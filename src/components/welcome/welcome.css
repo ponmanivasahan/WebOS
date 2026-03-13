@@ -1,0 +1,55 @@
+@keyframes fadeIn{
+    from{opacity:0;}
+    to {opacity:1;}
+}
+
+@keyframes blink{
+    0%,49%{opacity:1;}
+    50%,100%{opacity:0;}
+}
+
+@keyframes shake{
+    0%,100%{transform:translateX(0);}
+    20%,60%{transform:translateX(-5px);}
+    40%,80% {transform:translateX(5px);}
+}
+
+@keyframes slideUp{
+    to{transform:translateY(-100vh);}
+}
+
+@keyframes fillBar{
+    from{width:0%;}
+    to{width:100%}
+}
+:root{
+    --bg:#d4d0c8;
+    --surface:#ece9d8;
+    --border:#808080;
+    --border-lt:#ffffff;
+    --border-dk:#404040;
+    --text:#000000;
+    --text-dim:#555555;
+    --accent:#000080;
+    --accent-fg:#ffffff;
+}
+
+.w-screen{
+    position:fixed;
+    inset:0;
+    font-family:'Segoe UI',Tahoma,sans-serif;
+    font-size:13px;
+    overflow:hidden;
+    user-select:none;
+    color:var(--text);
+}
+
+.boot-screen{
+    background:#000;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:32px;
+    animation:fadeIn 0.3s ease;
+}
