@@ -9,6 +9,13 @@ export default function BootScreen({onDone}){
     return(
         <div className="w-screen boot-screen">
             <div className="boot-logo-name">Aurora OS</div>
+            <div className="boot-logo-sub">V 1.00</div>
+            <div className="boot-dots">
+                <div className="boot-dot" />
+                <div className="boot-dot" />
+                <div className="boot-dot" />
+                <div className="boot-dot" />
+            </div>
         </div>
     )
 }

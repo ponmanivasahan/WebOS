@@ -53,3 +53,122 @@
     gap:32px;
     animation:fadeIn 0.3s ease;
 }
+
+.boot-logo-name{
+    font-size:clamp(28px,5vw,48px);
+    font-weight:700;
+    letter-spacing:6px;
+    color:#c0c0c0;
+    text-align:center;
+}
+
+.boot-logo-sub{
+    font-size:11px;
+    letter-spacing:4px;
+    color:#444;
+    text-align:center;
+    margin-top:4px;
+}
+
+.boot-dots{
+    display:flex;
+    gap:8px;
+}
+
+.boot-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    animation:blink 1.2s step-end infinite;
+}
+
+.boot-dot:nth-child(1){
+    background:#888;
+    animation-delay:0s;
+}
+
+.boot-dot:nth-child(2){
+    background:#777;
+    animation-delay:0.3s;
+}
+.boot-dot:nth-child(3){
+    background:#666;
+    animation-delay:0.6s;
+}
+
+.boot-dot:nth-child(4){
+    background:#555;
+    animation-delay:0.9s;
+}
+
+.lock-screen{
+    background:#1a1a1a;
+    cursor:pointer;
+    display: flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:0;
+    transition:opacity 0.4s ease;
+}
+
+.lock-screen.exiting{
+    animation:slideUp 0.45s ease forwards;
+}
+
+.lock-time{
+    font-size:clamp(64px,14vw,120px);
+    font-weight:300;
+    letter-spacing:-2px;
+    color:#e0e0e0;
+    line-height:1;
+}
+.lock-seconds{
+    font-size:clamp(20px,4vw,38px);
+    font-weight:300;
+    color:#666;
+    margin-top:4px;
+    letter-spacing:2px;
+    font-family:'Consolas',monospace;
+}
+
+.lock-date{
+    font-size:clamp(12px,1.6vw,15px);
+    color:#666;
+    margin-top:10px;
+    letter-spacing:1px;
+}
+
+.lock-divider{
+    width:32px;
+    height:1px;
+    background:#333;
+    margin:20px auto;
+}
+
+.lock-hint{
+    font-size:11px;
+    color:#444;
+    letter-spacing:2px;
+}
+
+.lock-statusbar{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:32px;
+    display:flex;
+    align-items: center;
+    justify-content:center;
+    padding:0 16px;
+    font-size:11px;
+    color:#444;
+    border-bottom:1px solid #2a2a2a;
+}
+
+.lock-status-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
