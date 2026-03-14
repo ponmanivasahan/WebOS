@@ -1,12 +1,13 @@
-import BootScreen from "./components/welcome/Bootscreen";
-import LockScreen from './components/welcome/LockScreen';
-import LoginScreen from "./components/welcome/LoginScreen";
+import WelcomeScreen from './components/welcome/Welcome'
+import './index.css'
+import { OSProvider } from './context/OSContext';
+
 
 function App(){
   return(
-    <>
-   <LoginScreen />
-    </>
+    <OSProvider>
+        <WelcomeScreen />
+    </OSProvider>
   )
 }
 export default App

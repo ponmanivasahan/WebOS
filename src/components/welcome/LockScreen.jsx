@@ -29,7 +29,7 @@ export default function LockScreen({onUnlock}){
     return(
         <div className={`w-screen lock-screen${exiting ? 'exiting' :''}`} onClick={doUnlock} >
             <div className="lock-statusbar">
-                <span>Aurora OS</span>
+                <span className="nametitle">Aurora OS</span>
                 <div className="lock-status-right">
                     <WifiIcon />
                     <BatteryIcon />
@@ -49,9 +49,9 @@ export default function LockScreen({onUnlock}){
 function WifiIcon(){
     return(
         <svg width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <rect x="1" y="2" width="19" height="10" rx="2" />
+            {/* <rect x="1" y="2" width="19" height="10" rx="2" />
             <rect x="2.5" y="3.5" width="12" height="7" rx="1" fill="currentColor" stroke="none" />
-            <path d="M21 5v4" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M21 5v4" strokeWidth="2.5" strokeLinecap="round" /> */}
         </svg>
     )
 }
@@ -60,9 +60,9 @@ function BatteryIcon(){
 
     return(
         <svg width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <rect x="1" y="2" width="19" height="10" rx="2" />
+            {/* <rect x="1" y="2" width="19" height="10" rx="2" />
             <rect x="2.5" y="3.5" width="12" height="7" rx="1"  fill="currentColor" stroke="none"/>
-            <path d="M21 5v4" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M21 5v4" strokeWidth="2.5" strokeLinecap="round" /> */}
 
         </svg>
     )

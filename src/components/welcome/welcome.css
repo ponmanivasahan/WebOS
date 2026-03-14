@@ -336,3 +336,33 @@ border-bottom:1px solid var(--border-dk);
     gap:6px;
     border-top:1px solid var(--border);
 }
+
+.os-btn{
+    padding:3px 14px;
+    font-size:12px;
+    background:var(--surface);
+    color:var(--text);
+    border-top:2px solid var(--border-lt);
+    border-left:2px solid var(--border-lt);
+    border-right:2px solid var(--border-dk);
+    border-bottom:2px solid var(--border-dk);
+    min-width:72px;
+}
+
+.os-btn:active{
+    border-top:2px solid var(--border-dk);
+    border-left:2px solid var(--border-dk);
+    border-right:2px solid var(--border-lt);
+    border-bottom:2px solid var(--border-lt);
+    padding:4px 13px 2px 15px;
+}
+
+.os-btn.primary{
+    background:var(--surface);
+    font-weight:600;
+}
+
+.nametitle{
+    display: flex;
+    margin-right:550px;
+}
