@@ -55,3 +55,15 @@ function WifiIcon(){
         </svg>
     )
 }
+
+function BatteryIcon(){
+
+    return(
+        <svg width="18" height="11" viewBox="0 0 24 14" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <rect x="1" y="2" width="19" height="10" rx="2" />
+            <rect x="2.5" y="3.5" width="12" height="7" rx="1"  fill="currentColor" stroke="none"/>
+            <path d="M21 5v4" strokeWidth="2.5" strokeLinecap="round" />
+
+        </svg>
+    )
+}
