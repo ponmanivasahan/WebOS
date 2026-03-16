@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import './desktop.css';
 import useNow from '../../hooks/useNow';
 const p2=(n)=>String(n).padStart(2,'0');
 export default function TaskbarClock(){

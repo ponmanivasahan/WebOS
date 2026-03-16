@@ -1,4 +1,5 @@
 import {useRef} from 'react'
+import './desktop.css';
 export default function DesktopIcon({label,icon,selected=false,id,onSelect,onOpen,onContext}){
      const clickTimer=useRef(null);
      const handleClick=(e)=>{

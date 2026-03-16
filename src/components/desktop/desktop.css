@@ -66,3 +66,106 @@
     border-right:1px solid #404040;
     border-bottom: 1px solid #404040;
 }
+
+.context-menu{
+    position:fixed;
+    z-index:500;
+    background:#d4d0c8;
+    min-width:160px;
+    padding:2px 0;
+    border-top: 2px solid #ffffff;
+    border-left:2px solid #ffffff;
+    border-right: 2px solid #404040;
+    border-bottom:2px solid #404040;
+}
+
+.content-menu-item{
+  padding: 4px 20px 4px 24px;
+  font-size:13px;
+  color:#000000;
+  cursor: default;
+  white-space: nowrap;
+  position: relative;
+}
+
+.content-menu-item:hover{
+    background:#000080;
+    color:#ffffff;
+}
+.content-menu-item.is-disabled{
+    color:#555555;
+    pointer-events:none;
+}
+.context-menu-seperator{
+    height: 1px;
+    background:#404040;
+    margin:3px 2px;
+    box-shadow:0 1px 0 #ffffff;
+}
+
+.desktop{
+    position:fixed;
+    inset:0;
+    background:#008080;
+    font-family:'Segoe UI',Tahoma,sans-serif;
+    font-size:13px;
+    overflow:hidden;
+    user-select: none;
+}
+.desktop-area{
+    position:absolute;
+    inset:0;
+    bottom:36px;
+    padding: 10px;
+}
+.desktop-icons{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+    padding:6px;
+}
+
+.desktop-icon{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:4px;
+    width: 72px;
+    padding:4px;
+    border:1px solid transparent;
+    border-radius: 2px;
+    cursor:pointer;
+    color:#fff;
+    text-align:center;
+}
+.desktop-icon:hover{
+    background:rgba(0,0,128,0.25);
+    border-color: rgba(255,255,255,0.4);
+}
+.desktop-icon.is-selected{
+    background:rgba(0,0,128,0.45);
+    border-color: rgba(255,255,255,0.6);
+}
+.desktop.has-wallpaper{
+    background-size:cover;
+    background-position:center;
+    background-repeat: no-repeat;
+}
+
+.desktop-icon-img{
+    width: 40px;
+    height:40px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.desktop-icon-label{
+    font-size:11px;
+    line-height: 1.3;
+    word-break: break-word;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    max-width: 68px;
+}
