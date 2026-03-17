@@ -24,6 +24,7 @@
 }
 :root{
     --bg:#d4d0c8;
+    --lock-bg-image:none;
     --surface:#ece9d8;
     --border:#808080;
     --border-lt:#ffffff;
@@ -45,34 +46,82 @@
 }
 
 .boot-screen{
-    background:#000;
+    background:radial-gradient(circle at 20% 20%, #192d44 0%, #0d1724 38%, #05080d 100%);
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:32px;
+    padding:24px;
     animation:fadeIn 0.3s ease;
 }
 
+.boot-frame{
+    width:min(520px,92vw);
+    border:1px solid rgba(141,170,210,0.32);
+    background:linear-gradient(180deg, rgba(17,30,47,0.88), rgba(8,15,24,0.88));
+    box-shadow:0 18px 40px rgba(0,0,0,0.42);
+    border-radius:12px;
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.boot-brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.boot-logo-mark{
+    width:34px;
+    height:34px;
+    border-radius:8px;
+    background:conic-gradient(from 180deg, #34c7ff, #74f4ce, #3a85ff, #34c7ff);
+    box-shadow:0 0 18px rgba(55,157,255,0.45);
+}
+
 .boot-logo-name{
-    font-size:clamp(28px,5vw,48px);
+    font-size:clamp(24px,4.2vw,34px);
     font-weight:700;
-    letter-spacing:6px;
-    color:#c0c0c0;
-    text-align:center;
+    letter-spacing:2px;
+    color:#e8f3ff;
 }
 
 .boot-logo-sub{
+    margin-top:2px;
+    font-size:12px;
+    letter-spacing:1.4px;
+    color:#9db5cd;
+    text-transform:uppercase;
+}
+
+.boot-progress-track{
+    height:8px;
+    width:100%;
+    border-radius:999px;
+    background:#0f2234;
+    border:1px solid #294866;
+    overflow:hidden;
+}
+
+.boot-progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, #38bdf8, #86efac);
+    transition:width 120ms linear;
+}
+
+.boot-progress-label{
+    color:#9db5cd;
     font-size:11px;
-    letter-spacing:4px;
-    color:#444;
-    text-align:center;
-    margin-top:4px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
 }
 
 .boot-dots{
     display:flex;
     gap:8px;
+    justify-content:flex-start;
 }
 
 .boot-dot{
@@ -83,26 +132,30 @@
 }
 
 .boot-dot:nth-child(1){
-    background:#888;
+    background:#6dd3ff;
     animation-delay:0s;
 }
 
 .boot-dot:nth-child(2){
-    background:#777;
+    background:#76cae4;
     animation-delay:0.3s;
 }
 .boot-dot:nth-child(3){
-    background:#666;
+    background:#76d8be;
     animation-delay:0.6s;
 }
 
 .boot-dot:nth-child(4){
-    background:#555;
+    background:#94e9a7;
     animation-delay:0.9s;
 }
 
 .lock-screen{
-    background:#1a1a1a;
+    background-color:#1a1a1a;
+    background-image:var(--lock-bg-image, none);
+    background-position:center;
+    background-size:cover;
+    background-repeat:no-repeat;
     cursor:pointer;
     display: flex;
     flex-direction:column;
@@ -112,44 +165,63 @@
     transition:opacity 0.4s ease;
 }
 
+.lock-screen::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.44) 100%);
+    pointer-events:none;
+}
+
+.lock-screen > *{
+    position:relative;
+    z-index:1;
+}
+
 .lock-screen.exiting{
     animation:slideUp 0.45s ease forwards;
+    pointer-events:none;
 }
 
 .lock-time{
     font-size:clamp(64px,14vw,120px);
     font-weight:300;
     letter-spacing:-2px;
-    color:#e0e0e0;
+    color:#e7edf3;
     line-height:1;
+    text-shadow:0 2px 10px rgba(0,0,0,0.45);
 }
 .lock-seconds{
     font-size:clamp(20px,4vw,38px);
     font-weight:300;
-    color:#666;
+    color:#d7e0ea;
     margin-top:4px;
     letter-spacing:2px;
     font-family:'Consolas',monospace;
+    text-shadow:0 1px 6px rgba(0,0,0,0.5);
 }
 
 .lock-date{
     font-size:clamp(12px,1.6vw,15px);
-    color:#666;
+    color:#d7e0ea;
     margin-top:10px;
     letter-spacing:1px;
+    text-shadow:0 1px 6px rgba(0,0,0,0.5);
 }
 
 .lock-divider{
     width:32px;
     height:1px;
-    background:#333;
+    background:#9aa7b5;
     margin:20px auto;
 }
 
 .lock-hint{
     font-size:11px;
-    color:#444;
-    letter-spacing:2px;
+    color:#e8edf3;
+    letter-spacing:1.6px;
+    text-transform:uppercase;
+    text-shadow:0 1px 6px rgba(0,0,0,0.55);
 }
 
 .lock-statusbar{
@@ -160,11 +232,13 @@
     height:32px;
     display:flex;
     align-items: center;
-    justify-content:center;
+    justify-content:space-between;
     padding:0 16px;
     font-size:11px;
-    color:#444;
-    border-bottom:1px solid #2a2a2a;
+    color:#e8edf3;
+    background:rgba(0,0,0,0.28);
+    border-bottom:1px solid rgba(255,255,255,0.22);
+    backdrop-filter:blur(2px);
 }
 
 .lock-status-right{
@@ -173,11 +247,17 @@
     gap:12px;
 }
 
+.nametitle{
+    font-weight:600;
+    letter-spacing:0.8px;
+}
+
 .login-screen{
     background:var(--bg);
     display:flex;
-    align-items:center;
+    align-items:flex-end;
     justify-content:center;
+    padding:0 16px 9vh;
     animation:fadeIn 0.3s ease;
 }
 .login-frame{
@@ -190,28 +270,10 @@
     display:flex;
     flex-direction:column;
     overflow:hidden;
-}
-
-.login-titlebar{
-    background:var(--accent);
-    color:var(--accent-fg);
-    padding:4px 8px;
-    font-size:12px;
-    font-weight:700;
-    display:flex;
-    align-items:center;
-    gap:6px;
-}
-
-.login-titlebar-icon{
-    width:14px;
-    height:14px;
-    background:#c0c0c0;
-    border-radius:50%;
-    flex-shrink:0;
+    box-shadow:2px 2px 14px rgba(0,0,0,0.16);
 }
 .login-body{
-    padding:20px 18px 16px;
+    padding:24px 18px 16px;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -362,7 +424,8 @@ border-bottom:1px solid var(--border-dk);
     font-weight:600;
 }
 
-.nametitle{
-    display: flex;
-    margin-right:550px;
+@media (max-width: 768px){
+    .login-screen{
+        padding-bottom:7vh;
+    }
 }

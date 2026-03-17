@@ -16,7 +16,7 @@ export default function LoginScreen({onAuthenticate}){
 
     const submit=()=>{
         if(!password || success) return;
-        if(password==CORRECT_PASSWORD){
+        if(password===CORRECT_PASSWORD){
             setSuccess(true);
             setError('');
             setTimeout(onAuthenticate,900);
@@ -40,23 +40,19 @@ export default function LoginScreen({onAuthenticate}){
     return(
         <div className="w-screen login-screen">
             <div className="login-frame">
-                <div className="login-titlebar">
-                    <div className="login-titlebar-icon" />
-                    Welcome to Aurora OS
-                </div>
                 <div className="login-body">
                     <div className="login-avatar">
                         <UserIcon />
                     </div>
                     <div className="login-name">User</div>
-                    <div className={`login-input-wrap${shaking ? 'login-input-shake' :''}`} >
+                    <div className={`login-input-wrap${shaking ? ' login-input-shake' :''}`} >
                         <div className={rowClass}>
                             <input ref={inputRef} type={showPwd ? 'text':'password'} placeholder="Password" value={password} className="login-input" onChange={(e)=>{
                                 setPassword(e.target.value);
                                 setError('');
-                            }} on onKeyDown={(e)=>e.key==='Enter' && submit()} />
+                            }} onKeyDown={(e)=>e.key==='Enter' && submit()} />
 
-                            <button className="login-eye-btn" onClick={()=>setShowPwd((v)=>!v)} tabIndex={-1}>
+                            <button type="button" className="login-eye-btn" onClick={()=>setShowPwd((v)=>!v)} tabIndex={-1}>
                                 {showPwd ? <EyeOffIcon/> : <EyeIcon />}
                             </button>
                         </div>
@@ -80,7 +76,7 @@ export default function LoginScreen({onAuthenticate}){
                     </div>
                 </div>
                 <div className="login-footer-row">
-                    <button className="os-btn primary" onClick={submit}>
+                    <button type="button" className="os-btn primary" onClick={submit}>
                         Sign In
                     </button>
                 </div>

@@ -1,7 +1,16 @@
-import {useRef} from 'react'
+import {useEffect,useRef} from 'react'
 import './desktop.css';
 export default function DesktopIcon({label,icon,selected=false,id,onSelect,onOpen,onContext}){
      const clickTimer=useRef(null);
+
+     useEffect(()=>{
+        return ()=>{
+            if(clickTimer.current){
+                clearTimeout(clickTimer.current);
+            }
+        };
+     },[]);
+
      const handleClick=(e)=>{
         e.stopPropagation();
         if(clickTimer.current){
@@ -24,7 +33,7 @@ export default function DesktopIcon({label,icon,selected=false,id,onSelect,onOpe
         onContext?.(e,id);
      }
     return(
-        <div className={`desktop-icon${selected ? 'is-selected' : ''}`} onClick={handleClick} onContextMenu={handleContext}>
+        <div className={`desktop-icon${selected ? ' is-selected' : ''}`} onClick={handleClick} onContextMenu={handleContext}>
                  <div className="desktop-icon-img">{icon}</div>
                  <span className="desktop-icon-label">{label}</span>
         </div>

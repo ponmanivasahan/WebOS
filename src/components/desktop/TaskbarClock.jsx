@@ -10,9 +10,9 @@ const mm=p2(now.getMinutes());
 const date=now.toLocaleDateString('en-US',{
     weekday:'long',year:'numeric',month:'long',day:'numeric',
 })
-console.log(hh);
-console.log(mm);
-console.log(date);
+// console.log(hh);
+// console.log(mm);
+// console.log(date);
 
 return(
     <div className="taskbar-clock" onMouseEnter={()=>setTip(true)}
