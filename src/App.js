@@ -43,6 +43,7 @@ function App(){
       {stage==='desktop' && (
         <Desktop openWindows={windows} activeWinId={activeWinId} onWinClick={handleWinClick} onOpenApp={handleOpenApp} />
       )}
+      
      </OSProvider>
   )
 }
