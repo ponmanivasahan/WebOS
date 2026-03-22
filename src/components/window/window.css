@@ -98,3 +98,14 @@
     background: #c04040;
     color: #fff;
 }
+
+.win-menubar{
+    display:flex;
+    align-items: center;
+    padding: 0 2px;
+    height: 20px;
+    background: #d4d0c8;
+    border-bottom: 1px solid #808080;
+    flex-shrink: 0;
+    gap: 0;
+}

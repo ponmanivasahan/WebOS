@@ -1,0 +1,325 @@
+.tm-shell{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #d4d0c8;
+    font-family:'Segoe UI', Tahoma, sans-serif;
+    font-size: 13px;
+    color: #000;
+    user-select: none;
+}
+
+.tm-toolbar{
+    display:flex;
+    align-items: center;
+    gap:2px;
+    padding: 4px 6px;
+    border-bottom:1px solid #808088;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.tm-tab{
+    padding:3px 14px;
+    font-size: 12px;
+    background: #d4d0c8;
+    color: #000;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #404040;
+    border-bottom: 2px solid #404040;
+}
+
+.tm-tab.is-active{
+    background: #ece9d8;
+    border-bottom-color: #ece9d8;
+    font-weight: 600;
+}
+
+.tm-add-form{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border-bottom: 1px solid #808088;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    background: #ece9d8;
+}
+
+.tm-add-title{
+    flex:1;
+    min-width: 120px;
+    height: 24px;
+    padding: 0 6px;
+    font-size: 12px;
+    background: #fff;
+    color: #000;
+    border-top: 2px solid #404040;
+    border-left: 2px solid #404040;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    outline: none;
+}
+
+.tm-add-title::placeholder{
+    color: #999;
+}
+
+.tm-add-date, .tm-add-time{
+    height: 24px;
+    padding: 0 6px;
+    font-size: 12px;
+    background: #fff;
+    color: #000;
+    border-top: 2px solid #404040;
+    border-left: 2px solid #404040;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    outline: none;
+    font-family: inherit;
+}
+
+.tm-add-priority{
+    height: 24px;
+    padding: 0 4px;
+    font-size: 12px;
+    background: #fff;
+    color: #000;
+    border-top: 2px solid #404040;
+    border-left: 2px solid #404040;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    outline: none;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.tm-add-btn{
+    height: 24px;
+    padding: 0 14px;
+    font-size: 12px;
+    background: #d4d0c8;
+    color: #000;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #404040;
+    border-bottom: 2px solid #404040;
+    white-space: nowrap;
+}
+.tm-add-btn:hover{
+    background: #c8c4bc;
+}
+
+.tm-add-btn:active{
+    border-top: 2px solid #404040;
+    border-left: 2px solid #404040;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    padding: 1px 13px 0 15px;
+}
+
+.tm-filter-bar{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-bottom: 1px solid #808088;
+    flex-shrink: 0;
+    font-size: 12px;
+}
+
+.tm-filter-bar{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-bottom: 1px solid #808080;
+    flex-shrink: 0;
+    font-size: 12px;
+}
+
+.tm-filter-bar label{
+    color: #555;
+}
+
+.tm-filter-btn{
+    padding: 1px 8px;
+    font-size: 11px;
+    background: #d4d0c8;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #404040;
+    border-bottom: 1px solid #404040;
+    color: #000;
+}
+.tm-filter-btn:active{
+    background: #000080;
+    color: #fff;
+    border-color: #000080;
+}
+
+.tm-body{
+    flex: 1;
+    overflow-y: auto;
+    background: #fff;
+    border-top: 2px solid #404040;
+    border-left: 2px solid #404040;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    margin: 4px 6px;
+}
+
+.tm-empty{
+    padding: 20px 16px;
+    color: #888;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.tm-task{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-bottom: 1px solid #eee;
+    font-size: 12px;
+    cursor: default;
+    background: #fff;
+    position: relative;
+}
+
+.tm-task:last-child{
+    border-bottom: none;
+}
+.tm-task:hover{
+    background: #f0f4ff;
+}
+.tm-task.is-done{
+    background: #f8f8f8;
+}
+
+tm-task.drag-over-top{
+    border-top:2px solid #000080;
+}
+.tm-task.drag-over-bottom{
+    border-bottom: 2px solid #000080;
+}
+
+.tm-drag-handle{
+    cursor: grab;
+    color: #bbb;
+    font-size: 14px;
+    line-height: 1;
+    flex-shrink: 0;
+    padding: 0 2px;
+}
+
+.tm-drag-handle:active{
+    cursor: grabbing;
+}
+
+.tm-checkbox{
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    cursor: pointer;
+    accent-color: #000080;
+}
+
+.tm-task-title{
+    flex:1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tm-task.is-done .tm-task-title{
+    text-decoration: line-through;
+    color: #888;
+}
+
+.tm-edit-input{
+    flex: 1;
+    padding: 1px 4px;
+    font-size: 12px;
+    border: 1px solid #000080;
+    outline: none;
+    background: #fff;
+    font-family: inherit;
+}
+
+.tm-due{
+    font-size: 11px;
+    color: #666;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.tm-due.is-overdue{
+    color: #900;
+    font-weight: 600;
+}
+.tm-due.is-today{
+    color: #060;
+    font-weight: 600;
+}
+.tm-priority{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.tm-priority.high{background: #c00;}
+.tm-priority.medium{background: #e80;}
+.tm-priority.low{background: #080;}
+
+.tm-task-actions{
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.1s;
+}
+.tm-task:hover .tm-task-actions{opacity: 1;}
+
+.tm-action-btn{
+    padding: 1px 5px;
+    font-size: 11px;
+    background: #d4d0c8;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #404040;
+    border-bottom: 1px solid #404040;
+    color: #000;
+    line-height: 1.4;
+}
+
+.tm-action-btn:hover{
+    background: #c8c4bc;
+}
+.tm-action-btn.danger:hover{
+    background: #c04040;
+    color: #fff;
+}
+
+.tm-statusbar{
+    padding:3px 8px;
+    font-size: 11px;
+    color: #555;
+    border-top: 1px solid #808080;
+    background: #d4d0c8;
+    flex-shrink: 0;
+    display: flex;
+    gap: 12px;
+}
+
+.tm-status-panel{
+    border-top: 1px solid #404040;
+    border-left: 1px solid #404040;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    padding: 1px 6px;
+}
