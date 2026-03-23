@@ -1,7 +1,7 @@
 import {useState,useEffect,useCallback,useRef} from 'react'
 import './welcome.css';
 import useNow from '../../hooks/useNow';
-
+import background from '../../assets/background.png';
 const p2=(n)=>String(n).padStart(2,'0');
 export default function LockScreen({onUnlock}){
     const now=useNow();
