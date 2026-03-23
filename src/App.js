@@ -1,8 +1,9 @@
 import {useState} from 'react';
-import WelcomeScreen from './components/welcome/Welcome'
-import './index.css'
 import { OSProvider } from './context/OSContext';
+import WelcomeScreen from './components/welcome/Welcome'
 import Desktop from './components/desktop/Desktop';
+import WindowManager from './components/window/windowManager';
+import './index.css'
 
 function App(){
   const [stage,setStage]=useState('welcome');
@@ -35,13 +36,34 @@ function App(){
       setActiveWinId(id);
     }
   }
+
+  const handleFocus=(id)=>{
+    setActiveWinId(id);
+    setWindows((prev)=>
+    prev.map((w)=>w.id===id ? {...w,minimized:false}:w))
+  };
+
+  const handleClose=(id)=>{
+    setWindows((prev)=>prev.filter((w)=>w.id !==id));
+    setActiveWinId((cur)=>(cur===id ? null :cur));
+  };
+
+  const handleMinimize=(id)=>{
+    setWindows((prev)=>
+    prev.map((w)=>w.id===id ? {...w,minimized:true}:w));
+    setActiveWinId((cur)=>(cur===id ? null : cur));
+  };
   return(
     <OSProvider>
       {stage==='welcome' && (
         <WelcomeScreen onComplete={()=>setStage('desktop')} />
       )}
       {stage==='desktop' && (
+        <>
         <Desktop openWindows={windows} activeWinId={activeWinId} onWinClick={handleWinClick} onOpenApp={handleOpenApp} />
+
+        <WindowManager windows={windows} activeWinId={activeWinId} onFocus={handleFocus} onClose={handleClose} onMinimize={handleMinimize} />
+      </>
       )}
       
      </OSProvider>

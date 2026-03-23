@@ -18,7 +18,7 @@ function fmtDue(dueDate,dueTime){
     return [dueDate,dueTime].filter(Boolean).join(' ');
 }
 
-function priorityDot({priority}){
+function PriorityDot({priority}){
     return <div className={`tm-priority ${priority}`} title={priority} />;
 }
 
@@ -52,9 +52,9 @@ function TaskItem({task,index,onToggle,onDelete,onEdit,
             <span className="tm-drag-handle" title="Drag to reorder">⠿</span>
 
             <input type='checkbox' className='tm-checkbox' checked={task.done} onChange={()=>onToggle(task.id)} />
-            <priorityDot priority={task.priority} />
+            <PriorityDot priority={task.priority} />
 
-            {ending ? (
+            {editing ? (
                 <input ref={editRef} className='tm-edit-input' value={editVal} onChange={(e)=>setEditVal(e.target.value)} onBlur={commitEdit} onKeyDown={(e)=>{
                     if(e.key==='Enter') commitEdit(); 
                     if(e.key==='Escape') setEditing(false);
@@ -68,7 +68,7 @@ function TaskItem({task,index,onToggle,onDelete,onEdit,
         }
 
         {(task.dueDate || task.dueTime) && (
-            <span className={`tm-due ${duebadgeClass(task.dueDate)}`}>
+            <span className={`tm-due ${dueBadgeClass(task.dueDate)}`}>
                 {fmtDue(task.dueDate,task.dueTime)}
             </span>
         )}

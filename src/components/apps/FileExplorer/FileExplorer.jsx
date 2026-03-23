@@ -1,6 +1,6 @@
 import {useState,useEffect,useRef,useCallback} from 'react';
 import useFileSystem from './useFileSystem';
-import './fileexplorer.css';
+import './Fileexplorer.css';
 
 function FolderIcon({open=false,size=16}){
     return(
@@ -159,7 +159,7 @@ export default function FileExplorer(){
         e.preventDefault();
         e.stopPropagation();
         setSelected(entry.id);
-        setCtx({x:clientX,y:e.clientY,
+        setCtx({x:e.clientX,y:e.clientY,
             items:[
                 {label:'Open',action:()=>handleOpen(entry)},
                 {sep:true},
