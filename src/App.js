@@ -20,7 +20,7 @@ function App(){
     }
     const id=`${appId}-${Date.now()}`;
     const meta=APP_META[appId] || {title:appId,icon:null};
-    setWindows((prev)=>[...prev,{id,appId,minimized:false,...meta}]);
+    setWindows((prev)=>[...prev,{id,appId,minimized:false,startMaximized:true,...meta}]);
     setActiveWinId(id);
   }
 

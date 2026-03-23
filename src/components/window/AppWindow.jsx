@@ -3,12 +3,13 @@ import './window.css';
 
 export default function AppWindow({
     id,title='Window',icon=null,children,x=60,y=60,width=640,height=440,
-    isActive=false,isMinimized=false,menuItems=[],
+    isActive=false,isMinimized=false,isMaximized=false,menuItems=[],
   statusText='',onFocus,onClose,onMinimize,onMaximize,onChange,
 }){
     const dragState=useRef(null);
     const resizeState=useRef(null);
     const startDrag=useCallback((e)=>{
+      if(isMaximized) return;
         if(e.button!==0) return;
         e.preventDefault();
         onFocus?.(id);
@@ -35,9 +36,10 @@ export default function AppWindow({
 
         window.addEventListener('mousemove',onMove);
         window.addEventListener('mouseup',onUp);
-    },[id,x,y,width,height,onFocus,onChange]);
+    },[id,x,y,width,height,isMaximized,onFocus,onChange]);
 
     const startResize=useCallback((e,dir)=>{
+      if(isMaximized) return;
         if(e.button!==0) return;
         e.preventDefault();
         e.stopPropagation();
@@ -69,7 +71,7 @@ export default function AppWindow({
 
         window.addEventListener('mousemove',onMove);
         window.addEventListener('mouseup',onUp);
-    },[id,x,y,width,height,onFocus,onChange]);
+    },[id,x,y,width,height,isMaximized,onFocus,onChange]);
 
     useEffect(()=>{
         return()=>{
@@ -86,7 +88,7 @@ export default function AppWindow({
         <div className={['app-window',isActive ? 'is-active' : '',isMinimized?'is-minimized':'',].filter(Boolean).join(' ')}
         style={{left:safeX,top:safeY,width,height,zIndex:isActive ? 200:100,}}
         onMouseDown={()=>onFocus?.(id)}>
-            {['n','s','e','w','nw','ne','sw','se'].map((dir) => (
+            {!isMaximized && ['n','s','e','w','nw','ne','sw','se'].map((dir) => (
         <div
           key={dir}
           className={`win-resize win-resize-${dir}`}
@@ -109,9 +111,9 @@ export default function AppWindow({
              <button
             className="win-ctrl-btn maximize"
             onClick={(e) => { e.stopPropagation(); onMaximize?.(id); }}
-            title="Maximize"
+            title={isMaximized ? 'Restore' : 'Maximize'}
           >
-            □
+            {isMaximized ? 'R' : 'M'}
           </button>
 
            <button

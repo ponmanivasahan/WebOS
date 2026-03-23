@@ -1,29 +1,9 @@
-import {useEffect,useRef} from 'react'
 import './desktop.css';
 export default function DesktopIcon({label,icon,selected=false,id,onSelect,onOpen,onContext}){
-     const clickTimer=useRef(null);
-
-     useEffect(()=>{
-        return ()=>{
-            if(clickTimer.current){
-                clearTimeout(clickTimer.current);
-            }
-        };
-     },[]);
-
      const handleClick=(e)=>{
         e.stopPropagation();
-        if(clickTimer.current){
-            clearTimeout(clickTimer.current);
-            clickTimer.current=null;
-            onOpen?.(id);
-        }
-        else{
-            onSelect?.(id);
-            clickTimer.current=setTimeout(()=>{
-                clickTimer.current=null;
-            },280)
-        }
+        onSelect?.(id);
+        onOpen?.(id);
      }
 
      const handleContext=(e)=>{

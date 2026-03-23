@@ -37,33 +37,84 @@ export default function WindowManager({
   onMinimize,
 }) {
   const [geometry, setGeometry] = useState({});
+  const getMaxRect = () => ({
+    x:0,
+    y:0,
+    width:window.innerWidth,
+    height:window.innerHeight - 36,
+  });
+  const getDefaultRestoreRect = useCallback((id) => {
+    const index = windows.findIndex((w) => w.id === id);
+    const win = windows[index];
+    const defaults = APP_DEFAULTS[win?.appId] || { width: 600, height: 400 };
+    const offset = Math.max(0, index) * 24;
+    return {
+      x:60 + offset,
+      y:40 + offset,
+      width:defaults.width,
+      height:defaults.height,
+    };
+  },[windows]);
 
   const handleChange = useCallback((id, rect) =>{
     setGeometry((prev) =>({ ...prev, [id]: rect }));
   },[]);
   const handleMaximize = useCallback((id) =>{
-    setGeometry((prev) =>({
-      ...prev,
-      [id]:{
-        x:0,
-        y:0,
-        width:window.innerWidth,
-        height:window.innerHeight - 36,
-      },
-    }));
-  },[]);
+    setGeometry((prev) => {
+      const current = prev[id];
+      const win = windows.find((w) => w.id === id);
+      const wasImplicitMaximized = !current && !!win?.startMaximized;
+      if (current?.isMaximized || wasImplicitMaximized) {
+        const restore = current?.restoreRect || getDefaultRestoreRect(id);
+        return {
+          ...prev,
+          [id]:{
+            ...restore,
+            isMaximized:false,
+            restoreRect:null,
+          },
+        };
+      }
+
+      const baseRect = current || getDefaultRestoreRect(id);
+
+      return {
+        ...prev,
+        [id]:{
+          ...getMaxRect(),
+          isMaximized:true,
+          restoreRect:{
+            x:baseRect.x,
+            y:baseRect.y,
+            width:baseRect.width,
+            height:baseRect.height,
+          },
+        },
+      };
+    });
+  },[windows,getDefaultRestoreRect]);
 
   return (
     <>
       {windows.map((win, index) => {
         const defaults = APP_DEFAULTS[win.appId] || { width: 600, height: 400, title: win.appId };
         const offset= index * 24;
-        const geo= geometry[win.id] || {
+        const storedGeo = geometry[win.id];
+        const geo= storedGeo || (win.startMaximized ? {
+          ...getMaxRect(),
+          isMaximized:true,
+          restoreRect:{
+            x:60+offset,
+            y:40+offset,
+            width:defaults.width,
+            height:defaults.height,
+          },
+        } : {
           x:60+offset,
           y:40+offset,
           width:defaults.width,
           height:defaults.height,
-        };
+        });
 
         return (
           <AppWindow
@@ -75,6 +126,7 @@ export default function WindowManager({
             y={geo.y}
             width={geo.width}
             height={geo.height}
+            isMaximized={!!geo.isMaximized}
             isActive={win.id === activeWinId}
             isMinimized={win.minimized}
             menuItems={APP_MENUS[win.appId] || []}
