@@ -80,7 +80,7 @@ export default function AppWindow({
         };
     },[]);
 
-    const TASKBAR_H=36;
+    const TASKBAR_H=40;
     const safeX=Math.max(0,Math.min(x,window.innerWidth-width));
     const safeY=Math.max(0,Math.min(y,window.innerHeight-TASKBAR_H-30));
 

@@ -27,7 +27,7 @@
 .desktop-area {
     position: absolute;
     inset: 0;
-    bottom: 38px;
+    bottom: 44px;
     padding: 12px;
 }
 
@@ -77,10 +77,15 @@
 }
 
 .desktop-icon-label {
-    font-size: 11px;
-    line-height: 1.3;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.85);
+    font-size: 12px;
+    line-height: 1.25;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     max-width: 74px;
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: rgba(8, 14, 20, 0.2);
 }
 
 .taskbar {
@@ -88,30 +93,36 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 44px;
-    background: rgba(17, 25, 35, 0.82);
-    border-top: 1px solid rgba(227, 238, 248, 0.18);
+    height: 42px;
+    background: rgba(7, 12, 18, 0.34);
+    border-top: none;
     box-shadow: none;
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 0 10px;
-    z-index: 100;
+    border-radius: 0;
+    z-index: 1200;
 }
 
 .taskbar-start {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 0 10px;
+    padding: 0 8px;
     font-size: 12px;
-    font-weight: 500;
-    background: rgba(236, 244, 252, 0.12);
+    font-weight: 600;
+    background: rgba(236, 244, 252, 0.05);
     color: #eff5fb;
-    border: 1px solid rgba(225, 239, 252, 0.24);
+    border: none;
     height: 30px;
     flex-shrink: 0;
-    border-radius: 6px;
+    border-radius: 4px;
+    transition: background 120ms ease;
+}
+
+.taskbar-start:hover {
+    background: rgba(236, 244, 252, 0.14);
 }
 
 .taskbar-start:active {
@@ -121,26 +132,20 @@
 .taskbar-start-icon {
     width: 16px;
     height: 16px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 1px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: currentColor;
 }
 
-.taskbar-start-icon span {
+.taskbar-start-icon svg {
     display: block;
-    border-radius: 1px;
 }
-
-.taskbar-start-icon span:nth-child(1) { background: #ff0000; }
-.taskbar-start-icon span:nth-child(2) { background: #00b000; }
-.taskbar-start-icon span:nth-child(3) { background: #0000ff; }
-.taskbar-start-icon span:nth-child(4) { background: #ffff00; }
 
 .taskbar-divider {
     width: 1px;
-    height: 22px;
-    background: rgba(236, 245, 255, 0.16);
+    height: 16px;
+    background: rgba(236, 245, 255, 0.24);
     margin: 0 3px;
     flex-shrink: 0;
 }
@@ -148,32 +153,66 @@
 .taskbar-windows {
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 4px;
     flex: 1;
     overflow: hidden;
+}
+
+.taskbar-dev-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 10px;
+    height: 30px;
+    font-size: 12px;
+    font-weight: 500;
+    background: rgba(236, 244, 252, 0.03);
+    color: #7fbde8;
+    border: none;
+    flex-shrink: 0;
+    border-radius: 4px;
+    transition: background 120ms ease;
+    cursor: pointer;
+}
+
+.taskbar-dev-btn:hover {
+    background: rgba(236, 244, 252, 0.1);
+    color: #b8d8e8;
+}
+
+.taskbar-dev-btn.is-active {
+    background: rgba(127, 189, 232, 0.2);
+    color: #f1f7fe;
 }
 
 .taskbar-win-btn {
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 0 9px;
+    gap: 6px;
+    padding: 0 10px;
     height: 30px;
-    max-width: 180px;
+    max-width: 190px;
     font-size: 12px;
-    background: rgba(233, 242, 252, 0.1);
+    font-weight: 500;
+    background: rgba(236, 244, 252, 0.03);
     color: #edf4fb;
-    border: 1px solid rgba(233, 243, 253, 0.2);
+    border: none;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     flex-shrink: 0;
-    border-radius: 6px;
+    border-radius: 4px;
+    transition: background 120ms ease;
+}
+
+.taskbar-win-btn:hover {
+    background: rgba(233, 242, 252, 0.15);
 }
 
 .taskbar-win-btn.is-active {
-    background: rgba(149, 187, 214, 0.2);
-    border-color: rgba(225, 240, 253, 0.34);
+    background: rgba(149, 187, 214, 0.26);
+    box-shadow: inset 0 -2px 0 rgba(188, 222, 247, 0.9);
 }
 
 .taskbar-win-btn-icon {
@@ -191,26 +230,57 @@
 .taskbar-tray {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
     margin-left: auto;
-    padding: 0 9px;
+    padding: 0 6px;
     height: 30px;
-    border: 1px solid rgba(225, 239, 252, 0.2);
-    background: rgba(233, 242, 252, 0.1);
-    border-radius: 6px;
+    border: none;
+    background: rgba(236, 244, 252, 0.05);
+    border-radius: 4px;
+}
+
+.taskbar-tray-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #f2f8ff;
+    border-radius: 4px;
+    transition: background 120ms ease;
+}
+
+.taskbar-tray-icon:hover {
+    background: rgba(236, 244, 252, 0.16);
 }
 
 .taskbar-clock {
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.2px;
     color: #f1f7fe;
     white-space: nowrap;
     cursor: default;
     position: relative;
+    padding: 0 6px;
+    height: 24px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.taskbar-clock:hover {
+    background: rgba(236, 244, 252, 0.16);
+}
+
+.taskbar-clock-value {
+    line-height: 1;
 }
 
 .taskbar-clock-tooltip {
     position: absolute;
-    bottom: 34px;
+    bottom: 24px;
     right: 0;
     background: rgba(19, 30, 44, 0.92);
     color: #edf4fb;
@@ -219,7 +289,7 @@
     white-space: nowrap;
     pointer-events: none;
     z-index: 200;
-    border: 1px solid rgba(220, 236, 250, 0.4);
+    border: none;
     border-radius: 4px;
 }
 
@@ -263,7 +333,7 @@
 
 @media (max-width: 768px) {
     .desktop-area {
-        bottom: 44px;
+        bottom: 40px;
     }
 
     .desktop-icon {
@@ -272,7 +342,10 @@
     }
 
     .taskbar {
-        height: 44px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 42px;
     }
 
     .taskbar-start,
@@ -282,10 +355,362 @@
     }
 
     .taskbar-win-btn {
-        max-width: 135px;
+        max-width: 120px;
     }
 }
 
 .taskbar svg {
     display: block;
+}
+
+.devinfo-overlay{
+    position: fixed;
+    inset: 0;
+  bottom: 42px;
+    z-index: 300;
+    pointer-events: all;
+}
+
+.devinfo-panel{
+  position: fixed;
+  width: min(560px, calc(100vw - 24px));
+    max-height: calc(100vh - 42px - 20px);
+  background: #fffaf2;
+  border: 1px solid #ccb389;
+  border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  box-shadow: 0 26px 52px rgba(22, 18, 11, 0.28);
+  min-height: min(520px, calc(100vh - 72px));
+}
+
+.devinfo-titlebar{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    background: #1a2234;
+    border-bottom: 1px solid #131a28;
+    color: #ffefd1;
+    flex-shrink: 0;
+    cursor: grab;
+    user-select: none;
+}
+
+.devinfo-titlebar:active {
+    cursor: grabbing;
+}
+
+.devinfo-titlebar-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: #f1c06f;
+}
+.devinfo-titlebar-title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  color: #ffefd1;
+}
+.devinfo-close {
+  background: rgba(255, 245, 222, 0.12);
+  color: #ffefd1;
+  border: none;
+  border-radius: 999px;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.devinfo-close:hover {
+  background: rgba(255, 245, 222, 0.32);
+  color: #ffffff;
+}
+.devinfo-close:active {
+  background: rgba(255, 245, 222, 0.4);
+}
+ 
+.devinfo-tabs {
+  display: flex;
+  border-bottom: 1px solid #e6d8bf;
+  background: #f7eddc;
+  flex-shrink: 0;
+  padding: 6px 8px;
+  gap: 6px;
+}
+.devinfo-tab {
+  padding: 7px 14px;
+  font-size: 12px;
+  background: transparent;
+  color: #5a5567;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+.devinfo-tab:hover {
+  color: #1a2234;
+  background: #eddcc1;
+}
+.devinfo-tab.is-active {
+  color: #ffffff;
+  background: #1a2234;
+  font-weight: 700;
+}
+.devinfo-body {
+  flex: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  background: #fffaf2;
+  padding: 18px;
+}
+ 
+.devinfo-divider {
+  height: 1px;
+  background: #e5d6bb;
+  margin: 12px 0;
+}
+.devinfo-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #84623b;
+  margin-bottom: 8px;
+}
+.devinfo-empty {
+  font-size: 12px;
+  color: #667d9c;
+  font-style: italic;
+  padding: 12px 0;
+}
+.devinfo-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.devinfo-pill {
+  padding: 5px 12px;
+  font-size: 11px;
+  background: #f5e8d1;
+  color: #5a452b;
+  border: 1px solid #dfc79f;
+  border-radius: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+.devinfo-pill:hover {
+  background: #ebd7b3;
+  color: #43331f;
+}
+.devinfo-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #ab6427;
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color 0.2s ease;
+}
+.devinfo-link:hover { 
+  color: #7e4215;
+}
+.devinfo-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eadfcd;
+}
+.devinfo-avatar {
+  width: 108px;
+  height: 108px;
+  border-radius: 12px;
+  background: #ede2d1;
+  border: 1px solid #d4c0a2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.devinfo-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.devinfo-name {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1f2a44;
+  line-height: 1.2;
+  letter-spacing: 0.2px;
+}
+.devinfo-role {
+  font-size: 14px;
+  color: #815f36;
+  margin-top: 4px;
+  font-weight: 600;
+}
+.devinfo-bio {
+  font-size: 12px;
+  color: #4f586b;
+  line-height: 1.6;
+  margin: 0;
+}
+.devinfo-quick-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.devinfo-projects {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.devinfo-project-card {
+  background: #fff8ec;
+  border: 1px solid #e4d2b6;
+  border-left: 4px solid #c68a46;
+  border-radius: 10px;
+  padding: 12px 14px;
+  transition: all 0.2s ease;
+  margin-bottom: 6px;
+}
+.devinfo-project-card:hover {
+  background: #faedd8;
+  border-color: #d7c09b;
+  border-left-color: #a96e2f;
+  transform: translateY(-1px);
+}
+.devinfo-project-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.devinfo-project-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1f2a44;
+}
+.devinfo-project-link {
+  color: #ab6427;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+.devinfo-project-link:hover { 
+  color: #7e4215;
+}
+.devinfo-project-desc {
+  font-size: 11px;
+  color: #5e6677;
+  line-height: 1.5;
+  margin: 0 0 6px 0;
+}
+.devinfo-about {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.devinfo-hero-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+.devinfo-skill-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.devinfo-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.devinfo-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.devinfo-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #fff8ec;
+  border: 1px solid #e4d2b6;
+  border-left: 4px solid #c68a46;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #4f586b;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+.devinfo-contact-row:hover {
+  background: #faedd8;
+  border-color: #d7c09b;
+  border-left-color: #a96e2f;
+  color: #1f2a44;
+  transform: translateY(-1px);
+}
+.devinfo-contact-row:hover svg * {
+  stroke: #7e4215;
+  fill: #7e4215;
+}
+.devinfo-contact-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: #ab6427;
+  transition: color 0.2s ease;
+}
+.devinfo-contact-row:hover .devinfo-contact-icon {
+  color: #7e4215;
+}
+.devinfo-contact-label {
+  font-weight: 600;
+  width: 70px;
+  flex-shrink: 0;
+  color: #1f2a44;
+}
+.devinfo-contact-value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #5e6677;
+  font-size: 11px;
+}
+.devinfo-contact-row:hover .devinfo-contact-value {
+  color: #4a4f5f;
+}
+.devinfo-contact-arrow {
+  flex-shrink: 0;
+  font-size: 14px;
+  color: #84623b;
+  transition: all 0.2s ease;
+}
+.devinfo-contact-row:hover .devinfo-contact-arrow {
+  transform: translateX(2px);
+  color: #7e4215;
 }

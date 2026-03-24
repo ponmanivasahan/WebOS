@@ -10,14 +10,11 @@ const mm=p2(now.getMinutes());
 const date=now.toLocaleDateString('en-US',{
     weekday:'long',year:'numeric',month:'long',day:'numeric',
 })
-// console.log(hh);
-// console.log(mm);
-// console.log(date);
 
 return(
     <div className="taskbar-clock" onMouseEnter={()=>setTip(true)}
     onMouseLeave={()=>setTip(false)}>
-        {hh}:{mm}
+        <span className="taskbar-clock-value">{hh}:{mm}</span>
         {tip && (
             <div className="taskbar-clock-tooltip">{date}</div>
         )}
