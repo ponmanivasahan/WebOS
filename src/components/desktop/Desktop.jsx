@@ -4,6 +4,7 @@ import DesktopIcon from './DesktopIcon';
 import ContextMenu from './ContextMenu';
 import {useOS} from '../../context/OSContext';
 import './desktop.css';
+import desktopBackground from '../../assets/desktopbg.png';
 
 const DESKTOP_APPS=[
     {
@@ -74,9 +75,11 @@ export default function Desktop({openWindows=[], activeWinId, onWinClick,onStart
             ],
         })
     },[onOpenApp]);
-    const bgStyle=wallpaper ? {background:wallpaper} :{};
+    const bgStyle=wallpaper
+        ? {background:wallpaper}
+        : {backgroundImage:`url(${desktopBackground})`};
     return(
-        <div  ref={desktopRef}  className={`desktop${wallpaper ? ' has-wallpaper':''}`} style={bgStyle} onMouseDown={handleDesktopMouseDown} onContextMenu={handleDesktopContext}>
+        <div  ref={desktopRef}  className="desktop has-wallpaper" style={bgStyle} onMouseDown={handleDesktopMouseDown} onContextMenu={handleDesktopContext}>
             <div className="desktop-area" >
                 <div className="desktop-icons">
                     {DESKTOP_APPS.map((app)=>(

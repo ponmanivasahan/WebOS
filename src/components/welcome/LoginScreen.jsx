@@ -1,5 +1,6 @@
 import {useState,useEffect,useRef} from 'react'
 import './welcome.css';
+import background from '../../assets/background2.png';
 const CORRECT_PASSWORD='pwd';
 export default function LoginScreen({onAuthenticate}){
     const [password,setPassword]=useState('')
@@ -7,7 +8,6 @@ export default function LoginScreen({onAuthenticate}){
     const [success,setSuccess]=useState(false);
     const [shaking,setShaking]=useState(false);
     const [attempts,setAttempts]=useState(0);
-    const [showPwd,setShowPwd]=useState(false)
     const inputRef=useRef(null);
 
     useEffect(()=>{
@@ -19,7 +19,7 @@ export default function LoginScreen({onAuthenticate}){
         if(password===CORRECT_PASSWORD){
             setSuccess(true);
             setError('');
-            setTimeout(onAuthenticate,900);
+            setTimeout(onAuthenticate,550);
         }
         else{
             const a=attempts+1;
@@ -38,43 +38,36 @@ export default function LoginScreen({onAuthenticate}){
         success ? 'is-success' :'',
      ].filter(Boolean).join(' ');
     return(
-        <div className="w-screen login-screen">
+        <div className="w-screen login-screen" style={{ '--login-bg-image': `url(${background})` }}>
             <div className="login-frame">
-                <div className="login-body">
-                    <div className="login-avatar">
-                        <UserIcon />
-                    </div>
-                    <div className="login-name">User</div>
-                    <div className={`login-input-wrap${shaking ? ' login-input-shake' :''}`} >
-                        <div className={rowClass}>
-                            <input ref={inputRef} type={showPwd ? 'text':'password'} placeholder="Password" value={password} className="login-input" onChange={(e)=>{
-                                setPassword(e.target.value);
-                                setError('');
-                            }} onKeyDown={(e)=>e.key==='Enter' && submit()} />
+                <div className="login-avatar">
+                    <UserIcon />
+                </div>
 
-                            <button type="button" className="login-eye-btn" onClick={()=>setShowPwd((v)=>!v)} tabIndex={-1}>
-                                {showPwd ? <EyeOffIcon/> : <EyeIcon />}
-                            </button>
-                        </div>
+                <div className={`login-input-wrap${shaking ? ' login-input-shake' :''}`} >
+                    <div className={rowClass}>
+                        <input ref={inputRef} type="password" placeholder="Password" value={password} className="login-input" onChange={(e)=>{
+                            setPassword(e.target.value);
+                            setError('');
+                        }} onKeyDown={(e)=>e.key==='Enter' && submit()} />
 
-                        {error &&(
-                            <div className="login-msg is-error">{error}</div>
-                        )}
-                        {success &&(
-                            <div className="login-msg is-success">Signing in ... </div>
-                        )}
+                        <button type="button" className="login-go-btn" onClick={submit} tabIndex={-1} aria-label="Sign in">
+                            <ArrowRightIcon />
+                        </button>
                     </div>
 
-                    {success && (
-                        <div className="login-fill-track">
-                            <div className="login-fill-bar" />
-                            </div>
+                    {error &&(
+                        <div className="login-msg is-error">{error}</div>
+                    )}
+                    {success &&(
+                        <div className="login-msg is-success">Signing in ... </div>
                     )}
 
                     <div className="login-hint">
-                        Hint:<b>pwd</b>
+                        Hint: <b>pwd</b>
                     </div>
                 </div>
+
                 <div className="login-footer-row">
                     <button type="button" className="os-btn primary" onClick={submit}>
                         Sign In
@@ -94,21 +87,12 @@ function UserIcon(){
     );
 }
 
-function EyeIcon(){
+function ArrowRightIcon(){
     return(
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
-            <circle cx="12" cy="12" r="3" />
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M5 12h14" />
+            <path d="m13 5 7 7-7 7" />
         </svg>
     );
 }
 
-function EyeOffIcon(){
-    return(
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M17.94 17.94A10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-            <line x1="1" y1="1"x2="23" y2="23" />
-        </svg>
-    );
-}

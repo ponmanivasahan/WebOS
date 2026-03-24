@@ -88,41 +88,34 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 42px;
-    background: linear-gradient(180deg, #e7e3db 0%, #cdc8bf 100%);
-    border-top: 2px solid #ffffff;
-    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.18), inset 0 1px 0 #f7f4ee;
+    height: 44px;
+    background: rgba(17, 25, 35, 0.82);
+    border-top: 1px solid rgba(227, 238, 248, 0.18);
+    box-shadow: none;
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 0 6px;
+    gap: 6px;
+    padding: 0 10px;
     z-index: 100;
 }
 
 .taskbar-start {
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 2px 8px 2px 6px;
-    font-size: 13px;
-    font-weight: 700;
-    background: #d4d0c8;
-    color: #000000;
-    border-top: 2px solid #ffffff;
-    border-left: 2px solid #ffffff;
-    border-right: 2px solid #404040;
-    border-bottom: 2px solid #404040;
+    gap: 6px;
+    padding: 0 10px;
+    font-size: 12px;
+    font-weight: 500;
+    background: rgba(236, 244, 252, 0.12);
+    color: #eff5fb;
+    border: 1px solid rgba(225, 239, 252, 0.24);
     height: 30px;
     flex-shrink: 0;
-    border-radius: 3px;
+    border-radius: 6px;
 }
 
 .taskbar-start:active {
-    border-top: 2px solid #404040;
-    border-left: 2px solid #404040;
-    border-right: 2px solid #ffffff;
-    border-bottom: 2px solid #ffffff;
-    padding: 3px 7px 1px 7px;
+    transform: translateY(1px);
 }
 
 .taskbar-start-icon {
@@ -146,10 +139,9 @@
 
 .taskbar-divider {
     width: 1px;
-    height: 24px;
-    background: #404040;
+    height: 22px;
+    background: rgba(236, 245, 255, 0.16);
     margin: 0 3px;
-    box-shadow: 1px 0 0 #ffffff;
     flex-shrink: 0;
 }
 
@@ -165,29 +157,23 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    padding: 2px 8px;
+    padding: 0 9px;
     height: 30px;
     max-width: 180px;
     font-size: 12px;
-    background: #d4d0c8;
-    color: #000000;
-    border-top: 2px solid #ffffff;
-    border-left: 2px solid #ffffff;
-    border-right: 2px solid #404040;
-    border-bottom: 2px solid #404040;
+    background: rgba(233, 242, 252, 0.1);
+    color: #edf4fb;
+    border: 1px solid rgba(233, 243, 253, 0.2);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     flex-shrink: 0;
-    border-radius: 3px;
+    border-radius: 6px;
 }
 
 .taskbar-win-btn.is-active {
-    border-top: 2px solid #404040;
-    border-left: 2px solid #404040;
-    border-right: 2px solid #ffffff;
-    border-bottom: 2px solid #ffffff;
-    background: #c7c2b8;
+    background: rgba(149, 187, 214, 0.2);
+    border-color: rgba(225, 240, 253, 0.34);
 }
 
 .taskbar-win-btn-icon {
@@ -207,19 +193,16 @@
     align-items: center;
     gap: 8px;
     margin-left: auto;
-    padding: 2px 8px;
+    padding: 0 9px;
     height: 30px;
-    border-top: 1px solid #8a8a8a;
-    border-left: 1px solid #8a8a8a;
-    border-right: 1px solid #ffffff;
-    border-bottom: 1px solid #ffffff;
-    background: #d7d2c9;
-    border-radius: 3px;
+    border: 1px solid rgba(225, 239, 252, 0.2);
+    background: rgba(233, 242, 252, 0.1);
+    border-radius: 6px;
 }
 
 .taskbar-clock {
     font-size: 12px;
-    color: #000000;
+    color: #f1f7fe;
     white-space: nowrap;
     cursor: default;
     position: relative;
@@ -227,18 +210,17 @@
 
 .taskbar-clock-tooltip {
     position: absolute;
-    bottom: 32px;
+    bottom: 34px;
     right: 0;
-    background: #d4d0c8;
+    background: rgba(19, 30, 44, 0.92);
+    color: #edf4fb;
     padding: 4px 8px;
     font-size: 11px;
     white-space: nowrap;
     pointer-events: none;
     z-index: 200;
-    border-top: 1px solid #ffffff;
-    border-left: 1px solid #ffffff;
-    border-right: 1px solid #404040;
-    border-bottom: 1px solid #404040;
+    border: 1px solid rgba(220, 236, 250, 0.4);
+    border-radius: 4px;
 }
 
 .context-menu {
@@ -281,7 +263,7 @@
 
 @media (max-width: 768px) {
     .desktop-area {
-        bottom: 42px;
+        bottom: 44px;
     }
 
     .desktop-icon {
@@ -290,7 +272,7 @@
     }
 
     .taskbar {
-        height: 42px;
+        height: 44px;
     }
 
     .taskbar-start,
