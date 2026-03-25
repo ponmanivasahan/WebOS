@@ -36,7 +36,7 @@ const WALLPAPERS=[
 ]
 
 
-export default function Desktop({openWindows=[], activeWinId, onWinClick,onStartClick,onOpenApp}){
+export default function Desktop({openWindows = [], activeWinId, onOpenApp}) {
     const {wallpaper,setWallpaper}=useOS();
     const [selectedIcon,setSelectedIcon]=useState(null);
     const [ctxMenu,setCtxMenu]=useState(null);
@@ -91,8 +91,12 @@ export default function Desktop({openWindows=[], activeWinId, onWinClick,onStart
 
             </div>
 
-            <Taskbar windows={openWindows} activeWinId={activeWinId}
-            onWinClick={onWinClick} onStartClick={onStartClick} />
+                        <Taskbar
+                            windows={openWindows}
+                            activeWinId={activeWinId}
+                            onOpenApp={onOpenApp}
+                            availableApps={DESKTOP_APPS.map((app) => ({ appId: app.appId, label: app.label }))}
+                        />
 
             {ctxMenu && (
                 <ContextMenu x={ctxMenu.x} y={ctxMenu.y} items={ctxMenu.items} onClose={()=>setCtxMenu(null)} />
