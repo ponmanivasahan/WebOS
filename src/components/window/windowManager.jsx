@@ -16,7 +16,7 @@ import notesIcon from '../../assets/taskbar/notepad.png';
 const APP_DEFAULTS = {
   'file-explorer':{ width: 720, height: 480, title: 'File Explorer'},
   'task-manager':{ width: 560, height: 460, title: 'Task Manager'},
-  'notes':{ width: 540, height: 420, title: 'Notepad'},
+  'notes':{ width: 540, height: 420, title: ''},
   'vscode': { width: 900, height: 580, title: 'VS Code' },
   'terminal': { width: 760, height: 500, title: 'Terminal' },
   'chrome': { width: 960, height: 600, title: 'Chrome' },
@@ -35,9 +35,7 @@ const getAppIcon = (appId) => {
 const APP_MENUS = {
   'file-explorer':[],
   'task-manager':[],
-  'notes':[
-    {label:'File'},{label:'Edit'},{label:'Format'},{label:'Help'},
-  ],
+  'notes':[],
   'vscode':[
     {label:'File'},{label:'Edit'},{label:'Selection'},{label:'View'},{label:'Run'},{label:'Terminal'},{label:'Help'},
   ],
@@ -49,14 +47,26 @@ const APP_MENUS = {
   ],
 };
 
+const APP_COMPONENTS = {
+  'file-explorer': FileExplorer,
+  'task-manager': TaskManager,
+  'notes': Notes,
+  'vscode': VSCode,
+  'terminal': Terminal,
+  'chrome': Chrome,
+};
+
 export default function WindowManager({
   windows=[],
   activeWinId,
   onFocus,
   onClose,
   onMinimize,
+  onTitleChange,
 }) {
   const [geometry, setGeometry] = useState({});
+  const [newFileSignals,setNewFileSignals]=useState({});
+  const [titleRenameRequests,setTitleRenameRequests]=useState({});
   const getMaxRect = () => ({
     x:0,
     y:0,
@@ -136,11 +146,20 @@ export default function WindowManager({
           height:defaults.height,
         });
 
+        const AppModule = APP_COMPONENTS[win.appId];
+        const AppComponent = (
+          AppModule &&
+          typeof AppModule === 'object' &&
+          typeof AppModule.default === 'function'
+        ) ? AppModule.default : AppModule;
+        const canRender = typeof AppComponent === 'function';
+        const windowTitle = win.title || defaults.title;
+
         return (
           <AppWindow
             key={win.id}
             id={win.id}
-            title={win.title || defaults.title}
+            title={windowTitle}
             icon={getAppIcon(win.appId)}
             x={geo.x}
             y={geo.y}
@@ -155,13 +174,23 @@ export default function WindowManager({
             onMinimize={onMinimize}
             onMaximize={handleMaximize}
             onChange={handleChange}
+            onTitleAdd={win.appId==='notes' ? (id)=>setNewFileSignals((prev)=>({
+              ...prev,
+              [id]:(prev[id] || 0) + 1,
+            })) : undefined}
+            onTitleRename={win.appId==='notes' ? (id,nextTitle)=>setTitleRenameRequests((prev)=>({
+              ...prev,
+              [id]:{ value: nextTitle, token: Date.now() },
+            })) : undefined}
           >
-            {win.appId ==='file-explorer' && <FileExplorer/>}
-            {win.appId ==='task-manager'&& <TaskManager />}
-            {win.appId ==='notes' && <Notes/>}
-            {win.appId === 'vscode' && <VSCode />}
-            {win.appId === 'terminal' && <Terminal />}
-            {win.appId === 'chrome' && <Chrome />}
+            {canRender ? (
+              <AppComponent
+                windowId={win.id}
+                onWindowTitleChange={(title)=>onTitleChange?.(win.id,title)}
+                newFileSignal={newFileSignals[win.id] || 0}
+                titleRenameRequest={titleRenameRequests[win.id] || null}
+              />
+            ) : <div>Unable to load app.</div>}
           </AppWindow>
         );
       })}

@@ -1,13 +1,33 @@
-import {useRef,useCallback,useEffect} from 'react';
+import {useRef,useCallback,useEffect,useState} from 'react';
 import './window.css';
 
 export default function AppWindow({
     id,title='Window',icon=null,children,x=60,y=60,width=640,height=440,
     isActive=false,isMinimized=false,isMaximized=false,menuItems=[],
-  statusText='',onFocus,onClose,onMinimize,onMaximize,onChange,
+  statusText='',onFocus,onClose,onMinimize,onMaximize,onChange,onTitleRename,onTitleAdd,
 }){
     const dragState=useRef(null);
     const resizeState=useRef(null);
+  const titleInputRef=useRef(null);
+  const [isEditingTitle,setIsEditingTitle]=useState(false);
+  const [titleDraft,setTitleDraft]=useState(title);
+
+  useEffect(()=>{
+    if(!isEditingTitle) setTitleDraft(title);
+  },[title,isEditingTitle]);
+
+  useEffect(()=>{
+    if(isEditingTitle && titleInputRef.current){
+      titleInputRef.current.focus();
+      titleInputRef.current.select();
+    }
+  },[isEditingTitle]);
+
+  const commitTitleEdit=useCallback(()=>{
+    const next=titleDraft.trim();
+    if(next && next!==title) onTitleRename?.(id,next);
+    setIsEditingTitle(false);
+  },[titleDraft,title,onTitleRename,id]);
     const startDrag=useCallback((e)=>{
       if(isMaximized) return;
         if(e.button!==0) return;
@@ -100,10 +120,51 @@ export default function AppWindow({
         />
       ))}
 
-      <div className="win-titlebar">
-        <div className="win-drag-handle" onMouseDown={startDrag}>
+        <div className="win-titlebar">
+        <div className="win-drag-handle" onMouseDown={(e)=>{ if(!isEditingTitle) startDrag(e); }}>
             {icon && <div className='win-titlebar-icon'>{icon}</div>}
-            <span className='win-title'>{title}</span>
+          {isEditingTitle ? (
+            <input
+              ref={titleInputRef}
+              className='win-title-edit-input'
+              value={titleDraft}
+              onMouseDown={(e)=>e.stopPropagation()}
+              onChange={(e)=>setTitleDraft(e.target.value)}
+              onBlur={commitTitleEdit}
+              onKeyDown={(e)=>{
+                if(e.key==='Enter'){
+                  e.preventDefault();
+                  commitTitleEdit();
+                }
+                if(e.key==='Escape'){
+                  e.preventDefault();
+                  setTitleDraft(title);
+                  setIsEditingTitle(false);
+                }
+              }}
+            />
+          ) : (
+            <span
+              className='win-title'
+              onDoubleClick={(e)=>{
+                if(!onTitleRename) return;
+                e.stopPropagation();
+                setIsEditingTitle(true);
+              }}
+            >
+              {title}
+            </span>
+          )}
+          {onTitleAdd && (
+            <button
+              className='win-title-add-btn win-title-action'
+              onMouseDown={(e)=>e.stopPropagation()}
+              onClick={(e)=>{e.stopPropagation(); onTitleAdd(id);}}
+              title='New file'
+            >
+              +
+            </button>
+          )}
         </div>
 
         <div className='win-controls'>

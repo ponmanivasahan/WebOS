@@ -40,6 +40,12 @@ function App(){
     prev.map((w)=>w.id===id ? {...w,minimized:true}:w));
     setActiveWinId((cur)=>(cur===id ? null : cur));
   };
+
+  const handleWindowTitleChange=(id,title)=>{
+    setWindows((prev)=>
+      prev.map((w)=>w.id===id ? {...w,title}:w)
+    );
+  };
   return(
     <OSProvider>
       {stage==='welcome' && (
@@ -49,7 +55,14 @@ function App(){
         <>
         <Desktop openWindows={windows} activeWinId={activeWinId} onOpenApp={handleOpenApp} />
 
-        <WindowManager windows={windows} activeWinId={activeWinId} onFocus={handleFocus} onClose={handleClose} onMinimize={handleMinimize} />
+        <WindowManager
+          windows={windows}
+          activeWinId={activeWinId}
+          onFocus={handleFocus}
+          onClose={handleClose}
+          onMinimize={handleMinimize}
+          onTitleChange={handleWindowTitleChange}
+        />
       </>
       )}
       

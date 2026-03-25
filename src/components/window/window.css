@@ -59,11 +59,56 @@
 .win-title{
     font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
     font-size: 12px;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: 0.1px;
+    cursor: default;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.win-title.is-editing{
+    outline: none;
+    min-width: 72px;
+    text-overflow: clip;
+    cursor: text;
+}
+
+.win-title-edit-input{
+    font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    color: inherit;
+    background: transparent;
+    border: none;
+    outline: none;
+    min-width: 88px;
+    max-width: 320px;
+    padding: 0;
+}
+
+.win-title-add-btn{
+    width: 24px;
+    height: 24px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: #dadada;
+    font-size: 18px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 8px;
+    line-height: 1;
+}
+
+.win-title-add-btn:hover{
+    background: #3b362f;
+    border-color: #5a534b;
+    color: #fff;
 }
 .win-controls{
     display: flex;
