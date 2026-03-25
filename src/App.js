@@ -61,7 +61,7 @@ export default App
 const APP_META={
   'file-explorer':{title:'File Explorer'},
   'task-manager':{title:'Task Manager'},
-  'notes':{title:'Notes'},
+  'notes':{title:'Notepad'},
   'vscode':{title:'VS Code'},
   'terminal':{title:'Terminal'},
   'chrome':{title:'Chrome'},

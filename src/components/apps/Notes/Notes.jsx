@@ -7,7 +7,7 @@ function loadNotes(){
         const raw=localStorage.getItem(STORAGE_KEY);
         return raw ? JSON.parse(raw):[
             {id:'default_1',title:'Welcome',
-                body:'This is your Notes app. \n\nCreate notes using the New button. \nClick a note in the sidebar to open it.',
+                body:'This is your Notepad app. \n\nCreate notes using the New button. \nClick a note in the sidebar to open it.',
                 updatedAt:new Date().toISOString(),
             },
         ];

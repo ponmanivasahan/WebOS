@@ -2,19 +2,22 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import TaskbarClock from './TaskbarClock';
 import DevInfo from './DevInfo';
 import windowsIcon from '../../assets/taskbar/windows.svg';
-import fileExplorerIcon from '../../assets/taskbar/file-explorer.svg';
-import vscodeIcon from '../../assets/taskbar/vscode.svg';
-import terminalIcon from '../../assets/taskbar/terminal.svg';
-import chromeIcon from '../../assets/taskbar/chrome.svg';
-import taskManagerIcon from '../../assets/taskbar/task-manager.svg';
-import notesIcon from '../../assets/taskbar/notes.svg';
-import soundIcon from '../../assets/taskbar/sound.svg';
-import notificationIcon from '../../assets/taskbar/notification.svg';
-import batteryIcon from '../../assets/taskbar/battery.svg';
+import fileExplorerIcon from '../../assets/taskbar/fileexp.png';
+import vscodeIcon from '../../assets/taskbar/vs.png';
+import terminalIcon from '../../assets/taskbar/terminal.png';
+import chromeIcon from '../../assets/taskbar/chrome.png';
+import taskManagerIcon from '../../assets/taskbar/taskmanager.png';
+import notesIcon from '../../assets/taskbar/notepad.png';
+import settingsIcon from '../../assets/taskbar/settings.png';
+import soundIcon from '../../assets/taskbar/sound.png';
+import notificationIcon from '../../assets/taskbar/notification.png';
+import batteryIcon from '../../assets/taskbar/battery.png';
 import genericAppIcon from '../../assets/taskbar/generic-app.svg';
-import devIcon from '../../assets/taskbar/dev.svg';
+import devIcon from '../../assets/taskbar/dev.png';
+import { useOS } from '../../context/OSContext';
 
 export default function Taskbar({ windows = [], activeWinId, onOpenApp, availableApps = [] }) {
+  const { soundVolume, setSoundVolume, brightness, setBrightness } = useOS();
   const [isStartOpen, setIsStartOpen] = useState(false);
   const [isQuickOpen, setIsQuickOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -39,21 +42,33 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
 
   const MAX_VISIBLE_PINNED = 7;
 
-  const pinnedApps = useMemo(
-    () => [
+  const pinnedApps = useMemo(() => {
+    const base = [
       { id: 'file-explorer', appId: 'file-explorer', label: 'File Explorer', type: 'internal' },
+      { id: 'chrome', appId: 'chrome', label: 'Chrome', type: 'internal' },
       { id: 'vscode', appId: 'vscode', label: 'VS Code', type: 'internal' },
+      { id: 'terminal', appId: 'terminal', label: 'Terminal', type: 'internal' },
+      { id: 'notes', appId: 'notes', label: 'Notepad', type: 'internal' },
+      { id: 'task-manager', appId: 'task-manager', label: 'Task Manager', type: 'internal' },
+    ];
+
+    const merged = [
+      ...base,
       ...projectApps.map((app) => ({
         id: app.appId,
         appId: app.appId,
         label: app.label,
         type: 'internal',
       })),
-      { id: 'terminal', appId: 'terminal', label: 'Terminal', type: 'internal' },
-      { id: 'chrome', appId: 'chrome', label: 'Chrome', type: 'internal' },
-    ],
-    [projectApps]
-  );
+    ];
+
+    const seen = new Set();
+    return merged.filter((entry) => {
+      if (!entry.appId || seen.has(entry.appId)) return false;
+      seen.add(entry.appId);
+      return true;
+    });
+  }, [projectApps]);
 
   const visiblePinnedApps = useMemo(() => pinnedApps.slice(0, MAX_VISIBLE_PINNED), [pinnedApps]);
   const overflowPinnedApps = useMemo(() => pinnedApps.slice(MAX_VISIBLE_PINNED), [pinnedApps]);
@@ -88,7 +103,7 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
     return [
       { appId: 'file-explorer', label: 'Open File Explorer' },
       { appId: 'task-manager', label: 'Open Task Manager' },
-      { appId: 'notes', label: 'Open Notes' },
+      { appId: 'notes', label: 'Open Notepad' },
     ];
   }, [windows]);
 
@@ -281,6 +296,20 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
           <button
             type="button"
             className={`taskbar-tray-btn${isQuickOpen ? ' is-active' : ''}`}
+            title="Settings"
+            aria-label="Settings"
+            onClick={() => {
+              setIsQuickOpen((v) => !v);
+              setIsNotificationsOpen(false);
+              setIsTrayOverflowOpen(false);
+            }}
+            onContextMenu={(e) => openTaskbarContextMenu(e, 'tray')}
+          >
+            <TaskbarIconImage src={settingsIcon} alt="" className="taskbar-tray-img" />
+          </button>
+          <button
+            type="button"
+            className={`taskbar-tray-btn${isQuickOpen ? ' is-active' : ''}`}
             title="Sound"
             aria-label="Sound"
             onClick={() => {
@@ -422,12 +451,26 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
             <button type="button" className="tray-toggle is-on">Night light</button>
           </div>
           <div className="tray-slider-row">
-            <span>Volume</span>
-            <input type="range" defaultValue="68" readOnly />
+            <span>Volume {Math.round(soundVolume)}%</span>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value={soundVolume}
+              onChange={(e) => setSoundVolume(Number(e.target.value))}
+            />
           </div>
           <div className="tray-slider-row">
-            <span>Brightness</span>
-            <input type="range" defaultValue="54" readOnly />
+            <span>Brightness {Math.round(brightness)}%</span>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value={brightness}
+              onChange={(e) => setBrightness(Number(e.target.value))}
+            />
           </div>
         </div>
       )}

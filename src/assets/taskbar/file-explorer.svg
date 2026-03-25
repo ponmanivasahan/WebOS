@@ -1,5 +1,26 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M3 7.5C3 6.4 3.9 5.5 5 5.5H8.7L10.2 7H19C20.1 7 21 7.9 21 9V16.5C21 17.6 20.1 18.5 19 18.5H5C3.9 18.5 3 17.6 3 16.5V7.5Z" fill="#F5C84B"/>
-  <path d="M3.8 9.2H20.2V16.4C20.2 17 19.7 17.5 19.1 17.5H4.9C4.3 17.5 3.8 17 3.8 16.4V9.2Z" fill="#E6B439"/>
-  <path d="M3 9C3 7.9 3.9 7 5 7H19C20.1 7 21 7.9 21 9V9.8H3V9Z" fill="#FFD86A"/>
+  <defs>
+    <linearGradient id="tabGrad" x1="12" y1="2.4" x2="12" y2="7.2" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E1A100"/>
+      <stop offset="1" stop-color="#CA9000"/>
+    </linearGradient>
+    <linearGradient id="folderGrad" x1="12" y1="8" x2="12" y2="24" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7D05A"/>
+      <stop offset="1" stop-color="#F0C23A"/>
+    </linearGradient>
+    <linearGradient id="pocketGrad" x1="12" y1="13.4" x2="12" y2="24" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1498EA"/>
+      <stop offset="1" stop-color="#0A74C8"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M0 6.15C0 4.72 1.16 3.56 2.59 3.56H8.92C9.77 3.56 10.58 3.9 11.18 4.5L12.05 5.37H21.45C22.86 5.37 24 6.51 24 7.92V8.12H0V6.15Z" fill="url(#tabGrad)"/>
+
+  <path d="M0 10.2C0 8.99 0.99 8 2.2 8H21.8C23.01 8 24 8.99 24 10.2V21.8C24 23.01 23.01 24 21.8 24H2.2C0.99 24 0 23.01 0 21.8V10.2Z" fill="url(#folderGrad)"/>
+  <path d="M0.4 10.18C0.4 9.19 1.21 8.38 2.2 8.38H21.8C22.79 8.38 23.6 9.19 23.6 10.18V10.58H0.4V10.18Z" fill="#FBE08A"/>
+
+  <path d="M3.8 16.55C3.8 15.12 4.96 13.96 6.39 13.96H17.61C19.04 13.96 20.2 15.12 20.2 16.55V24H3.8V16.55Z" fill="url(#pocketGrad)"/>
+  <rect x="7" y="17.88" width="10" height="0.86" rx="0.43" fill="#0D5DA7"/>
+
+  <path d="M0 8H24" stroke="#E6B43D" stroke-width="0.3" opacity="0.85"/>
 </svg>

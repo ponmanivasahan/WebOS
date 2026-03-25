@@ -1,9 +1,25 @@
 import './desktop.css';
-export default function DesktopIcon({label,icon,selected=false,id,onSelect,onOpen,onContext}){
+export default function DesktopIcon({
+   label,
+   icon,
+   selected=false,
+   id,
+   style,
+   isEditing=false,
+   editValue='',
+   isDragging=false,
+   onSelect,
+   onOpen,
+   onContext,
+   onEditChange,
+   onEditCommit,
+   onEditCancel,
+   onDragStart,
+   onDragEnd,
+}){
      const handleClick=(e)=>{
         e.stopPropagation();
         onSelect?.(id);
-        onOpen?.(id);
      }
 
      const handleContext=(e)=>{
@@ -13,9 +29,34 @@ export default function DesktopIcon({label,icon,selected=false,id,onSelect,onOpe
         onContext?.(e,id);
      }
     return(
-        <div className={`desktop-icon${selected ? ' is-selected' : ''}`} onClick={handleClick} onContextMenu={handleContext}>
+      <div
+         className={`desktop-icon${selected ? ' is-selected' : ''}${isDragging ? ' is-dragging' : ''}`}
+         style={style}
+         draggable={!isEditing}
+         onDragStart={(e)=>onDragStart?.(e,id)}
+         onDragEnd={onDragEnd}
+         onClick={handleClick}
+         onDoubleClick={(e)=>{if(isEditing) return; e.stopPropagation(); onOpen?.(id);}}
+         onContextMenu={handleContext}
+      >
                  <div className="desktop-icon-img">{icon}</div>
-                 <span className="desktop-icon-label">{label}</span>
+                 {isEditing ? (
+                    <input
+                       className="desktop-icon-name-input"
+                       value={editValue}
+                       autoFocus
+                       onChange={(e)=>onEditChange?.(e.target.value)}
+                       onClick={(e)=>e.stopPropagation()}
+                       onDoubleClick={(e)=>e.stopPropagation()}
+                       onBlur={()=>onEditCommit?.()}
+                       onKeyDown={(e)=>{
+                          if(e.key==='Enter') onEditCommit?.();
+                          if(e.key==='Escape') onEditCancel?.();
+                       }}
+                    />
+                 ) : (
+                    <span className="desktop-icon-label">{label}</span>
+                 )}
         </div>
     )
 }

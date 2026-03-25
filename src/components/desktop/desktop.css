@@ -27,28 +27,28 @@
 .desktop-area {
     position: absolute;
     inset: 0;
-    bottom: 44px;
+  bottom: 52px;
     padding: 12px;
 }
 
 .desktop-icons {
     position: relative;
     z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 6px;
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  overflow: hidden;
 }
 
 .desktop-icon {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
-    width: 84px;
-    min-height: 84px;
-    padding: 6px 4px;
+    gap: 8px;
+  position: absolute;
+    width: 86px;
+    height: 98px;
+    padding: 8px 4px;
     border: 1px solid transparent;
     border-radius: 4px;
     cursor: pointer;
@@ -58,18 +58,22 @@
 }
 
 .desktop-icon:hover {
-    background: rgba(6, 24, 72, 0.28);
-    border-color: rgba(255, 255, 255, 0.48);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .desktop-icon.is-selected {
-    background: rgba(6, 24, 72, 0.48);
-    border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.desktop-icon.is-dragging {
+  opacity: 0.55;
 }
 
 .desktop-icon-img {
-    width: 42px;
-    height: 42px;
+  width: 34px;
+  height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -77,15 +81,18 @@
 }
 
 .desktop-icon-label {
-    font-size: 12px;
-    line-height: 1.25;
-    font-weight: 500;
-    letter-spacing: 0.2px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-    max-width: 74px;
-    padding: 1px 4px;
-    border-radius: 4px;
-    background: rgba(8, 14, 20, 0.2);
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  width: 78px;
+  padding: 0;
+  border-radius: 4px;
+  background: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .taskbar {
@@ -93,7 +100,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-  height: 48px;
+  height: 52px;
   background: rgba(16, 24, 34, 0.45);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -135,8 +142,8 @@
 }
 
 .taskbar-icon-img {
-  width: 19px;
-  height: 19px;
+  width: 16px;
+  height: 16px;
   object-fit: contain;
   user-select: none;
   pointer-events: none;
@@ -212,8 +219,8 @@
 }
 
 .taskbar-tray-img {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   object-fit: contain;
   user-select: none;
   pointer-events: none;
@@ -275,7 +282,7 @@
 .start-menu {
   position: absolute;
   left: 50%;
-  bottom: 56px;
+  bottom: 60px;
   transform: translateX(-50%);
   width: min(610px, calc(100vw - 20px));
   background: linear-gradient(165deg, rgba(28, 38, 52, 0.97) 0%, rgba(19, 27, 39, 0.98) 100%);
@@ -340,8 +347,8 @@
 }
 
 .start-menu-app .taskbar-icon-img {
-  width: 17px;
-  height: 17px;
+  width: 15px;
+  height: 15px;
 }
 
 .start-menu-app:hover {
@@ -423,7 +430,7 @@
 .tray-panel {
   position: absolute;
   right: 8px;
-  bottom: 54px;
+  bottom: 58px;
   width: 330px;
   background: linear-gradient(165deg, rgba(27, 38, 54, 0.96) 0%, rgba(19, 28, 41, 0.98) 100%);
   border: 1px solid rgba(216, 234, 248, 0.2);
@@ -505,7 +512,7 @@
 .taskbar-overflow-panel {
   position: absolute;
   left: 50%;
-  bottom: 56px;
+  bottom: 60px;
   transform: translateX(-50%);
   width: min(420px, calc(100vw - 16px));
   background: linear-gradient(165deg, rgba(27, 38, 54, 0.97) 0%, rgba(18, 27, 40, 0.99) 100%);
@@ -669,40 +676,180 @@
 
 .context-menu {
     position: fixed;
-    z-index: 500;
-    background: #d4d0c8;
-    min-width: 190px;
-    padding: 2px 0;
-    border-top: 2px solid #ffffff;
-    border-left: 2px solid #ffffff;
-    border-right: 2px solid #404040;
-    border-bottom: 2px solid #404040;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.28);
+  z-index: 1700;
+  min-width: 360px;
+  margin: 0;
+  list-style: none;
+  padding: 6px;
+  border: 1px solid rgba(150, 168, 182, 0.45);
+  border-radius: 12px;
+  background: rgba(219, 232, 240, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 24px rgba(23, 36, 49, 0.24);
+  animation: desktop-context-in 120ms ease-out;
+  font-family: 'Tahoma', 'Segoe UI', 'Noto Sans', sans-serif;
 }
 
 .context-menu-item {
-    padding: 5px 20px 5px 24px;
-    font-size: 13px;
-    color: #000000;
-    cursor: default;
-    white-space: nowrap;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #1e2932;
+  cursor: default;
+  white-space: nowrap;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.context-menu-item-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.context-menu-item-icon {
+  width: 24px;
+  min-width: 24px;
+  text-align: center;
+  color: #3f6176;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.context-menu-item-right {
+  color: #596f80;
+  font-size: 11px;
+  padding-left: 10px;
 }
 
 .context-menu-item:hover {
-    background: #000080;
-    color: #ffffff;
+  background: rgba(192, 213, 225, 0.7);
+  color: #18232d;
 }
 
 .context-menu-item.is-disabled {
-    color: #555555;
+  color: rgba(108, 125, 138, 0.48);
     pointer-events: none;
 }
 
 .context-menu-seperator {
     height: 1px;
-    background: #404040;
-    margin: 3px 2px;
-    box-shadow: 0 1px 0 #ffffff;
+  background: rgba(149, 169, 184, 0.32);
+  margin: 6px 8px;
+}
+
+.context-menu.context-menu--compact {
+  min-width: 220px;
+  padding: 4px;
+}
+
+.context-menu.context-menu--compact .context-menu-item {
+  height: 34px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.desktop-icon-name-input {
+  width: 78px;
+  height: 22px;
+  border: 1px solid rgba(188, 214, 236, 0.9);
+  border-radius: 4px;
+  background: rgba(20, 34, 46, 0.92);
+  color: #eef6ff;
+  text-align: center;
+  font-size: 12px;
+  padding: 0 4px;
+  outline: none;
+}
+
+.wallpaper-picker {
+  position: fixed;
+  left: 14px;
+  bottom: 66px;
+  width: min(480px, calc(100vw - 28px));
+  z-index: 1750;
+  border: 1px solid rgba(145, 164, 178, 0.36);
+  border-radius: 12px;
+  background: rgba(231, 241, 247, 0.97);
+  box-shadow: 0 14px 30px rgba(21, 34, 46, 0.28);
+  padding: 10px;
+}
+
+.wallpaper-picker-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2a33;
+  margin-bottom: 8px;
+}
+
+.wallpaper-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.wallpaper-picker-item {
+  border: 1px solid rgba(151, 170, 184, 0.35);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 4px;
+  color: #1f2a33;
+  font-size: 11px;
+  text-align: left;
+}
+
+.wallpaper-picker-item img {
+  width: 100%;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.wallpaper-picker-item:hover {
+  background: rgba(203, 223, 236, 0.72);
+}
+
+.wallpaper-picker-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.wallpaper-picker-btn {
+  border: 1px solid rgba(150, 170, 184, 0.4);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  color: #1f2a33;
+  font-size: 11px;
+  height: 30px;
+  padding: 0 10px;
+}
+
+.wallpaper-picker-btn:hover {
+  background: rgba(203, 223, 236, 0.7);
+}
+
+@keyframes desktop-context-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @media (max-width: 768px) {

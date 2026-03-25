@@ -1,7 +1,22 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect x="4" y="3.5" width="16" height="17" rx="2" fill="#FFFBE0" stroke="#D3B15E"/>
-  <path d="M7.2 8H16.8" stroke="#B7B7B7" stroke-width="1"/>
-  <path d="M7.2 11H16.8" stroke="#B7B7B7" stroke-width="1"/>
-  <path d="M7.2 14H14.4" stroke="#B7B7B7" stroke-width="1"/>
-  <path d="M7.2 17H12.6" stroke="#B7B7B7" stroke-width="1"/>
+  <defs>
+    <linearGradient id="padBody" x1="12" y1="5" x2="12" y2="21" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#BCEBFF"/>
+      <stop offset="1" stop-color="#6CCEF3"/>
+    </linearGradient>
+    <linearGradient id="padTop" x1="12" y1="2" x2="12" y2="6" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0E86BA"/>
+      <stop offset="1" stop-color="#2EA7D8"/>
+    </linearGradient>
+  </defs>
+  <rect x="5" y="5" width="14" height="15" rx="1.8" fill="url(#padBody)" stroke="#3B91B6" stroke-width="0.9"/>
+  <rect x="5" y="3" width="14" height="3.5" rx="1" fill="url(#padTop)"/>
+  <rect x="5" y="18.7" width="14" height="1.8" fill="#8D4B28"/>
+  <path d="M8 9.2H16" stroke="#3A86A8" stroke-width="0.9" stroke-linecap="round"/>
+  <path d="M8 11.7H16" stroke="#3A86A8" stroke-width="0.9" stroke-linecap="round"/>
+  <path d="M8 14.2H14.6" stroke="#3A86A8" stroke-width="0.9" stroke-linecap="round"/>
+  <path d="M8 16.7H13.2" stroke="#3A86A8" stroke-width="0.9" stroke-linecap="round"/>
+  <circle cx="8" cy="4.7" r="0.55" fill="#68D7FF"/>
+  <circle cx="12" cy="4.7" r="0.55" fill="#68D7FF"/>
+  <circle cx="16" cy="4.7" r="0.55" fill="#68D7FF"/>
 </svg>
