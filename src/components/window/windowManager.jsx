@@ -31,9 +31,7 @@ const getAppIcon = (appId) => {
 
 const APP_MENUS = {
   'file-explorer':[],
-  'task-manager':[
-    {label:'File'},{label:'Edit'},{label:'View'},
-  ],
+  'task-manager':[],
   'notes':[
     {label:'File'},{label:'Edit'},{label:'Format'},{label:'Help'},
   ],

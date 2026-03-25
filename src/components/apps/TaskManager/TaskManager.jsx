@@ -22,6 +22,17 @@ function PriorityDot({priority}){
     return <div className={`tm-priority ${priority}`} title={priority} />;
 }
 
+const AllIcon=()=> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="8" /><path d="M8 12h8"/></svg>;
+const ActiveIcon=()=> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="8" /><path d="M12 8v4l3 2"/></svg>;
+const DoneIcon=()=> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="8" /><path d="m8.5 12 2.2 2.3 4.8-4.8"/></svg>;
+const PriorityIcon=()=> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 4h8l-2 4 2 4H6v8"/></svg>;
+
+function tabIcon(key){
+    if(key==='all') return <AllIcon />;
+    if(key==='active') return <ActiveIcon />;
+    return <DoneIcon />;
+}
+
 function TaskItem({task,index,onToggle,onDelete,onEdit,
     onDragStart,onDragEnter,onDragEnd,onDrop,dragOverId,dragOverPos,
 }){
@@ -182,6 +193,7 @@ export default function TaskManager(){
                 ].map(({key,label})=>(
                     <button key={key} className={`tm-tab${filter===key ? 'is-active' : ''}`}
                     onClick={()=>setFilter(key)} >
+                        <span className='tm-tab-icon'>{tabIcon(key)}</span>
                         {label}
                     </button>
                 ))}
@@ -190,10 +202,11 @@ export default function TaskManager(){
             <AddTaskForm onAdd={addTask} />
 
             <div className="tm-filter-bar">
-                <span>Priority:</span>
+                <span className='tm-filter-label'><PriorityIcon /> Priority:</span>
                 {['all','high','medium','low'].map((p)=>(
                     <button key={p} className={`tm-filter-btn${priFilter===p ? 'is-active' : ''}`}
                     onClick={()=>setPriFilter(p)}>
+                        {p!=='all' ? <span className={`tm-pri-dot tm-pri-dot-${p}`} /> : null}
                         {p.charAt(0).toUpperCase()+p.slice(1)}
                     </button>
                 ))}
