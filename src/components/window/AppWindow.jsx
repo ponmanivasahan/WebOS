@@ -80,13 +80,17 @@ export default function AppWindow({
         };
     },[]);
 
-    const TASKBAR_H=40;
-    const safeX=Math.max(0,Math.min(x,window.innerWidth-width));
-    const safeY=Math.max(0,Math.min(y,window.innerHeight-TASKBAR_H-30));
+    const TASKBAR_H=48;
+    const maxWidth=Math.max(240,window.innerWidth-8);
+    const maxHeight=Math.max(140,window.innerHeight-TASKBAR_H-8);
+    const safeWidth=Math.min(width,maxWidth);
+    const safeHeight=Math.min(height,maxHeight);
+    const safeX=Math.max(0,Math.min(x,window.innerWidth-safeWidth));
+    const safeY=Math.max(0,Math.min(y,window.innerHeight-TASKBAR_H-safeHeight));
 
     return(
         <div className={['app-window',isActive ? 'is-active' : '',isMinimized?'is-minimized':'',].filter(Boolean).join(' ')}
-        style={{left:safeX,top:safeY,width,height,zIndex:isActive ? 200:100,}}
+        style={{left:safeX,top:safeY,width:safeWidth,height:safeHeight,zIndex:isActive ? 200:100,}}
         onMouseDown={()=>onFocus?.(id)}>
             {!isMaximized && ['n','s','e','w','nw','ne','sw','se'].map((dir) => (
         <div
@@ -109,11 +113,20 @@ export default function AppWindow({
             </button>
 
              <button
-            className="win-ctrl-btn maximize"
+              className={`win-ctrl-btn maximize${isMaximized ? ' is-restored' : ''}`}
             onClick={(e) => { e.stopPropagation(); onMaximize?.(id); }}
             title={isMaximized ? 'Restore' : 'Maximize'}
           >
-            {isMaximized ? 'R' : 'M'}
+              {isMaximized ? (
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <rect x="2" y="1" width="8" height="8" stroke="currentColor" strokeWidth="1" />
+                  <path d="M1 3.5V11h7.5" stroke="currentColor" strokeWidth="1" />
+                </svg>
+              ) : (
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <rect x="1.5" y="1.5" width="9" height="9" stroke="currentColor" strokeWidth="1" />
+                </svg>
+              )}
           </button>
 
            <button

@@ -24,19 +24,6 @@ function App(){
     setActiveWinId(id);
   }
 
-  const handleWinClick=(id)=>{
-    if(id===activeWinId){
-      setWindows((prev)=>
-      prev.map((w)=>w.id===id ? {...w,minimized:!w.minimized}:w))
-      setActiveWinId(null);
-    }
-    else{
-      setWindows((prev)=>
-      prev.map((w)=>w.id===id ? {...w,minimized:false}:w))
-      setActiveWinId(id);
-    }
-  }
-
   const handleFocus=(id)=>{
     setActiveWinId(id);
     setWindows((prev)=>
@@ -60,7 +47,7 @@ function App(){
       )}
       {stage==='desktop' && (
         <>
-        <Desktop openWindows={windows} activeWinId={activeWinId} onWinClick={handleWinClick} onOpenApp={handleOpenApp} />
+        <Desktop openWindows={windows} activeWinId={activeWinId} onOpenApp={handleOpenApp} />
 
         <WindowManager windows={windows} activeWinId={activeWinId} onFocus={handleFocus} onClose={handleClose} onMinimize={handleMinimize} />
       </>
@@ -75,4 +62,7 @@ const APP_META={
   'file-explorer':{title:'File Explorer'},
   'task-manager':{title:'Task Manager'},
   'notes':{title:'Notes'},
+  'vscode':{title:'VS Code'},
+  'terminal':{title:'Terminal'},
+  'chrome':{title:'Chrome'},
 };

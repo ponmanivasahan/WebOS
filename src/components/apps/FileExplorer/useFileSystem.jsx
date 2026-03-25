@@ -15,10 +15,12 @@ const DEFAULT_FS={
 };
 
 
-function loadFS(fs){
+function loadFS(){
     try{
       const raw=localStorage.getItem(FS_KEY);
-      return raw ? JSON.parse(raw) :DEFAULT_FS;
+            if(!raw) return DEFAULT_FS;
+            const parsed=JSON.parse(raw);
+            return parsed && typeof parsed==='object' ? parsed : DEFAULT_FS;
     }
     catch{
        return DEFAULT_FS;
@@ -77,7 +79,7 @@ export default function useFileSystem(){
             const folderPath=(path==='/' ? '':path)+'/'+name;
             update((prev)=>({
                 ...prev,
-                [path]:[...DEFAULT_FS(prev[path] || []),{
+                [path]:[...(prev[path] || []),{
                     id,name,type:'folder',modified:todayStr(),
                 }],
                 [folderPath]:prev[folderPath] || [],
