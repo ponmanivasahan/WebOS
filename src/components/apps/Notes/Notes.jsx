@@ -301,14 +301,6 @@ export default function Notes({onWindowTitleChange,newFileSignal,titleRenameRequ
     return(
         <div className='notes-shell'>
             <div className='notes-toolbar'>
-                <div className='notes-menu-group'>
-                    <span className='notes-menu-item'>File</span>
-                    <span className='notes-menu-item'>Edit</span>
-                    <span className='notes-menu-item'>View</span>
-                </div>
-
-                <div className='notes-toolbar-sep' />
-
                 <div className='notes-fmt-group'>
                     <button className={`notes-fmt-btn${fmt.bold ? ' is-active' : ''}`} onClick={()=>applyFormat('bold')} title='Bold (Ctrl+B)'>
                         <BoldIcon />

@@ -36,15 +36,9 @@ const APP_MENUS = {
   'file-explorer':[],
   'task-manager':[],
   'notes':[],
-  'vscode':[
-    {label:'File'},{label:'Edit'},{label:'Selection'},{label:'View'},{label:'Run'},{label:'Terminal'},{label:'Help'},
-  ],
-  'terminal':[
-    {label:'File'},{label:'Edit'},{label:'View'},{label:'Help'},
-  ],
-  'chrome':[
-    {label:'File'},{label:'Edit'},{label:'View'},{label:'History'},{label:'Bookmarks'},
-  ],
+  'vscode':[],
+  'terminal':[],
+  'chrome':[],
 };
 
 const APP_COMPONENTS = {

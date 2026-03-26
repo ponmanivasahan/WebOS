@@ -2,14 +2,18 @@
     position:fixed;
     display:flex;
     flex-direction:column;
-    background: rgba(15, 24, 36, 0.66);
-    border: 1px solid rgba(220, 236, 250, 0.28);
-    border-radius: 10px;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 14px 38px rgba(0, 0, 0, 0.36);
+    background: rgba(16, 22, 30, 0.82);
+    border: 1px solid #bbb8ad;
+    border-radius: 6px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
     min-width:200px;
     min-height:120px;
     overflow:hidden;
+}
+
+.app-window.is-maximized{
+    border-radius: 0;
 }
 
 .app-window.is-minimized{
@@ -156,7 +160,7 @@
     padding: 0 2px;
     height: 20px;
     background: rgba(16, 28, 41, 0.66);
-    border-bottom: 1px solid rgba(220, 236, 250, 0.18);
+    border-bottom: none;
     flex-shrink: 0;
     gap: 0;
 }
@@ -205,14 +209,14 @@
     font-size: 11px;
     color: #555;
     background: #d4d0c8;
-    border-top: 1px solid #808080;
+    border-top: none;
     flex-shrink: 0;
     gap: 4px;
 }
 
 .win-status-panel{
     padding:0 6px;
-    border: 1px solid rgba(220, 236, 250, 0.24);
+    border: none;
     height: 14px;
     display: flex;
     align-items: center;

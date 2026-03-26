@@ -4,6 +4,7 @@ import './window.css';
 export default function AppWindow({
     id,title='Window',icon=null,children,x=60,y=60,width=640,height=440,
     isActive=false,isMinimized=false,isMaximized=false,menuItems=[],
+  showTopbar=true,
   statusText='',onFocus,onClose,onMinimize,onMaximize,onChange,onTitleRename,onTitleAdd,
 }){
     const dragState=useRef(null);
@@ -109,7 +110,7 @@ export default function AppWindow({
     const safeY=Math.max(0,Math.min(y,window.innerHeight-TASKBAR_H-safeHeight));
 
     return(
-        <div className={['app-window',isActive ? 'is-active' : '',isMinimized?'is-minimized':'',].filter(Boolean).join(' ')}
+      <div className={['app-window',isActive ? 'is-active' : '',isMinimized?'is-minimized':'',isMaximized ? 'is-maximized' : '',].filter(Boolean).join(' ')}
         style={{left:safeX,top:safeY,width:safeWidth,height:safeHeight,zIndex:isActive ? 200:100,}}
         onMouseDown={()=>onFocus?.(id)}>
             {!isMaximized && ['n','s','e','w','nw','ne','sw','se'].map((dir) => (
@@ -120,93 +121,97 @@ export default function AppWindow({
         />
       ))}
 
-        <div className="win-titlebar">
-        <div className="win-drag-handle" onMouseDown={(e)=>{ if(!isEditingTitle) startDrag(e); }}>
-            {icon && <div className='win-titlebar-icon'>{icon}</div>}
-          {isEditingTitle ? (
-            <input
-              ref={titleInputRef}
-              className='win-title-edit-input'
-              value={titleDraft}
-              onMouseDown={(e)=>e.stopPropagation()}
-              onChange={(e)=>setTitleDraft(e.target.value)}
-              onBlur={commitTitleEdit}
-              onKeyDown={(e)=>{
-                if(e.key==='Enter'){
-                  e.preventDefault();
-                  commitTitleEdit();
-                }
-                if(e.key==='Escape'){
-                  e.preventDefault();
-                  setTitleDraft(title);
-                  setIsEditingTitle(false);
-                }
-              }}
-            />
-          ) : (
-            <span
-              className='win-title'
-              onDoubleClick={(e)=>{
-                if(!onTitleRename) return;
-                e.stopPropagation();
-                setIsEditingTitle(true);
-              }}
-            >
-              {title}
-            </span>
-          )}
-          {onTitleAdd && (
-            <button
-              className='win-title-add-btn win-title-action'
-              onMouseDown={(e)=>e.stopPropagation()}
-              onClick={(e)=>{e.stopPropagation(); onTitleAdd(id);}}
-              title='New file'
-            >
-              +
-            </button>
-          )}
-        </div>
+        {showTopbar && (
+          <>
+            <div className="win-titlebar">
+              <div className="win-drag-handle" onMouseDown={(e)=>{ if(!isEditingTitle) startDrag(e); }}>
+                {icon && <div className='win-titlebar-icon'>{icon}</div>}
+                {isEditingTitle ? (
+                  <input
+                    ref={titleInputRef}
+                    className='win-title-edit-input'
+                    value={titleDraft}
+                    onMouseDown={(e)=>e.stopPropagation()}
+                    onChange={(e)=>setTitleDraft(e.target.value)}
+                    onBlur={commitTitleEdit}
+                    onKeyDown={(e)=>{
+                      if(e.key==='Enter'){
+                        e.preventDefault();
+                        commitTitleEdit();
+                      }
+                      if(e.key==='Escape'){
+                        e.preventDefault();
+                        setTitleDraft(title);
+                        setIsEditingTitle(false);
+                      }
+                    }}
+                  />
+                ) : (
+                  <span
+                    className='win-title'
+                    onDoubleClick={(e)=>{
+                      if(!onTitleRename) return;
+                      e.stopPropagation();
+                      setIsEditingTitle(true);
+                    }}
+                  >
+                    {title}
+                  </span>
+                )}
+                {onTitleAdd && (
+                  <button
+                    className='win-title-add-btn win-title-action'
+                    onMouseDown={(e)=>e.stopPropagation()}
+                    onClick={(e)=>{e.stopPropagation(); onTitleAdd(id);}}
+                    title='New file'
+                  >
+                    +
+                  </button>
+                )}
+              </div>
 
-        <div className='win-controls'>
-            <button className="win-ctrl-btn minimize" onClick={(e)=>{e.stopPropagation();onMinimize?.(id);}}
-            title='Minimize'>
-                -
-            </button>
+              <div className='win-controls'>
+                <button className="win-ctrl-btn minimize" onClick={(e)=>{e.stopPropagation();onMinimize?.(id);}}
+                title='Minimize'>
+                  -
+                </button>
 
-             <button
-              className={`win-ctrl-btn maximize${isMaximized ? ' is-restored' : ''}`}
-            onClick={(e) => { e.stopPropagation(); onMaximize?.(id); }}
-            title={isMaximized ? 'Restore' : 'Maximize'}
-          >
-              {isMaximized ? (
-                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                  <rect x="2" y="1" width="8" height="8" stroke="currentColor" strokeWidth="1" />
-                  <path d="M1 3.5V11h7.5" stroke="currentColor" strokeWidth="1" />
-                </svg>
-              ) : (
-                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                  <rect x="1.5" y="1.5" width="9" height="9" stroke="currentColor" strokeWidth="1" />
-                </svg>
-              )}
-          </button>
+                <button
+                  className={`win-ctrl-btn maximize${isMaximized ? ' is-restored' : ''}`}
+                  onClick={(e) => { e.stopPropagation(); onMaximize?.(id); }}
+                  title={isMaximized ? 'Restore' : 'Maximize'}
+                >
+                  {isMaximized ? (
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                      <rect x="2" y="1" width="8" height="8" stroke="currentColor" strokeWidth="1" />
+                      <path d="M1 3.5V11h7.5" stroke="currentColor" strokeWidth="1" />
+                    </svg>
+                  ) : (
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                      <rect x="1.5" y="1.5" width="9" height="9" stroke="currentColor" strokeWidth="1" />
+                    </svg>
+                  )}
+                </button>
 
-           <button
-            className="win-ctrl-btn close"
-            onClick={(e) => { e.stopPropagation(); onClose?.(id); }}
-            title="Close"
-          >
-            ✕
-          </button>
-        </div>
-      </div>
-          
-         {menuItems.length > 0 && (
-        <div className="win-menubar">
-          {menuItems.map((item, i) => (
-            <div key={i} className="win-menu-item">{item.label}</div>
-          ))}
-        </div>
-      )}
+                <button
+                  className="win-ctrl-btn close"
+                  onClick={(e) => { e.stopPropagation(); onClose?.(id); }}
+                  title="Close"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {menuItems.length > 0 && (
+              <div className="win-menubar">
+                {menuItems.map((item, i) => (
+                  <div key={i} className="win-menu-item">{item.label}</div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
  
       <div className="win-body win-body-inset">
         {children}
