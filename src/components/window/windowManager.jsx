@@ -194,6 +194,6 @@ export default function WindowManager({
 
 function AppIcon({ src, alt }) {
   return (
-    <img src={src} alt={alt} width="12" height="12" draggable="false" style={{ display: 'block' }} />
+    <img src={src} alt={alt} width="22" height="22" draggable="false" style={{ display: 'block' }} />
   );
 }
