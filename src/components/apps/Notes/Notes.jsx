@@ -104,7 +104,7 @@ const SettingsIcon =()=>(
     </svg>
 );
 
-export default function Notes({onWindowTitleChange,newFileSignal,titleRenameRequest}){
+export default function Notes({onWindowTitleChange,newFileSignal,titleRenameRequest,openFileRequest}){
     const initialNotes=useRef(loadNotes()).current;
     const initialContents=useRef(loadContents()).current;
 
@@ -115,6 +115,7 @@ export default function Notes({onWindowTitleChange,newFileSignal,titleRenameRequ
     const editorRef=useRef(null);
     const lastNewSignalRef=useRef(0);
     const lastRenameTokenRef=useRef(0);
+    const lastOpenFileTokenRef=useRef(0);
 
     const {listDir,createFile,deleteEntry,renameEntry}=useFileSystem();
 
@@ -244,6 +245,52 @@ export default function Notes({onWindowTitleChange,newFileSignal,titleRenameRequ
         renameNoteById(activeNote.id,normalized || 'Untitled');
     },[titleRenameRequest,activeNote,renameNoteById]);
 
+    useEffect(()=>{
+        if(!openFileRequest?.token) return;
+        if(openFileRequest.token===lastOpenFileTokenRef.current) return;
+        lastOpenFileTokenRef.current=openFileRequest.token;
+
+        const incomingName=openFileRequest.name || 'Untitled.txt';
+        const incomingTitle=stripTxt(incomingName) || 'Untitled';
+        const incomingFsId=openFileRequest.id || null;
+        const incomingPath=openFileRequest.path || DOCS_PATH;
+
+        let nextActiveId=null;
+        setNotes((prev)=>{
+            const byFsId=incomingFsId ? prev.find((n)=>n.fsId===incomingFsId) : null;
+            if(byFsId){
+                nextActiveId=byFsId.id;
+                return prev;
+            }
+
+            const byPathAndName=prev.find((n)=>n.filePath===incomingPath && n.fileName===incomingName);
+            if(byPathAndName){
+                nextActiveId=byPathAndName.id;
+                return prev;
+            }
+
+            const created={
+                id:makeId(),
+                title:incomingTitle,
+                fileName:incomingName,
+                filePath:incomingPath,
+                fsId:incomingFsId,
+                body:'',
+                updatedAt:new Date().toISOString(),
+            };
+            nextActiveId=created.id;
+            return [...prev,created];
+        });
+
+        if(nextActiveId) setActiveId(nextActiveId);
+        if(incomingFsId){
+            setContentsMap((prev)=>({
+                ...prev,
+                [incomingFsId]:prev[incomingFsId] ?? '',
+            }));
+        }
+    },[openFileRequest]);
+
     const handleEditorInput=useCallback(()=>{
         const html=editorRef.current?.innerHTML ?? '';
         let fsIdToSave=null;
@@ -301,6 +348,28 @@ export default function Notes({onWindowTitleChange,newFileSignal,titleRenameRequ
     return(
         <div className='notes-shell'>
             <div className='notes-toolbar'>
+                <div className='notes-menu-group'>
+                    <span className='notes-menu-item'>File</span>
+                    <span className='notes-menu-item'>Edit</span>
+                    <span className='notes-menu-item'>View</span>
+
+                    {activeNote && (
+                        <span className='notes-file-head' title={activeNote.fileName || toFileName(activeNote.title)}>
+                            <span className='notes-current-file-name'>{activeNote.fileName || toFileName(activeNote.title)}</span>
+                            {notes.length>1 && (
+                                <button
+                                    className='notes-delete-file-btn notes-delete-file-btn-inline'
+                                    onClick={()=>handleDelete(activeId)}
+                                    title='Close file'
+                                    aria-label='Close file'
+                                >
+                                    x
+                                </button>
+                            )}
+                        </span>
+                    )}
+                </div>
+
                 <div className='notes-fmt-group'>
                     <button className={`notes-fmt-btn${fmt.bold ? ' is-active' : ''}`} onClick={()=>applyFormat('bold')} title='Bold (Ctrl+B)'>
                         <BoldIcon />
@@ -319,9 +388,6 @@ export default function Notes({onWindowTitleChange,newFileSignal,titleRenameRequ
                 <button className='notes-settings-btn' title='Settings'>
                     <SettingsIcon />
                 </button>
-                {notes.length>1 && (
-                    <button className='notes-delete-file-btn' onClick={()=>handleDelete(activeId)} title='Close file'>x</button>
-                )}
             </div>
 
             <div className='notes-editor-panel'>

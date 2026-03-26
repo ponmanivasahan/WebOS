@@ -10,17 +10,31 @@ function App(){
   const [windows,setWindows]=useState([]);
   const [activeWinId,setActiveWinId]=useState(null);
 
-  const handleOpenApp=(appId)=>{
+  const handleOpenApp=(appId,launchData=null)=>{
     const existing=windows.find((w)=>w.appId===appId);
     if(existing){
       setWindows((prev)=>
-      prev.map((w)=>w.id===existing.id ?{...w,minimized:false}:w))
+      prev.map((w)=>{
+        if(w.id!==existing.id) return w;
+        if(appId==='notes' && launchData?.type==='open-text-file'){
+          return {
+            ...w,
+            minimized:false,
+            notesOpenRequest:{...launchData,token:Date.now()},
+          };
+        }
+        return {...w,minimized:false};
+      }))
       setActiveWinId(existing.id);
       return;
     }
     const id=`${appId}-${Date.now()}`;
     const meta=APP_META[appId] || {title:appId,icon:null};
-    setWindows((prev)=>[...prev,{id,appId,minimized:false,startMaximized:true,...meta}]);
+    const nextWindow={id,appId,minimized:false,startMaximized:true,...meta};
+    if(appId==='notes' && launchData?.type==='open-text-file'){
+      nextWindow.notesOpenRequest={...launchData,token:Date.now()};
+    }
+    setWindows((prev)=>[...prev,nextWindow]);
     setActiveWinId(id);
   }
 
@@ -58,6 +72,7 @@ function App(){
         <WindowManager
           windows={windows}
           activeWinId={activeWinId}
+          onOpenApp={handleOpenApp}
           onFocus={handleFocus}
           onClose={handleClose}
           onMinimize={handleMinimize}

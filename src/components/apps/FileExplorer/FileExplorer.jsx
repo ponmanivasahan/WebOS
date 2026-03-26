@@ -137,7 +137,7 @@ function CtxMenu({x,y,items,onClose}){
     )
 }
 
-export default function FileExplorer(){
+export default function FileExplorer({onOpenTextFile}){
     const { fs,listDir,createFile,createFolder,deleteEntry,renameEntry}=useFileSystem();
 
     const [history,setHistory]=useState(['/']);
@@ -217,10 +217,15 @@ export default function FileExplorer(){
     },[renaming,renameVal,renameEntry,currentPath]);
 
     const handleOpen=useCallback((entry)=>{
+        if(!entry) return;
         if(entry.type==='folder'){
             navigate((currentPath==='/' ? '' :currentPath)+'/'+entry.name);
+            return;
         }
-    },[currentPath,navigate]);
+        if(entry.type==='file' && entry.name.toLowerCase().endsWith('.txt')){
+            onOpenTextFile?.({id:entry.id,name:entry.name,path:currentPath});
+        }
+    },[currentPath,navigate,onOpenTextFile]);
 
     const handleEntryCtx=useCallback((e,entry)=>{
         e.preventDefault();
@@ -321,20 +326,6 @@ export default function FileExplorer(){
                                             }}
                                         />
                 </div>
-            </div>
-
-            <div className='fe-toolbar'>
-                <button className='fe-toolbar-btn' onClick={handleNewFolder} ><span>📁</span> New Folder</button>
-                <button className="fe-toolbar-btn" onClick={handleNewFile}><span>📄</span> New File</button> 
-                <div className="fe-toolbar-sep" />               
-                <button className='fe-toolbar-btn' onClick={goUp} disabled={currentPath==='/'}><UpIcon /> Up</button>
-                <div className='fe-toolbar-sep' />
-                <button className='fe-toolbar-btn' disabled={!selected} onClick={()=>{const e=entries.find((e)=>e.id===selected); if(e) startRename(e);}} >
-                    Rename
-                </button>
-                 <button className="fe-toolbar-btn" disabled={!selected} onClick={handleDelete}>
-                      Delete
-                 </button>
             </div>
 
             {/* <div className='fe-addressbar'>

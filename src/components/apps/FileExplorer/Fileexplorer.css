@@ -156,6 +156,103 @@
   flex-shrink: 0;
 }
 
+.fe-commandbar {
+  background: #f3f3f3;
+  border-bottom: 1px solid #d8d8d8;
+  color: #1f1f1f;
+  flex-shrink: 0;
+}
+
+.fe-commandbar-top {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 0 12px;
+  gap: 0;
+}
+
+.fe-command-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 82px;
+  height: 52px;
+  border: none;
+  border-right: 1px solid #e1e1e1;
+  background: transparent;
+  color: #2a2a2a;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.fe-command-btn:first-child {
+  border-left: 1px solid #e1e1e1;
+}
+
+.fe-command-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  color: #0e63b8;
+  line-height: 1;
+}
+
+.fe-command-btn:hover:not(:disabled) {
+  background: #e8e8e8;
+}
+
+.fe-command-btn:disabled {
+  color: #a1a1a1;
+  cursor: default;
+}
+
+.fe-commandbar-open {
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #d4d4d4;
+  background: #ebebeb;
+}
+
+.fe-open-row {
+  width: 100%;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: #242424;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.fe-open-row:hover:not(:disabled) {
+  background: #e2e2e2;
+}
+
+.fe-open-row:disabled {
+  color: #979797;
+  cursor: default;
+}
+
+.fe-open-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #0e63b8;
+}
+
+.fe-open-shortcut {
+  margin-left: auto;
+  color: #5e5e5e;
+  font-size: 13px;
+}
+
 .fe-toolbar-btn {
   display: inline-flex;
   align-items: center;

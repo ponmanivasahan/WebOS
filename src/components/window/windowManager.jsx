@@ -53,6 +53,7 @@ const APP_COMPONENTS = {
 export default function WindowManager({
   windows=[],
   activeWinId,
+  onOpenApp,
   onFocus,
   onClose,
   onMinimize,
@@ -180,9 +181,11 @@ export default function WindowManager({
             {canRender ? (
               <AppComponent
                 windowId={win.id}
+                onOpenTextFile={(file)=>onOpenApp?.('notes',{type:'open-text-file',...file})}
                 onWindowTitleChange={(title)=>onTitleChange?.(win.id,title)}
                 newFileSignal={newFileSignals[win.id] || 0}
                 titleRenameRequest={titleRenameRequests[win.id] || null}
+                openFileRequest={win.notesOpenRequest || null}
               />
             ) : <div>Unable to load app.</div>}
           </AppWindow>
