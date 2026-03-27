@@ -1,3 +1,4 @@
+import { useState,useEffect,useCallback,useRef } from "react";
 const Icon={
 	back:(
 		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLineJoin="round" width="16" height="16" >
@@ -78,21 +79,367 @@ const Icon={
 		 </svg>
 	)
 }
+
+const DEFAULT_BOOKMARKS=[
+	{label:'Google', url:"https://www.google.com", favicon:"https://www.google.com/favicon.ico"},
+	{label:"YouTube", url:"https://www.youtube.com",favicon:"https://www.youtube.com/favicon.ico"},
+	{label:"GitHub", url:"https://github.com", favicon:"https://github.com/favicon.ico"},
+	{label:"Wikipedia",url:"https://en.wikipedia.org",favicon:"https://en.wikipedia.org/favicon.ico"},
+	{label:"MDN",url:"https://developer.mozilla.org",favicon:"https://developer.mozilla.org/favicon.ico"},
+];
+
+const QUICK_DIAL=[
+	{label:"Google",url:"https://google.com",bg:"#fff",color:"#4285f4",letter:"G"},
+	{label:"YouTube",url:"https://youtube.com",bg:"#ff0000",color:"#fff",letter:"Y"},
+	{label:"GitHub",url:"https://github.com",bg:"#24292e",color:"#fff",letter:"G"},
+	{label:"Wikipedia",url:"https://en.wikipedia.org",bg:"#f8f8f8",color:"#333",letter:"W"},
+	{label:"Reddit",url:"https://reddit.com",bg:"#ff4500",color:"#fff",letter:"R"},
+	{label:"Twitter",url:"https://twitter.com",bg:"#1da1f2",color:"#fff",letter:"T"},
+	{label:"MDN",url:"https://developer.mozilla.org",bg:"1b1b1b",color:"#fff",letter:"M"},
+	{label:"Claude",url:"https://claude.ai",bg:"#da7756",color:"#fff",letter:"C"},
+];
+
+const SUGGESTIONS=[
+	"google.com","github.com","youtube.com","reddit.com","twitter.com",
+	"developer.mozilla.org","stackoverflow.com","wikipedia.org",
+	"claude.ai","npmjs.com","tailwindcss.com","reactjs.com",
+];
+
+let _tabId=1;
+
+const newTab=(url="newtab",title="New Tab")=>({
+	id:_tabId++,url,displayUrl:url==="newtab" ? "" :url,title,favicon:null,
+	loading:false,canBack:false,canForward:false,history:url==="newtab"?[]:[url],
+	histIdx:url==="newtab" ? -1:0, starred:false,
+});
+
+const isSecure=(url)=>url.startsWith("https://") || url==="newtab";
+
+const parseUrl=(raw)=>{
+	const t=raw.trim();
+	if(!t) return "newtab";
+	if(t==="newtab" || t==="chrome://newtab") return "newtab";
+	if(/^[\w-]+(\.\w{2,})+/.test(t)) return "https://"+ t;
+	return `https://www.google.com/search?q=${encodeURIComponent(t)}`;
+};
+
+const getTitle=(url)=>{
+	if(url==="newtab") return "New Tab";
+	try{
+		return new URL(url).hostname.replace("www.","")
+	}
+	catch{
+		return url;
+	}
+}
+
 export default function Chrome(){
+	const [tabs,setTabs]=useState([newTab()]);
+    const [activeId,setActiveId]=useState(tabs[0].id);
+	const [addrFocused,setAddrFocused]=useState(false);
+	const [addrVal,setAddrVal]=useState("");
+	const [suggestions,setSuggestions]=useState([]);
+	const [sugIdx,setSugIdx]=useState(-1);
+	const [showMenu,setShowMenu]=useState(false);
+	const [bookmarks]=useState(DEFAULT_BOOKMARKS);
+	const addrRef=useRef(null);
+	const active=tabs.find((t)=>t.id===activeId) || tabs[0];
+
+	const updateTab=useCallback((id,patch)=>{
+         setTabs((ts)=>ts.map((t)=>(t.id===id ? {...t,...patch} : t)));
+	},[]);
+
+	const addTab=(url="newtab")=>{
+		const t=newTab(url,getTitle(url));
+		setTabs((ts)=>[...ts,t]);
+		setActiveId(t.id);
+	};
+
+	const closeTab=(id,e)=>{
+		e.stopPropagation();
+		setTabs((ts)=>{
+			const next=ts.filter((t)=>t.id!==id);
+			if(next.length===0) return [newTab()];
+			return next;
+		});
+       if(activeId===id){
+		const idx=tabs.findIndex((t)=>t.id===id);
+		const fallback=tabs[idx+1] || tabs[idx-1];
+		if(fallback) setActiveId(fallback.id);
+	   }
+	};
+	 const navigate=(id,rawUrl)=>{
+		const url=parseUrl(rawUrl);
+		updateTab(id,{
+			url,displayUrl:url==="newtab" ? "" : url,
+			title:getTitle(url),loading:url !=="newtab",history:[url],
+			histIdx:0,canBack:false,canForward:false,
+		});
+	 };
+
+	 const handleGo=()=>{
+		setSuggestions([]);
+		setAddrFocused(false);
+		addrRef.current?.blur();
+		navigate(active.id,addrVal);
+	 }
+
+	 const handleAddrKey=(e)=>{
+		if(e.key==="Enter"){
+			handleGo(); return;
+		}
+		if(e.key==="Escape"){
+			setSuggestions([]);
+			setAddrFocused(false);
+			addrRef.current?.blur();return;
+		}
+		if(e.key==="ArrowDown"){
+			setSugIdx((i)=>Math.min(i+1,suggestions.length-1));
+			return;
+		}
+		if(e.key==="ArrowUp"){
+			setSugIdx((i)=>Math.min(i-1,-1));
+			return;
+		}
+		if(e.key==="Tab" && suggestions.length){
+			e.preventDefault();
+			setAddrVal(suggestions[0]);
+			setSuggestions([]);
+		}
+	 }
+
+	  const handleAddrChange=(v)=>{
+		 setAddrVal(v);
+		 setSugIdx(-1);
+		 if(!v.trim()){setSuggestions([]); return;}
+		 const q=v.toLowerCase();
+		 setSuggestions(SUGGESTIONS.filter((s)=>s.includes(q)).slice(0,6));
+	  }
+
+	  const goBack=()=>{
+		const t=active;
+		if(t.histIdx>0){
+             const idx=t.histIdx-1;
+			 updateTab(t.id,{
+				histIdx:idx,url:t.history[idx],
+				displayUrl:t.history[idx],title:getTitle(t.history[idx]),
+				loading:true, canBack:idx>0,canForward:true,
+			 });
+		}
+	  }
+
+	  const goForward=()=>{
+		const t=active;
+		if(t.histIdx<t.history.length-1){
+			const idx=t.histIdx+1;
+			updateTab(t.id,{
+				histIdx:idx,url:t.history[idx],
+				displayUrl:t.history[idx],title:getTitle(t.history[idx]),
+				loading:true,
+				canBack:true,canForward:idx<t.history.length-1,
+			});
+		}
+	  };
+       const goHome=()=>navigate(active.id,"newtab");
+	   const reload=()=>updateTab(active.id,{loading:true});
+
+	   useEffect(()=>{
+           if(!addrFocused){
+			setAddrVal(active.url==="newtab"?"":active.url);
+		   }
+	   },[active.url,active.id,addrFocused]);
+
+	   const displayAddr=addrFocused ? addrVal :active.url==="newtab" ? "" : active.url;
 	return (
-		<div className="mock-app mock-chrome">
-			<div className="mock-chrome-toolbar">
-				<div className="mock-chrome-dots">
-					<span />
-					<span />
-					<span />
-				</div>
-				<div className="mock-chrome-address">https://flavortown.local/desktop</div>
+		<>
+		<div className="chrome-tab-bar">
+			<div className="chrome-tab-scroll">
+				{tabs.map((tab)=>(
+					<div key={tab.id} className={`chrome-tab ${tab.id=== activeId ? "active" : "inactive"}`}
+					   onClick={()=>setActiveId(tab.id)}
+					>
+                     {tab.favicon ? <img src={tab.favicon} className="chrome-tab-favicon" alt="" onError={(e)=>{
+						e.target.style.display="none";
+					 }} /> : <span className="chrome-tab-favicon-fallback">{Icon.tabIcon}</span>}
+
+					 <span className="chrome-tab-title">{tab.title || "New Tab"}</span>
+					 <button className="chrome-tab-close" onClick={(e)=>closeTab(tab.id,e)} title="Close tab">
+						{Icon.close}
+					 </button>
+					</div>
+				))}
+
+				<button className="chrome-new-tab-btn" onClick={()=>addTab()} title="New tab">{Icon.plus}</button>
 			</div>
-			<div className="mock-chrome-body">
-				<h3>Chrome</h3>
-				<p>This runs as an internal window in your WebOS desktop.</p>
+
+			<div className="chrome-tab-bar-right">
+				<button className="chrome-icon-btn" title="Profile">{Icon.profile}</button>
+				<button className="chrome-icon-btn" title="Extensions">{Icon.extension}</button>
 			</div>
 		</div>
+
+		<div className="chrome-toolbar">
+             <button className="chrome-nav-btn" onClick={goBack} disabled={!active.canBack} title="Back">{Icon.back}</button>
+			 <button className="chrome-nav-btn" onClick={goForward} disabled={!active.canForward} title="Forward">{Icon.forward}</button>
+			 <button className={`chrome-nav-btn${active.loading ? "spinning" : ""}`} onClick={reload} title="Reload">{Icon.refresh}</button>
+			 <button className="chrome-nav-btn" onClick={goHome} title="Home">{Icon.home}</button>
+
+
+			 <div className={`chrome-addr-wrap${addrFocused ? "focused" : ""}`}>
+				<span className="chrome-addr-icon">
+					{isSecure(active.url) ? Icon.lock : Icon.globe}
+				</span>
+				<input ref={addrRef} className="chrome-addr-input" value={displayAddr} onChange={(e)=>handleAddrChange(e.target.value)} onFocus={()=>{
+					setAddrFocused(true);
+					setAddrVal(active.url==="newtab" ? "" :active.url);
+					addrRef.current?.select();
+				}} onBlur={()=>setTimeout(()=>{setAddrFocused(false); setSuggestions([]);},150)} 
+				onKeyDown={handleAddrKey} placeholder="Search Google or type a URL" spellCheck={false}/>
+				<button className="chrome-addr-star" onClick={()=>updateTab(active.id,{starred:!active.starred})} title="Bookmark this page">{Icon.star(active.starred)}</button>
+
+				{addrFocused && suggestions.length>0 && (
+					<div className="chrome-suggestions">
+                       {suggestions.map((s,i)=>(
+						<div key={s} className={`chrome-suggestions${i===sugIdx ? "active" : ""}`} onMouseDown={()=>{setAddrVal(s); setSuggestions([]); navigate(active.id,s);}}>
+							<span className="chrome-suggestion-icon">{Icon.globe}</span>
+							{s}
+						</div>
+					   ))}
+					</div>
+				)}
+			 </div>
+			 <button className="chrome-nav-btn" title="Extensions">{Icon.extension}</button>
+			 <button className="chrome-nav-btn" onClick={()=> setShowMenu((v)=>!v)} title="Chrome menu">
+				{Icon.menu}
+			 </button>
+
+			 {showMenu && (
+				<div className="chrome-ctx-menu">
+				  {[
+					["New tab",()=>addTab()],
+					["New window", null],
+					["─",null],
+					["Zoom  –  100%  +",null],
+					["─",null],
+					["Save page as…",null],
+					["Print…",null],
+					["Find…",null],
+					["─",null],
+					["Settings",null],
+					["Help",null],
+				  ].map(([label,action],i)=>
+				 label==="─" ? <div key={i} className="chrome-ctx-divider" />
+				    : <button key={i} className="chrome-ctx-item" onClick={()=>{action?.(); setShowMenu(false);}}>{label}</button> 
+				  )}	
+				</div>
+			 )}
+		</div>
+
+		<div className="chrome-bookmark-bar">
+			{bookmarks.map((bm)=>(
+				<button key={bm.url} className="chrome-bookmark-item" onClick={()=>navigate(active.id,bm.url)}>
+					<img src={bm.favicon} className="chrome-bookmark-favicon" alt="" onError={(e)=>{e.target.style.display="none";}} />
+					{bm.label}
+				</button>
+			))}
+			<button className="chrome-bookmark-item manage">Manage bookmarks »</button>
+		</div>
+         
+		 <div className="chrome-content">
+             {tabs.map((tab)=>(
+				<div key={tab.id} className={`chrome-tab-content${tab.id===activeId ? "visible" : ""}`}>
+                   {tab.loading && (
+					<div className="chrome-load-bar">
+                     <div className="chrome-load-bar-fill" />
+					</div>
+				   )}
+
+				   {tab.url==="newtab" ? (
+					<NewTabPage onNavigate={(url)=>navigate(tab.id,url)} />
+				   ):(
+					<>
+					<iframe  src={tab.url} className="chrome-iframe" title={tab.title}  onLoad={()=>updateTab(tab.id,{loading:false})} onError={()=>updateTab(tab.id,{loading:false})} 
+						sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation" />
+						<div className="chrome-blocked-overlay">
+                            <CorsMessage url={tab.url} onNavigate={(u)=>navigate(tab.id,u)} />
+						</div>
+					</>
+				   )}
+				</div>
+			 ))}
+		 </div>
+
+		</>
+	);
+}
+
+function NewTabPage({onNavigate}){
+   const [q,setQ]=useState("");
+   const handleSubmit=(e)=>{
+	e.preventDefault();
+	if(q.trim()) onNavigate(q);
+   }
+   const logoColors=[
+	"ntp-logo-g","ntp-logo-o1","ntp-logo-o2",
+	"ntp-logo-g2","ntp-logo-1","ntp-logo-e",
+   ];
+
+   return(
+	<div className="ntp-root">
+		<div className="ntp-inner">
+			<div className="ntp-logo">
+				{"Google".split("").map((char,i)=>(
+					<span key={i} className={logoColors[i]}>{char}</span>
+				))}
+			</div>
+
+			<form className="ntp-search-form" onSubmit={handleSubmit}>
+				<input className="ntp-search-input" placeholder="Search Google or type a URL" value={q} onChange={(e)=> setQ(e.target.value)} autoFocus />
+				<button type="submit" className="ntp-search-btn" >Google Search</button>
+			</form>
+
+			<div className="ntp-grid">
+				{QUICK_DIAL.map((site)=>(
+					<button key={site.url} className="ntp-tile" onClick={()=>onNavigate(site.url)}>
+						<div className="ntp-tile-icon" style={{background:site.bg,color:site.color}}>
+							{site.letter}
+						</div>
+						<span className="ntp-tile-label">{site.label}</span>
+					</button>
+				))}
+			</div>
+		</div>
+
+		<div className="ntp-footer">
+			<span>India</span>
+			<div className="ntp-footer-links">
+				{["Advertising","Business","How Search works","Privacy","Terms", "Settings"].map((link)=>(
+					<a key={link} href="#" className="ntp-footer-link">{link}</a>
+				))}
+			</div>
+		</div>
+	</div>
+   );
+}
+
+function CorsMessage({url,onNavigate}){
+	return(
+		<>
+		 <svg viewBox="0 0 64 64" width="64" height="64" style={{ marginBottom: 16 }}>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#dadce0" strokeWidth="3" />
+        <text x="32" y="42" textAnchor="middle" fontSize="32" fill="#dadce0">🔒</text>
+        </svg>
+		<h2>This page can't be displayed in a frame</h2>
+		<p>
+			<strong>{url}</strong> has blocked embedding for security reasons
+			(X-Frame-Options / CSP). This is normal browser security behaviour.
+		</p>
+		<button className="chrome-blocked-btn" onClick={()=>window.open(url,"_blank")}>
+           Open in new window ↗
+		</button>
+		<button className="chrome-blocked-btn secondary" onClick={()=>onNavigate("newtab")}>
+			Back to new tab
+		</button>
+		</>
 	);
 }
