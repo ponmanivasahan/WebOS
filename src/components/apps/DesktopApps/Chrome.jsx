@@ -1,4 +1,5 @@
 import { useState,useEffect,useCallback,useRef } from "react";
+import "./Chrome.css";
 const Icon={
 	back:(
 		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLineJoin="round" width="16" height="16" >
@@ -251,7 +252,7 @@ export default function Chrome(){
 
 	   const displayAddr=addrFocused ? addrVal :active.url==="newtab" ? "" : active.url;
 	return (
-		<>
+		 <div className="chrome-root" onClick={() => { if (showMenu) setShowMenu(false); }}>
 		<div className="chrome-tab-bar">
 			<div className="chrome-tab-scroll">
 				{tabs.map((tab)=>(
@@ -369,7 +370,7 @@ export default function Chrome(){
 			 ))}
 		 </div>
 
-		</>
+		</div>
 	);
 }
 
