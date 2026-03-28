@@ -2,17 +2,17 @@ import { useState,useEffect,useCallback,useRef } from "react";
 import "./Chrome.css";
 const Icon={
 	back:(
-		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLineJoin="round" width="16" height="16" >
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" >
             <polyline points="15 18 9 12 15 6" />
 		</svg>
 	),
 	forward:(
-		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"   strokeLinecap="round" strokeLineJoin="round" width="16" height="16" >
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"   strokeLinecap="round" strokeLinejoin="round" width="16" height="16" >
             <polyline points="9 18 15 12 9 6" />
 		</svg>
 	),
 	refresh:(
-		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLineJoin="round" width="16" height="16">
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
 			<polyline points="23 4 23 10 17 10" />
             <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
 		</svg>
@@ -96,7 +96,7 @@ const QUICK_DIAL=[
 	{label:"Wikipedia",url:"https://en.wikipedia.org",bg:"#f8f8f8",color:"#333",letter:"W"},
 	{label:"Reddit",url:"https://reddit.com",bg:"#ff4500",color:"#fff",letter:"R"},
 	{label:"Twitter",url:"https://twitter.com",bg:"#1da1f2",color:"#fff",letter:"T"},
-	{label:"MDN",url:"https://developer.mozilla.org",bg:"1b1b1b",color:"#fff",letter:"M"},
+	{label:"MDN",url:"https://developer.mozilla.org",bg:"#1b1b1b",color:"#fff",letter:"M"},
 	{label:"Claude",url:"https://claude.ai",bg:"#da7756",color:"#fff",letter:"C"},
 ];
 
@@ -111,7 +111,7 @@ let _tabId=1;
 const newTab=(url="newtab",title="New Tab")=>({
 	id:_tabId++,url,displayUrl:url==="newtab" ? "" :url,title,favicon:null,
 	loading:false,canBack:false,canForward:false,history:url==="newtab"?[]:[url],
-	histIdx:url==="newtab" ? -1:0, starred:false,
+	histIdx:url==="newtab" ? -1:0, starred:false, frameBlocked:false,
 });
 
 const isSecure=(url)=>url.startsWith("https://") || url==="newtab";
@@ -120,6 +120,9 @@ const parseUrl=(raw)=>{
 	const t=raw.trim();
 	if(!t) return "newtab";
 	if(t==="newtab" || t==="chrome://newtab") return "newtab";
+	if(/^https?:\/\//i.test(t)) return t;
+	if(/^localhost(:\d+)?(\/.*)?$/i.test(t)) return `http://${t}`;
+	if(/^\d{1,3}(\.\d{1,3}){3}(:\d+)?(\/.*)?$/.test(t)) return `http://${t}`;
 	if(/^[\w-]+(\.\w{2,})+/.test(t)) return "https://"+ t;
 	return `https://www.google.com/search?q=${encodeURIComponent(t)}`;
 };
@@ -132,6 +135,14 @@ const getTitle=(url)=>{
 	catch{
 		return url;
 	}
+}
+
+const isProxyFallbackUrl=(url)=>url.startsWith("https://r.jina.ai/http://");
+
+const getInAppFallbackUrl=(url)=>{
+	if(url==="newtab" || isProxyFallbackUrl(url)) return url;
+	const stripped=url.replace(/^https?:\/\//i,"");
+	return `https://r.jina.ai/http://${stripped}`;
 }
 
 export default function Chrome(){
@@ -174,7 +185,7 @@ export default function Chrome(){
 		updateTab(id,{
 			url,displayUrl:url==="newtab" ? "" : url,
 			title:getTitle(url),loading:url !=="newtab",history:[url],
-			histIdx:0,canBack:false,canForward:false,
+			histIdx:0,canBack:false,canForward:false,frameBlocked:false,
 		});
 	 };
 
@@ -224,7 +235,7 @@ export default function Chrome(){
 			 updateTab(t.id,{
 				histIdx:idx,url:t.history[idx],
 				displayUrl:t.history[idx],title:getTitle(t.history[idx]),
-				loading:true, canBack:idx>0,canForward:true,
+				loading:true, canBack:idx>0,canForward:true, frameBlocked:false,
 			 });
 		}
 	  }
@@ -237,12 +248,12 @@ export default function Chrome(){
 				histIdx:idx,url:t.history[idx],
 				displayUrl:t.history[idx],title:getTitle(t.history[idx]),
 				loading:true,
-				canBack:true,canForward:idx<t.history.length-1,
+				canBack:true,canForward:idx<t.history.length-1, frameBlocked:false,
 			});
 		}
 	  };
        const goHome=()=>navigate(active.id,"newtab");
-	   const reload=()=>updateTab(active.id,{loading:true});
+	   const reload=()=>updateTab(active.id,{loading:true,frameBlocked:false});
 
 	   useEffect(()=>{
            if(!addrFocused){
@@ -282,11 +293,11 @@ export default function Chrome(){
 		<div className="chrome-toolbar">
              <button className="chrome-nav-btn" onClick={goBack} disabled={!active.canBack} title="Back">{Icon.back}</button>
 			 <button className="chrome-nav-btn" onClick={goForward} disabled={!active.canForward} title="Forward">{Icon.forward}</button>
-			 <button className={`chrome-nav-btn${active.loading ? "spinning" : ""}`} onClick={reload} title="Reload">{Icon.refresh}</button>
+			 <button className={`chrome-nav-btn${active.loading ? " spinning" : ""}`} onClick={reload} title="Reload">{Icon.refresh}</button>
 			 <button className="chrome-nav-btn" onClick={goHome} title="Home">{Icon.home}</button>
 
 
-			 <div className={`chrome-addr-wrap${addrFocused ? "focused" : ""}`}>
+			 <div className={`chrome-addr-wrap${addrFocused ? " focused" : ""}`}>
 				<span className="chrome-addr-icon">
 					{isSecure(active.url) ? Icon.lock : Icon.globe}
 				</span>
@@ -301,7 +312,7 @@ export default function Chrome(){
 				{addrFocused && suggestions.length>0 && (
 					<div className="chrome-suggestions">
                        {suggestions.map((s,i)=>(
-						<div key={s} className={`chrome-suggestions${i===sugIdx ? "active" : ""}`} onMouseDown={()=>{setAddrVal(s); setSuggestions([]); navigate(active.id,s);}}>
+						<div key={s} className={`chrome-suggestion${i===sugIdx ? " active" : ""}`} onMouseDown={()=>{setAddrVal(s); setSuggestions([]); navigate(active.id,s);}}>
 							<span className="chrome-suggestion-icon">{Icon.globe}</span>
 							{s}
 						</div>
@@ -310,30 +321,32 @@ export default function Chrome(){
 				)}
 			 </div>
 			 <button className="chrome-nav-btn" title="Extensions">{Icon.extension}</button>
-			 <button className="chrome-nav-btn" onClick={()=> setShowMenu((v)=>!v)} title="Chrome menu">
-				{Icon.menu}
-			 </button>
+			 <div className="chrome-menu-wrap" onClick={(e)=>e.stopPropagation()}>
+				<button className="chrome-nav-btn" onClick={()=> setShowMenu((v)=>!v)} title="Chrome menu">
+					{Icon.menu}
+				</button>
 
-			 {showMenu && (
-				<div className="chrome-ctx-menu">
-				  {[
-					["New tab",()=>addTab()],
-					["New window", null],
-					["─",null],
-					["Zoom  –  100%  +",null],
-					["─",null],
-					["Save page as…",null],
-					["Print…",null],
-					["Find…",null],
-					["─",null],
-					["Settings",null],
-					["Help",null],
-				  ].map(([label,action],i)=>
-				 label==="─" ? <div key={i} className="chrome-ctx-divider" />
-				    : <button key={i} className="chrome-ctx-item" onClick={()=>{action?.(); setShowMenu(false);}}>{label}</button> 
-				  )}	
-				</div>
-			 )}
+				{showMenu && (
+					<div className="chrome-ctx-menu">
+					  {[
+						["New tab",()=>addTab()],
+						["New window", null],
+						["─",null],
+						["Zoom  –  100%  +",null],
+						["─",null],
+						["Save page as…",null],
+						["Print…",null],
+						["Find…",null],
+						["─",null],
+						["Settings",null],
+						["Help",null],
+					  ].map(([label,action],i)=>
+					 label==="─" ? <div key={i} className="chrome-ctx-divider" />
+					    : <button key={i} className="chrome-ctx-item" onClick={()=>{action?.(); setShowMenu(false);}}>{label}</button> 
+					  )}	
+					</div>
+				)}
+			 </div>
 		</div>
 
 		<div className="chrome-bookmark-bar">
@@ -348,7 +361,7 @@ export default function Chrome(){
          
 		 <div className="chrome-content">
              {tabs.map((tab)=>(
-				<div key={tab.id} className={`chrome-tab-content${tab.id===activeId ? "visible" : ""}`}>
+				<div key={tab.id} className={`chrome-tab-content${tab.id===activeId ? " visible" : ""}`}>
                    {tab.loading && (
 					<div className="chrome-load-bar">
                      <div className="chrome-load-bar-fill" />
@@ -359,11 +372,13 @@ export default function Chrome(){
 					<NewTabPage onNavigate={(url)=>navigate(tab.id,url)} />
 				   ):(
 					<>
-					<iframe  src={tab.url} className="chrome-iframe" title={tab.title}  onLoad={()=>updateTab(tab.id,{loading:false})} onError={()=>updateTab(tab.id,{loading:false})} 
+					<iframe  src={tab.url} className="chrome-iframe" title={tab.title}  onLoad={()=>updateTab(tab.id,{loading:false,frameBlocked:false})} onError={()=>updateTab(tab.id,{loading:false,frameBlocked:true})} 
 						sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation" />
-						<div className="chrome-blocked-overlay">
-                            <CorsMessage url={tab.url} onNavigate={(u)=>navigate(tab.id,u)} />
-						</div>
+						{tab.frameBlocked && (
+							<div className="chrome-blocked-overlay">
+								<CorsMessage url={tab.url} onNavigate={(u)=>navigate(tab.id,u)} />
+							</div>
+						)}
 					</>
 				   )}
 				</div>
@@ -386,40 +401,64 @@ function NewTabPage({onNavigate}){
    ];
 
    return(
-	<div className="ntp-root">
-		<div className="ntp-inner">
-			<div className="ntp-logo">
-				{"Google".split("").map((char,i)=>(
-					<span key={i} className={logoColors[i]}>{char}</span>
-				))}
-			</div>
+   <div className="ntp-root">
+	   <div className="ntp-inner">
+		   <div className="ntp-logo">
+			   {"Google".split("").map((char,i)=>(
+				   <span key={i} className={logoColors[i]}>{char}</span>
+			   ))}
+		   </div>
 
-			<form className="ntp-search-form" onSubmit={handleSubmit}>
-				<input className="ntp-search-input" placeholder="Search Google or type a URL" value={q} onChange={(e)=> setQ(e.target.value)} autoFocus />
-				<button type="submit" className="ntp-search-btn" >Google Search</button>
-			</form>
+		   <form className="ntp-search-form" onSubmit={handleSubmit}>
+			   <div className="ntp-search-shell">
+				   <span className="ntp-search-left" aria-hidden="true">
+					   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+						   <circle cx="11" cy="11" r="7" />
+						   <line x1="16.65" y1="16.65" x2="21" y2="21" />
+					   </svg>
+				   </span>
+				   <input className="ntp-search-input" placeholder="Search Google or type a URL" value={q} onChange={(e)=> setQ(e.target.value)} autoFocus />
+				   <div className="ntp-search-right">
+					   <button type="button" className="ntp-search-action" title="Voice search" aria-label="Voice search">
+						   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+							   <rect x="9" y="2" width="6" height="12" rx="3" />
+							   <path d="M5 10a7 7 0 0 0 14 0" />
+							   <line x1="12" y1="17" x2="12" y2="22" />
+						   </svg>
+					   </button>
+					   <button type="button" className="ntp-search-action" title="Search by image" aria-label="Search by image">
+						   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+							   <rect x="4" y="4" width="16" height="16" rx="3" />
+							   <circle cx="9" cy="9" r="1.5" />
+							   <path d="M20 16l-4.5-4.5L8 19" />
+						   </svg>
+					   </button>
+					   <button type="submit" className="ntp-ai-btn">AI Mode</button>
+				   </div>
+			   </div>
+		   </form>
 
-			<div className="ntp-grid">
-				{QUICK_DIAL.map((site)=>(
-					<button key={site.url} className="ntp-tile" onClick={()=>onNavigate(site.url)}>
-						<div className="ntp-tile-icon" style={{background:site.bg,color:site.color}}>
-							{site.letter}
-						</div>
-						<span className="ntp-tile-label">{site.label}</span>
-					</button>
-				))}
-			</div>
-		</div>
+		   <div className="ntp-grid">
+			   {QUICK_DIAL.map((site)=>(
+				   <button key={site.url} className="ntp-tile" onClick={()=>onNavigate(site.url)}>
+					   <div className="ntp-tile-icon" style={{background:site.bg,color:site.color}}>
+						   {site.letter}
+					   </div>
+					   <span className="ntp-tile-label">{site.label}</span>
+				   </button>
+			   ))}
+		   </div>
+	   </div>
 
-		<div className="ntp-footer">
-			<span>India</span>
-			<div className="ntp-footer-links">
-				{["Advertising","Business","How Search works","Privacy","Terms", "Settings"].map((link)=>(
-					<a key={link} href="#" className="ntp-footer-link">{link}</a>
-				))}
-			</div>
-		</div>
-	</div>
+	   <div className="ntp-footer">
+		   <span>India</span>
+		   <div className="ntp-footer-links">
+			   {["Advertising","Business","How Search works","Privacy","Terms", "Settings"].map((link)=>(
+				   <button key={link} type="button" className="ntp-footer-link" style={{background: 'none', border: 'none', padding: 0, margin: 0, color: '#70757a', fontSize: '13px', cursor: 'pointer', textDecoration: 'underline'}}>{link}</button>
+			   ))}
+		   </div>
+	   </div>
+   </div>
    );
 }
 
@@ -435,9 +474,11 @@ function CorsMessage({url,onNavigate}){
 			<strong>{url}</strong> has blocked embedding for security reasons
 			(X-Frame-Options / CSP). This is normal browser security behaviour.
 		</p>
-		<button className="chrome-blocked-btn" onClick={()=>window.open(url,"_blank")}>
-           Open in new window ↗
-		</button>
+		{!isProxyFallbackUrl(url) && (
+			<button className="chrome-blocked-btn" onClick={()=>onNavigate(getInAppFallbackUrl(url))}>
+			   Open simplified view here
+			</button>
+		)}
 		<button className="chrome-blocked-btn secondary" onClick={()=>onNavigate("newtab")}>
 			Back to new tab
 		</button>

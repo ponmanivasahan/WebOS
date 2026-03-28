@@ -103,8 +103,9 @@ export default function AppWindow({
 
     const TASKBAR_H=48;
     const WINDOW_SIDE_GAP=isMaximized ? 0 : 8;
+    const BOTTOM_GAP=isMaximized ? 0 : 8;
     const maxWidth=Math.max(240,window.innerWidth-(WINDOW_SIDE_GAP*2));
-    const maxHeight=Math.max(140,window.innerHeight-TASKBAR_H-8);
+    const maxHeight=Math.max(140,window.innerHeight-TASKBAR_H-BOTTOM_GAP);
     const safeWidth=Math.min(width,maxWidth);
     const safeHeight=Math.min(height,maxHeight);
     const safeX=Math.max(WINDOW_SIDE_GAP,Math.min(x,window.innerWidth-WINDOW_SIDE_GAP-safeWidth));
