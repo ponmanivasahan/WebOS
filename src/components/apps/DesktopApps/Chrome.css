@@ -200,3 +200,164 @@
 .chrome-icon-btn:hover{
     background: rgba(0,0,0,0.06);
 }
+.chrome-addr-wrap{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    background: #f1f3f4;
+    border: 2px solid transparent;
+    border-radius: 20px;
+    padding: 0 8px;
+    gap: 6px;
+    position: relative;
+    transition: border 0.15s, background 0.15s;
+}
+
+.chrome-addr-wrap.focused{
+    background: #fff;
+    border-color: #1a73e8;
+    box-shadow: 0 1px 6px rgba(26,115,232,0.2);
+}
+.chrome-addr-icon{
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.chrome-addr-input{
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 13px;
+    color: #202124;
+    font-family: 'Google Sans','Segoe UI',system-ui,sans-serif;
+    min-width: 0;
+}
+
+.chrome-addr-star{
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 4px;
+    transition: background 0.1s;
+}
+
+.chrome-addr-star:hover{
+    background: rgba(0,0,0,0.06);
+}
+
+.chrome-suggestions{
+    position: absolute;
+    top: calc(100%+6px);
+    left: -2px;
+    right: -2px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    z-index: 999;
+    overflow: hidden;
+}
+
+.chrome-suggestion{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #202124;
+    transition: background 0.1s;
+}
+
+.chrome-suggestion:hover,
+.chrome-suggestion.active{
+    background: #f1f3f4;
+}
+
+.chrome-suggestion-icon{
+    flex-shrink: 0;
+}
+
+
+.chrome-ctx-menu{
+    position: absolute;
+    top: calc(100%+4px);
+    right: 10px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    z-index: 999;
+    min-width: 180px;
+    padding: 6px 0;
+}
+.chrome-ctx-item{
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 8px 18px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 13px;
+    color: #202124;
+    font-family: 'Google Sans','Segoe UI',system-ui,sans-serif;
+    transition: background 0.1s;
+}
+
+.chrome-ctx-item:hover{
+    background: #f1f3f4;
+}
+
+.chrome-ctx-divider{
+    height: 1px;
+    background: #e8eaed;
+    margin: 4px 0;
+}
+
+.chrome-bookmark-bar{
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    height: 30px;
+    background: #fff;
+    border-bottom: 1px solid #e8eaed;
+    gap:2px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.chrome-bookmark-item{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 12px;
+    color: #202124;
+    font-family: 'Google Sans','Segoe UI',system-ui,sans-serif;
+    white-space: nowrap;
+    transition: background 0.1s;
+}
+
+.chrome-bookmark-item:hover{
+    background: rgba(0,0,0,0.06);
+}
+
+.chrome-bookmark-item.manage{
+    margin-left: auto;
+    color: #1a73e8;
+}
+.chrome-bookmark-favicon{
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+}
