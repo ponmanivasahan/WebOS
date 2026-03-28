@@ -11,6 +11,7 @@ export default function LoginScreen({onAuthenticate}){
     const [isLocked,setIsLocked]=useState(false);
     const [showHint,setShowHint]=useState(false);
     const [showKeypad,setShowKeypad]=useState(false);
+    const [showPassword,setShowPassword]=useState(false);
     const inputRef=useRef(null);
 
     useEffect(()=>{
@@ -76,10 +77,21 @@ export default function LoginScreen({onAuthenticate}){
 
                 <div className={`login-input-wrap${shaking ? ' login-input-shake' :''}`} >
                     <div className={rowClass}>
-                        <input ref={inputRef} type="password" placeholder="Password" value={password} className="login-input" onChange={(e)=>{
+                        <input ref={inputRef} type={showPassword ? 'text' : 'password'} placeholder="Password" value={password} className="login-input" onChange={(e)=>{
                             setPassword(e.target.value);
                             setError('');
                         }} onKeyDown={(e)=>e.key==='Enter' && submit()} disabled={isLocked} />
+
+                        <button
+                            type="button"
+                            className="login-eye-btn"
+                            onClick={()=>setShowPassword((v)=>!v)}
+                            aria-label={showPassword ? 'Hide password' : 'Show password'}
+                            title={showPassword ? 'Hide password' : 'Show password'}
+                            disabled={isLocked}
+                        >
+                            <EyeIcon open={showPassword} />
+                        </button>
 
                         <button type="button" className="login-go-btn" onClick={submit} tabIndex={-1} aria-label="Sign in" disabled={isLocked}>
                             <ArrowRightIcon />
@@ -190,6 +202,16 @@ function KeypadIcon(){
             <path d="M7 8h.01M12 8h.01M17 8h.01" />
             <path d="M7 12h.01M12 12h.01M17 12h.01" />
             <path d="M7 16h10" />
+        </svg>
+    );
+}
+
+function EyeIcon({open}){
+    return(
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z" />
+            <circle cx="12" cy="12" r="3" />
+            {!open && <path d="M4 20 20 4" />}
         </svg>
     );
 }

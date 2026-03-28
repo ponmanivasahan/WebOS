@@ -380,6 +380,29 @@
     transition:background 0.18s ease;
 }
 
+.login-eye-btn{
+    width:40px;
+    border:none;
+    border-left:1px solid rgba(202, 216, 228, 0.9);
+    background:rgba(223, 236, 247, 0.94);
+    color:#35536f;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:background 0.18s ease, color 0.18s ease;
+}
+
+.login-eye-btn:hover{
+    background:rgba(211, 227, 240, 0.98);
+    color:#27465f;
+}
+
+.login-eye-btn:disabled{
+    opacity:0.58;
+    cursor:not-allowed;
+}
+
 .login-go-btn:hover{
     background:rgba(105, 139, 166, 0.98);
 }
@@ -556,7 +579,8 @@
 }
 
 .login-keypad-key:focus-visible,
-.login-tool-btn:focus-visible{
+.login-tool-btn:focus-visible,
+.login-eye-btn:focus-visible{
     outline:2px solid rgba(167, 210, 241, 0.9);
     outline-offset:1px;
 }
