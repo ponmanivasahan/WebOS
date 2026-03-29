@@ -1,350 +1,532 @@
-import {useState,useRef,useCallback} from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import useTaskStore from './useTaskStore';
-
 import './taskmanager.css';
 
-const TABS=[
-    {key:'all',label:'All'},
-    {key:'active',label:'Active'},
-    {key:'done',label:'Done'},
+const MODES =[
+  {key:'focus',label:'Focus',minutes:25,ring:''},
+  {key:'short',label:'Short Break',minutes:5,ring:'break'},
+  {key:'long',label:'Long Break',minutes:15,ring:'long-break'},
 ];
-const PRIORITIES=['all','high','medium','low'];
 
-const Icons={
-   checkSquare:(
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" >
-        <rect x="3" y="3" width="18" height="18" rx="4"/><polyline points="9 12 11.5 14.5 15.5 9.5"/>  
+const SESSIONS_PER_SET=4;
+const RING_R=88;
+const RING_C=2 *Math.PI*RING_R;
+
+const I={
+  logo:(
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round">
+      <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
     </svg>
-   ),
-   clock:(
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" strokeColor="currentColor" strokeWidth="2" strokeLinecap="round">
-        <circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/>
+  ),
+  timer:(
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/>
     </svg>
-   ),
-   circle:(
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" >
-        <circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>
+  ),
+  tasks:(
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/>
     </svg>
-   ),
-   check:(
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-        <circle cx="12" cy="12" r="9"/><polyline points="8.5 12 11 14.5 16 9"/> 
+  ),
+  play:(
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <polygon points="5 3 19 12 5 21"/>
     </svg>
-   ),
-   flag:(
+  ),
+  pause:(
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+    </svg>
+  ),
+  reset:(
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+      <polyline points="1 4 1 10 7 10"/>
+      <path d="M3.51 15a9 9 0 1 0 .49-4.6"/>
+    </svg>
+  ),
+  skip:(
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+      <polygon points="5 4 15 12 5 20"/><line x1="19" y1="5" x2="19" y2="19"/>
+    </svg>
+  ),
+  edit:(
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-        <path d="M5 3v18"/><path d="M5 4h12l-3 5 3 5H5"/>
-    </svg>
-   ),
-   edit:(
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-    </svg>
-   ),
-   trash: (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-      <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-      <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
     </svg>
   ),
-  tasks: (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
-      <rect x="3" y="3" width="18" height="18" rx="3"/>
-      <path d="M8 10l2.5 2.5 5-5"/><line x1="8" y1="16" x2="16" y2="16"/>
+  trash:(
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <polyline points="3 6 5 6 21 6"/>
+      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+      <path d="M10 11v6M14 11v6M9 6V4h6v2"/>
     </svg>
   ),
-  gripVertical: (
-    <svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor">
-      <circle cx="3" cy="3"  r="1.5"/><circle cx="3" cy="8"  r="1.5"/><circle cx="3" cy="13" r="1.5"/>
-      <circle cx="7" cy="3"  r="1.5"/><circle cx="7" cy="8"  r="1.5"/><circle cx="7" cy="13" r="1.5"/>
+  target:(
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
     </svg>
   ),
+  grip:(
+    <svg width="8" height="14" viewBox="0 0 8 14" fill="currentColor">
+      <circle cx="2" cy="2"  r="1.2"/><circle cx="6" cy="2"  r="1.2"/>
+      <circle cx="2" cy="7"  r="1.2"/><circle cx="6" cy="7"  r="1.2"/>
+      <circle cx="2" cy="12" r="1.2"/><circle cx="6" cy="12" r="1.2"/>
+    </svg>
+  ),
+  clock:(
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/>
+    </svg>
+  ),
+};
+
+const pad=(n) =>String(n).padStart(2,'0');
+const fmt=(s) =>`${pad(Math.floor(s/60))}:${pad(s % 60)}`;
+
+function dueCls(d){
+  if(!d) return '';
+  const t=new Date().toISOString().slice(0, 10);
+  if (d<t) return 'overdue';
+  if (d === t) return 'today';
+  return '';
 }
-function dueBadgeClass(dueDate){
-    if(!dueDate) return '';
-    const today=new Date().toISOString().slice(0,10);
-    if(dueDate<today) return 'is-overdue';
-    if(dueDate===today) return 'is-today';
+
+function fmtDue(d, t){return [d, t].filter(Boolean).join(' ');}
+
+function TimerView({tasks,activeTaskId,setActiveTaskId }){
+  const [modeIdx,setModeIdx]=useState(0);
+  const [seconds,setSeconds]=useState(MODES[0].minutes * 60);
+  const [running,setRunning]=useState(false);
+  const [session,setSession]=useState(1); 
+  const [completed,setCompleted]=useState(0);
+  const intervalRef = useRef(null);
+
+  const mode=MODES[modeIdx];
+  const total=mode.minutes*60;
+  const progress=seconds/total;
+  const offset=RING_C*progress;
+  useEffect(()=>{
+    if(running){
+      intervalRef.current=setInterval(() =>{
+        setSeconds(s =>{
+          if (s<=1){
+            clearInterval(intervalRef.current);
+            setRunning(false);
+            if (modeIdx === 0) {
+              const next = session>=SESSIONS_PER_SET ? 2 : 1;
+              setCompleted(c =>c+1);
+              setSession(s2 =>s2>=SESSIONS_PER_SET ? 1 : s2 + 1);
+              setModeIdx(next);
+              setSeconds(MODES[next].minutes*60);
+            } else {
+              setModeIdx(0);
+              setSeconds(MODES[0].minutes*60);
+            }
+            return 0;
+          }
+          return s - 1;
+        });
+      }, 1000);
+    }
+    return () =>clearInterval(intervalRef.current);
+  }, [running,modeIdx,session]);
+
+  const switchMode = (idx)=>{
+    clearInterval(intervalRef.current);
+    setRunning(false);
+    setModeIdx(idx);
+    setSeconds(MODES[idx].minutes * 60);
+  };
+
+  const toggle =()=>setRunning(r =>!r);
+
+  const reset = ()=>{
+    clearInterval(intervalRef.current);
+    setRunning(false);
+    setSeconds(mode.minutes * 60);
+  };
+
+  const skip =()=>{
+    clearInterval(intervalRef.current);
+    setRunning(false);
+    const next =modeIdx === 0 ? (session >= SESSIONS_PER_SET ? 2 : 1) : 0;
+    if (modeIdx===0) setSession(s => s >= SESSIONS_PER_SET ? 1 : s + 1);
+    setModeIdx(next);
+    setSeconds(MODES[next].minutes*60);
+  };
+
+  const activeTasks=tasks.filter(t => !t.done);
+  const activeTask=tasks.find(t => t.id === activeTaskId);
+  const dots = Array.from({ length: SESSIONS_PER_SET }, (_, i) => {
+    if (i < completed % SESSIONS_PER_SET) return 'done';
+    if (i === (completed % SESSIONS_PER_SET) && modeIdx !== 0) return 'break';
     return '';
-}
-function formatDue(dueDate,dueTime){
-    return [dueDate,dueTime].filter(Boolean).join(' ');
-}
-
-function PriorityDot({priority}){
-    return <div className={`tm-priority ${priority}`} title={priority} />;
-}
-
-
-function tabIcon(key){
-    if(key==='all') return Icons.circle;
-    if(key==='active') return Icons.clock;
-    return Icons.check;
-}
-
-function TaskItem({task,index,onToggle,onDelete,onEdit,
-    onDragStart,onDragEnter,onDragEnd,onDrop,dragOverId,dragOverPos,
-}){
-    const [editing, setEditing]=useState(false);
-    const [editVal,setEditVal]=useState(task.title);
-    const editRef=useRef(null);
-
-    const startEdit=()=>{
-        setEditing(true);
-        setEditVal(task.title);
-        setTimeout(()=>editRef.current ?.focus(),20);
-    };
-
-    const commitEdit=()=>{
-        if(editVal.trim()) onEdit(task.id,{title:editVal.trim()});
-        setEditing(false);
-    };
-    
-     const handleEditKey = (e) => {
-    if (e.key === 'Enter')  commitEdit();
-    if (e.key === 'Escape') setEditing(false);
-    e.stopPropagation();
-    };
-    const isOver=dragOverId===task.id;
-    const overCls=isOver ? (dragOverPos==='top' ? 'drag-over-top' : 'drag-over-bottom') : '';
-    const doneCls=task.done ? 'is-done': '';
-    return(
-        <div className={`tm-task${doneCls}${overCls}`}
-        draggable onDragStart={(e)=>onDragStart(e,index,task.id)}
-        onDragEnter={(e)=>onDragEnter(e,index,task.id)}
-        onDragOver={(e)=>{e.preventDefault(); onDragEnter(e,index,task.id);}}
-        onDragEnd={onDragEnd} onDrop={(e)=>onDrop(e,index)}>
-            <span className="tm-drag-handle" title="Drag to reorder">{Icons.gripVertical}</span>
-
-            <input type='checkbox' className='tm-checkbox' checked={task.done} onChange={()=>onToggle(task.id)} />
-            <PriorityDot priority={task.priority} />
-
-            {editing ? (
-                <input ref={editRef} className='tm-edit-input' value={editVal} onChange={(e)=>setEditVal(e.target.value)} onBlur={commitEdit} 
-                onKeyDown={handleEditKey} onClick={(e)=>e.stopPropagation()} />
-            ) : (
-                <span className="tm-task-title" onDoubleClick={startEdit} title="Double click to edit">
-                    {task.title}
-                </span>
-            )
-        }
-
-        {(task.dueDate || task.dueTime) && (
-            <span className={`tm-due ${dueBadgeClass(task.dueDate)}`}>
-                {Icons.clock}&nbsp;{formatDue(task.dueDate, task.dueTime)}
-            </span>
-        )}
-
-        <div className="tm-task-actions">
-            <button className="tm-action-btn" onClick={startEdit} title="Edit task">{Icons.edit}</button>
-            <button className="tm-action-btn danger" onClick={()=>onDelete(task.id)} title="Delete task">{Icons.trash}</button>
-        </div>
-        </div>
-    );
-}
-
-function AddTaskForm({onAdd}){
-    const [title,setTitle]=useState('');
-    const [dueDate,setDueDate]=useState('');
-    const [dueTime,setDueTime]=useState('');
-    const [priority,setPriority]=useState('medium');
-
-    const submit=()=>{
-        if(!title.trim()) return;
-        onAdd({title,dueDate,dueTime,priority});
-        setTitle('');
-        setDueDate(''); setDueTime(''); setPriority('medium');
-    };
-
-    return(
-        <div className='tm-add-form'>
-            <input className='tm-add-title' placeholder="New task title..." value={title} onChange={(e)=>setTitle(e.target.value)}
-            onKeyDown={(e)=>e.key==='Enter' && submit()} />
-            <input type='date' className='tm-add-date' value={dueDate}
-            onChange={(e)=>setDueDate(e.target.value)} title='Due date' />
-            <input type="time" className="tm-add-time" value={dueTime}
-            onChange={(e)=>setDueTime(e.target.value)} title="Due time" />
-            <select className='tm-add-priority' value={priority} onChange={(e)=>setPriority(e.target.value)}>
-                <option value="high"> High</option>
-                <option value="medium"> Medium</option>
-                <option value="low"> Low</option>
-            </select>
-            <button className='tm-add-btn' onClick={submit}>+ Add Task</button>
-        </div>
-    );
-}
-
-export default function TaskManager() {
-  const { tasks, addTask, toggleDone, deleteTask, editTask, reorderTasks } = useTaskStore();
- 
-  const [filter,    setFilter]    = useState('all');
-  const [priFilter, setPriFilter] = useState('all');
- 
-  const dragFromIdx = useRef(null);
-  const dragFromId  = useRef(null);
-  const [dragOverId,  setDragOverId]  = useState(null);
-  const [dragOverPos, setDragOverPos] = useState('bottom');
- 
-  const handleDragStart = useCallback((e, index, id) => {
-    dragFromIdx.current = index;
-    dragFromId.current  = id;
-    e.dataTransfer.effectAllowed = 'move';
-    setTimeout(() => { if (e.target) e.target.style.opacity = '0.45'; }, 0);
-  }, []);
- 
-  const handleDragEnter = useCallback((e, _index, id) => {
-    if (dragFromId.current === id) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const pos  = e.clientY < rect.top + rect.height / 2 ? 'top' : 'bottom';
-    setDragOverId(id);
-    setDragOverPos(pos);
-  }, []);
- 
-  const handleDragEnd = useCallback((e) => {
-    if (e.target) e.target.style.opacity = '';
-    setDragOverId(null);
-    dragFromIdx.current = null;
-    dragFromId.current  = null;
-  }, []);
- 
-  const handleDrop = useCallback((e, toIdx) => {
-    e.preventDefault();
-    const fromIdx = dragFromIdx.current;
-    if (fromIdx === null || fromIdx === toIdx) { setDragOverId(null); return; }
-    const rect   = e.currentTarget.getBoundingClientRect();
-    const pos    = e.clientY < rect.top + rect.height / 2 ? 'top' : 'bottom';
-    let   realTo = pos === 'top' ? toIdx : toIdx + 1;
-    if (fromIdx < realTo) realTo -= 1;
-    reorderTasks(fromIdx, Math.max(0, realTo));
-    setDragOverId(null);
-  }, [reorderTasks]);
-  const totalCount  = tasks.length;
-  const doneCount   = tasks.filter((t) => t.done).length;
-  const activeCount = tasks.filter((t) => !t.done).length;
- 
-  const tabCount = { all: totalCount, active: activeCount, done: doneCount };
- 
-  const visibleTasks = tasks.filter((t) => {
-    const doneOk = filter === 'all' ? true : filter === 'active' ? !t.done : t.done;
-    const priOk  = priFilter === 'all' ? true : t.priority === priFilter;
-    return doneOk && priOk;
   });
- 
-  const progressPct = totalCount === 0 ? 0 : Math.round((doneCount / totalCount) * 100);
- 
+
   return (
-    <div className="tm-shell">
- 
-      <div className="tm-header">
-        <div className="tm-header-left">
-          <div className="tm-app-icon">{Icons.tasks}</div>
-          <div>
-            <div className="tm-app-title">Task Manager</div>
-            <div className="tm-app-subtitle">
-              {progressPct}% complete
-            </div>
-          </div>
-        </div>
- 
-        <div className="tm-header-stats">
-          <div className="tm-stat-chip">
-            <span>Total</span>
-            <span className="num">{totalCount}</span>
-          </div>
-          <div className="tm-stat-chip active">
-            <span>Active</span>
-            <span className="num">{activeCount}</span>
-          </div>
-          <div className="tm-stat-chip done">
-            <span>Done</span>
-            <span className="num">{doneCount}</span>
-          </div>
-        </div>
-      </div>
- 
-      <div className="tm-toolbar">
-        {TABS.map(({ key, label }) => (
+    <div className="fa-timer-view">
+      <div className="fa-modes">
+        {MODES.map((m, i) => (
           <button
-            key={key}
-            className={`tm-tab${filter === key ? ' is-active' : ''}`}
-            onClick={() => setFilter(key)}
+            key={m.key}
+            className={`fa-mode-btn${modeIdx === i ? ' active' : ''}`}
+            onClick={() => switchMode(i)}
           >
-            <span className="tm-tab-icon">{tabIcon(key)}</span>
-            {label}
-            <span style={{ opacity: 0.6, fontSize: 11, marginLeft: 2 }}>
-              ({tabCount[key]})
-            </span>
+            {m.label}
           </button>
         ))}
       </div>
- 
-      <AddTaskForm onAdd={addTask} />
- 
-      <div className="tm-filter-bar">
-        <span className="tm-filter-label">
-          {Icons.flag} Priority
+      <div className="fa-timer-centre">
+        <div className="fa-ring-wrap">
+          <svg className="fa-ring-svg" viewBox="0 0 200 200">
+            <circle className="fa-ring-track" cx="100" cy="100" r={RING_R} />
+            <circle
+              className={`fa-ring-fill ${mode.ring}`}
+              cx="100" cy="100" r={RING_R}
+              strokeDasharray={RING_C}
+              strokeDashoffset={RING_C - offset}
+            />
+          </svg>
+          <div className="fa-ring-center">
+            <div className="fa-timer-digits">{fmt(seconds)}</div>
+            <div className="fa-timer-mode-label">{mode.label}</div>
+          </div>
+        </div>
+        <div className="fa-sessions">
+          {dots.map((cls, i) => (
+            <span key={i} className={`fa-session-dot ${cls}`} />
+          ))}
+          <span className="fa-session-label">
+            {completed} session{completed !== 1 ? 's' : ''} complete
+          </span>
+        </div>
+        <div className="fa-controls">
+          <button className="fa-btn-secondary" onClick={reset}>
+            {I.reset}&nbsp; Reset
+          </button>
+          <button className="fa-btn-primary" onClick={toggle}>
+            {running ? I.pause : I.play}
+            &nbsp;{running ? 'Pause' : 'Start Focus'}
+          </button>
+          <button className="fa-btn-secondary" onClick={skip}>
+            {I.skip}&nbsp; Skip
+          </button>
+        </div>
+      </div>
+      <div className="fa-active-task">
+        <div className="fa-active-task-label">Now focusing on</div>
+        {activeTask ? (
+          <div className="fa-active-task-pick">
+            <span className={`fa-pri-dot ${activeTask.priority}`} />
+            <span className="fa-active-task-title">{activeTask.title}</span>
+            <button className="fa-icon-btn" onClick={() => setActiveTaskId(null)} title="Clear">✕</button>
+          </div>
+        ) : (
+          <div className="fa-active-task-pick">
+            {activeTasks.length === 0 ? (
+              <span>No tasks — add some in the Tasks tab</span>
+            ) : (
+              <>
+                <span>Pick a task to focus on</span>
+                <select
+                  className="fa-task-select"
+                  value=""
+                  onChange={e => setActiveTaskId(e.target.value)}
+                >
+                  <option value="" disabled>Select task…</option>
+                  {activeTasks.map(t => (
+                    <option key={t.id} value={t.id}>{t.title}</option>
+                  ))}
+                </select>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
+    </div>
+  );
+}
+
+function TaskRow({
+  task, index, activeTaskId, setActiveTaskId,
+  onToggle, onDelete, onEdit,
+  onDragStart, onDragEnter, onDragEnd, onDrop,
+  dragOverId, dragOverPos,
+}) {
+  const [editing,setEditing]=useState(false);
+  const [val,setVal]=useState(task.title);
+  const ref=useRef(null);
+
+  const startEdit=()=>{setEditing(true); setVal(task.title); setTimeout(() => ref.current?.focus(), 20); };
+  const commit=()=>{if(val.trim()) onEdit(task.id, { title: val.trim() }); setEditing(false); };
+  const onKey= e =>{if(e.key === 'Enter') commit(); if (e.key === 'Escape') setEditing(false); e.stopPropagation(); };
+  const isOver=dragOverId === task.id;
+  const overCls=isOver ? `drag-${dragOverPos}` : '';
+  const isActive = activeTaskId === task.id;
+  return (
+    <div
+      className={`fa-task${task.done ? ' done' : ''}${overCls}${isActive ? ' is-active-task' : ''}`}
+      draggable
+      onDragStart={e => onDragStart(e,index,task.id)}
+      onDragEnter={e => onDragEnter(e,index,task.id)}
+      onDragOver={e  => {e.preventDefault(); onDragEnter(e, index, task.id); }}
+      onDragEnd={onDragEnd}
+      onDrop={e => onDrop(e, index)}
+    >
+      <span className="fa-grip">{I.grip}</span>
+
+      <input
+        type="checkbox"
+        className="fa-check"
+        checked={task.done}
+        onChange={() => onToggle(task.id)}
+      />
+      <span className={`fa-pri-dot ${task.priority}`} title={task.priority} />
+
+      {editing ? (
+        <input
+          ref={ref}
+          className="fa-edit-input"
+          value={val}
+          onChange={e => setVal(e.target.value)}
+          onBlur={commit}
+          onKeyDown={onKey}
+          onClick={e => e.stopPropagation()}
+        />
+      ) : (
+        <span className="fa-task-title" onDoubleClick={startEdit} title="Double-click to edit">
+          {task.title}
         </span>
-        {PRIORITIES.map((p) => (
+      )}
+
+      {(task.dueDate || task.dueTime) && (
+        <span className={`fa-due ${dueCls(task.dueDate)}`}>
+          {I.clock}&nbsp;{fmtDue(task.dueDate, task.dueTime)}
+        </span>
+      )}
+
+      <div className="fa-row-actions">
+        <button
+          className={`fa-icon-btn${isActive ? ' focus-set' : ''}`}
+          onClick={() => setActiveTaskId(isActive ? null : task.id)}
+          title={isActive ? 'Remove from focus' : 'Set as focus task'}
+        >
+          {I.target}
+        </button>
+        <button className="fa-icon-btn" onClick={startEdit} title="Edit">{I.edit} </button>
+        <button className="fa-icon-btn del" onClick={() => onDelete(task.id)} title="Delete">{I.trash}</button>
+      </div>
+    </div>
+  );
+}
+
+function TasksView({activeTaskId,setActiveTaskId}){
+  const { tasks,addTask,toggleDone,deleteTask,editTask, reorderTasks } = useTaskStore();
+
+  const [filter,setFilter]=useState('all');
+  const [priFilter,setPriFilter]=useState('all');
+  const [title,setTitle]=useState('');
+  const [dueDate,setDueDate]=useState('');
+  const [dueTime,setDueTime]=useState('');
+  const [priority,setPriority]=useState('medium');
+
+  const submit = () =>{
+    if (!title.trim()) return;
+    addTask({ title, dueDate, dueTime, priority });
+    setTitle(''); setDueDate(''); setDueTime(''); setPriority('medium');
+  };
+
+  const fromIdx=useRef(null);
+  const fromId =useRef(null);
+  const [dragOverId,setDragOverId]=useState(null);
+  const [dragOverPos,setDragOverPos]=useState('bottom');
+
+  const onDragStart = useCallback((e, i, id) => {
+    fromIdx.current = i; fromId.current = id;
+    e.dataTransfer.effectAllowed = 'move';
+    setTimeout(() => { if (e.target) e.target.style.opacity = '0.4'; }, 0);
+  }, []);
+
+  const onDragEnter = useCallback((e, _i, id) => {
+    if (fromId.current === id) return;
+    const { top, height } = e.currentTarget.getBoundingClientRect();
+    setDragOverId(id);
+    setDragOverPos(e.clientY < top + height / 2 ? 'top' : 'bottom');
+  }, []);
+
+  const onDragEnd = useCallback(e => {
+    if (e.target) e.target.style.opacity = '';
+    setDragOverId(null);
+    fromIdx.current = null; fromId.current = null;
+  }, []);
+
+  const onDrop = useCallback((e, toIdx) => {
+    e.preventDefault();
+    const fi = fromIdx.current;
+    if (fi === null || fi === toIdx) { setDragOverId(null); return; }
+    const { top, height } = e.currentTarget.getBoundingClientRect();
+    const pos = e.clientY < top + height / 2 ? 'top' : 'bottom';
+    let realTo = pos === 'top' ? toIdx : toIdx + 1;
+    if (fi < realTo) realTo--;
+    reorderTasks(fi, Math.max(0, realTo));
+    setDragOverId(null);
+  }, [reorderTasks]);
+
+  const total=tasks.length;
+  const done =tasks.filter(t => t.done).length;
+  const active=total -done;
+  const pct=total=== 0 ? 0 : Math.round(done/total*100);
+
+  const counts ={all:total,active,done};
+
+  const visible = tasks.filter(t => {
+    const fm=filter==='all' ? true : filter==='active' ? !t.done : t.done;
+    const fp=priFilter==='all' ? true : t.priority===priFilter;
+    return fm && fp;
+  });
+
+  const EMPTY_MSG = {
+    done:'No completed tasks yet.',
+    active:'All caught up.',
+    all:'No tasks yet. Add one above.',
+  };
+
+  return (
+    <div className="fa-tasks-view">
+      <div className="fa-add-form">
+        <input
+          className="fa-input fa-add-title"
+          placeholder="New task…"
+          value={title}
+          onChange={e =>setTitle(e.target.value)}
+          onKeyDown={e =>e.key==='Enter' && submit()}
+        />
+        <input type="date" className="fa-input fa-add-date" value={dueDate} onChange={e =>setDueDate(e.target.value)} title="Due date" />
+        <input type="time" className="fa-input fa-add-time" value={dueTime} onChange={e =>setDueTime(e.target.value)} title="Due time" />
+        <select className="fa-add-select" value={priority} onChange={e => setPriority(e.target.value)}>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <button className="fa-add-btn" onClick={submit}>+ Add</button>
+      </div>
+      <div className="fa-filter-row">
+        {['all', 'active', 'done'].map(k => (
+          <button
+            key={k}
+            className={`fa-pill${filter === k ? ' active' : ''}`}
+            onClick={() => setFilter(k)}
+          >
+            {k.charAt(0).toUpperCase() + k.slice(1)}
+            <span className="fa-pill-count">{counts[k]}</span>
+          </button>
+        ))}
+        <span className="fa-filter-sep" />
+        {['all', 'high', 'medium', 'low'].map(p =>(
           <button
             key={p}
-            className={`tm-filter-btn${priFilter === p ? ' is-active' : ''}`}
+            className={`fa-pill${priFilter === p ? ' active' : ''}`}
             onClick={() => setPriFilter(p)}
           >
-            {p !== 'all' && <span className={`tm-pri-dot tm-pri-dot-${p}`} />}
+            {p !== 'all' && <span className={`fa-dot fa-dot-${p}`} />}
             {p.charAt(0).toUpperCase() + p.slice(1)}
           </button>
         ))}
       </div>
- 
-      <div className="tm-body">
-        {visibleTasks.length === 0 ? (
-          <div className="tm-empty">
-            <span className="tm-empty-icon">
-              {filter === 'done' ? '🏁' : filter === 'active' ? '⚡' : '📋'}
-            </span>
-            {filter === 'done'
-              ? 'No completed tasks yet.'
-              : filter === 'active'
-              ? 'All caught up! Add a task above.'
-              : 'No tasks yet. Add one above!'}
+
+=      <div className="fa-task-body">
+        {visible.length === 0 ? (
+          <div className="fa-empty">
+            <span className="fa-empty-icon">{filter === 'done' ? '🏁' : '📋'}</span>
+            {EMPTY_MSG[filter] ?? 'No tasks.'}
           </div>
         ) : (
-          visibleTasks.map((task, index) => (
-            <TaskItem
+          visible.map((task,i) =>(
+            <TaskRow
               key={task.id}
               task={task}
-              index={index}
+              index={i}
+              activeTaskId={activeTaskId}
+              setActiveTaskId={setActiveTaskId}
               onToggle={toggleDone}
               onDelete={deleteTask}
               onEdit={editTask}
-              onDragStart={handleDragStart}
-              onDragEnter={handleDragEnter}
-              onDragEnd={handleDragEnd}
-              onDrop={handleDrop}
+              onDragStart={onDragStart}
+              onDragEnter={onDragEnter}
+              onDragEnd={onDragEnd}
+              onDrop={onDrop}
               dragOverId={dragOverId}
               dragOverPos={dragOverPos}
             />
           ))
         )}
       </div>
- 
-      <div className="tm-statusbar">
-        <span className="tm-status-panel">
-          <span className="val">{totalCount}</span> total
-        </span>
-        <span className="tm-status-panel">
-          <span className="val">{activeCount}</span> active
-        </span>
-        <span className="tm-status-panel">
-          <span className="val">{doneCount}</span> done
-        </span>
-        <span className="tm-status-spacer" />
-        <div className="tm-progress-bar" title={`${progressPct}% done`}>
-          <div className="tm-progress-fill" style={{ width: `${progressPct}%` }} />
+
+      <footer className="fa-statusbar">
+        <span className="fa-status-text"><strong>{active}</strong> active</span>
+        <span className="fa-status-sep" />
+        <span className="fa-status-text"><strong>{done}</strong> done</span>
+        <span className="fa-spacer" />
+        <span className="fa-progress-label">{pct}%</span>
+        <div className="fa-progress-bar">
+          <div className="fa-progress-fill" style={{ width: `${pct}%` }} />
         </div>
+      </footer>
+    </div>
+  );
+}
+
+export default function FocusApp() {
+  const [tab,setTab]=useState('timer');
+  const [activeTaskId,setActiveTaskId]=useState(null);
+  const {tasks}=useTaskStore();
+
+  const activeTasks=tasks.filter(t => !t.done);
+  return (
+    <div className="fa-shell">
+      <div className="fa-titlebar">
+        <div className="fa-logo">{I.logo}</div>
+        <span className="fa-appname">Focus</span>
+        {activeTaskId && (
+          <span style={{ fontSize: 11, color: 'var(--t3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 180 }}>
+            ● {tasks.find(t => t.id === activeTaskId)?.title}
+          </span>
+        )}
       </div>
- 
+      <nav className="fa-nav">
+        <div className="fa-nav-tab-wrap">
+          <button className={`fa-nav-btn${tab === 'timer' ? ' active' : ''}`} onClick={() => setTab('timer')}>
+            {I.timer} Timer
+          </button>
+        </div>
+        <div className="fa-nav-tab-wrap">
+          <button className={`fa-nav-btn${tab === 'tasks' ? ' active' : ''}`} onClick={() => setTab('tasks')}>
+            {I.tasks} Tasks
+            {activeTasks.length>0 &&(
+              <span style={{
+                fontSize:10,fontWeight:700,background:'var(--acc)',
+                color:'#fff',padding:'0 5px',borderRadius:99,marginLeft:2
+              }}>
+                {activeTasks.length}
+              </span>
+            )}
+          </button>
+        </div>
+      </nav>
+      {tab==='timer' ?(
+        <TimerView
+          tasks={tasks}
+          activeTaskId={activeTaskId}
+          setActiveTaskId={setActiveTaskId}
+        />
+      ) : (
+        <TasksView
+          activeTaskId={activeTaskId}
+          setActiveTaskId={setActiveTaskId}
+        />
+      )}
+
     </div>
   );
 }
