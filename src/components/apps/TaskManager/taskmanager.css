@@ -395,3 +395,19 @@
     width:100px;
     color-scheme: dark;
 }
+.fa-add-select {
+  height: 32px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background:#282828;
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.14s;
+}
+.fa-add-select:focus {
+     border-color: #0078d4;
+}
