@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import { OSProvider } from './context/OSContext';
 import WelcomeScreen from './components/welcome/Welcome'
 import Desktop from './components/desktop/Desktop';
@@ -6,7 +6,22 @@ import WindowManager from './components/window/windowManager';
 import './index.css'
 
 function App(){
-  const [stage,setStage]=useState('welcome');
+  const [stage,setStage]=useState(()=>{
+    try{
+      const saved=localStorage.getItem('webos_auth_stage');
+      return saved || 'welcome';
+    }catch{
+      return 'welcome';
+    }
+  });
+
+  useEffect(()=>{
+    try{
+      localStorage.setItem('webos_auth_stage',stage);
+    }catch{
+      /* ignore storage errors */
+    }
+  },[stage]);
   const [windows,setWindows]=useState([]);
   const [activeWinId,setActiveWinId]=useState(null);
 
@@ -88,7 +103,7 @@ export default App
 
 const APP_META={
   'file-explorer':{title:'File Explorer'},
-  'task-manager':{title:'Task Manager'},
+  'task-manager':{title:'Focus App'},
   'notes':{title:'Notepad'},
   'vscode':{title:'VS Code'},
   'terminal':{title:'Terminal'},

@@ -58,9 +58,9 @@ const DESKTOP_APPS=[
     },
     {
         id:'task-manager',
-        label:'Task Manager',
+        label:'Focus App',
         appId:'task-manager',
-        icon:<IconImage src={taskManagerIcon} alt='Task Manager' />,
+        icon:<IconImage src={taskManagerIcon} alt='Focus App' />,
     },
     {
         id:'notes',
