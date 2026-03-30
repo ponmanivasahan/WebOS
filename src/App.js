@@ -5,6 +5,7 @@ import Desktop from './components/desktop/Desktop';
 import WindowManager from './components/window/windowManager';
 import './index.css'
 
+
 function App(){
   const [stage,setStage]=useState(()=>{
     try{
@@ -108,4 +109,5 @@ const APP_META={
   'vscode':{title:'VS Code'},
   'terminal':{title:'Terminal'},
   'chrome':{title:'Chrome'},
+  'draw':{title:'Paint'},
 };

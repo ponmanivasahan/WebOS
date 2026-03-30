@@ -30,6 +30,7 @@ import notesIcon from '../../assets/taskbar/notepad.png';
 import vscodeIcon from '../../assets/taskbar/vs.png';
 import terminalIcon from '../../assets/taskbar/terminal.png';
 import chromeIcon from '../../assets/taskbar/chrome.png';
+import drawIcon from '../../assets/draw.png';
 
 const DESKTOP_APPS=[
     {
@@ -61,6 +62,12 @@ const DESKTOP_APPS=[
         label:'Focus App',
         appId:'task-manager',
         icon:<IconImage src={taskManagerIcon} alt='Focus App' />,
+    },
+    {
+        id:'draw',
+        label:'Paint',
+        appId:'draw',
+        icon:<IconImage src={drawIcon} alt='Paint' />,
     },
     {
         id:'notes',

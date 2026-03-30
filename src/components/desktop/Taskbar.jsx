@@ -8,6 +8,7 @@ import terminalIcon from '../../assets/taskbar/terminal.png';
 import chromeIcon from '../../assets/taskbar/chrome.png';
 import taskManagerIcon from '../../assets/taskbar/taskmanager.png';
 import notesIcon from '../../assets/taskbar/notepad.png';
+import drawIcon from '../../assets/draw.png';
 import settingsIcon from '../../assets/taskbar/settings.png';
 import soundIcon from '../../assets/taskbar/sound.png';
 import notificationIcon from '../../assets/taskbar/notification.png';
@@ -602,5 +603,6 @@ function TaskbarAppIcon({ appId }) {
   if (appId === 'vscode') return <TaskbarIconImage src={vscodeIcon} alt="" className="taskbar-icon-img" />;
   if (appId === 'terminal') return <TaskbarIconImage src={terminalIcon} alt="" className="taskbar-icon-img" />;
   if (appId === 'chrome') return <TaskbarIconImage src={chromeIcon} alt="" className="taskbar-icon-img" />;
+  if (appId === 'draw') return <TaskbarIconImage src={drawIcon} alt="" className="taskbar-icon-img" />;
   return <TaskbarIconImage src={genericAppIcon} alt="" className="taskbar-icon-img" />;
 }

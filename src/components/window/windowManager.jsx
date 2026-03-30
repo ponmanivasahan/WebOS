@@ -6,12 +6,14 @@ import Notes from '../apps/Notes/Notes';
 import VSCode from '../apps/DesktopApps/VSCode';
 import Terminal from '../apps/DesktopApps/Terminal';
 import Chrome from '../apps/DesktopApps/Chrome';
+import Draw from '../apps/DesktopApps/Draw';
 import vscodeIcon from '../../assets/taskbar/vs.png';
 import terminalIcon from '../../assets/taskbar/terminal.png';
 import chromeIcon from '../../assets/taskbar/chrome.png';
 import fileExplorerIcon from '../../assets/taskbar/fileexp.png';
 import taskManagerIcon from '../../assets/taskbar/taskmanager.png';
 import notesIcon from '../../assets/taskbar/notepad.png';
+import drawIcon from '../../assets/draw.png';
 
 const APP_DEFAULTS = {
   'file-explorer':{ width: 720, height: 480, title: 'File Explorer'},
@@ -20,6 +22,7 @@ const APP_DEFAULTS = {
   'vscode': { width: 900, height: 580, title: 'VS Code' },
   'terminal': { width: 760, height: 500, title: 'Terminal' },
   'chrome': { width: 960, height: 600, title: 'Chrome' },
+  'draw': { width: 980, height: 640, title: 'Paint' },
 };
 
 const getAppIcon = (appId) => {
@@ -29,6 +32,7 @@ const getAppIcon = (appId) => {
   if (appId === 'vscode') return <AppIcon src={vscodeIcon} alt="VS Code" />;
   if (appId === 'terminal') return <AppIcon src={terminalIcon} alt="Terminal" />;
   if (appId === 'chrome') return <AppIcon src={chromeIcon} alt="Chrome" />;
+  if (appId === 'draw') return <AppIcon src={drawIcon} alt="Paint" />;
   return null;
 };
 
@@ -39,6 +43,7 @@ const APP_MENUS = {
   'vscode':[],
   'terminal':[],
   'chrome':[],
+  'draw':[],
 };
 
 const APP_COMPONENTS = {
@@ -48,6 +53,7 @@ const APP_COMPONENTS = {
   'vscode': VSCode,
   'terminal': Terminal,
   'chrome': Chrome,
+  'draw': Draw,
 };
 
 export default function WindowManager({

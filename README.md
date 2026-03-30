@@ -1,49 +1,189 @@
-# Aurora OS
+<!--
+ Copyright (C) 2026 ponmanivasahan
 
-Aurora OS is a web-based operating system experience built fully in the browser.  
-It includes a desktop UI, draggable windows, a taskbar, and built-in apps like File Explorer, Task Manager, and Notes.
+ This file is part of WebOS.
 
-## Story
+ WebOS is free software: you can redistribute it and/or modify
+ it under the terms of the AGPL-3.0 License.
+-->
 
-This project started with one question:  
-What if a portfolio was not a normal website at all?
+<h1 align="center">WebOS</h1>
 
-Most portfolios are pages of links and project cards. Useful, but easy to forget.  
-I wanted something people could explore, so I built an interactive OS-style portfolio instead.
+<p align="center">
+  Enterprise-style browser desktop experience built with React.
+</p>
 
-I began this during Hack Club WebOS Jam (guided by SerenityUX), then continued improving it with my own ideas.
+<p align="center">
+  <a href="https://github.com/ponmanivasahan/WebOS">GitHub Repository</a>
+</p>
 
-This project is deeply personal to me.  
-I built it in memory of my girl, Aurora, and named it Aurora OS for her.
+<p align="center">
+  <img src="https://img.shields.io/badge/React-%5E19.2.4-2a5f92?style=for-the-badge&logo=react&logoColor=white" alt="React 19.2.4">
+  <img src="https://img.shields.io/badge/React%20Scripts-5.0.1-2a5f92?style=for-the-badge&logo=createreactapp&logoColor=white" alt="React Scripts 5.0.1">
+  <img src="https://img.shields.io/github/last-commit/ponmanivasahan/WebOS?style=for-the-badge" alt="Last Commit">
+  <img src="https://img.shields.io/github/commit-activity/w/ponmanivasahan/WebOS?style=for-the-badge" alt="Commit Activity">
+</p>
 
-## Features
+---
 
-### Welcome Flow
+## Table of Contents
+- [Executive Summary](#executive-summary)
+- [Product Scope](#product-scope)
+- [Capabilities](#capabilities)
+- [Technical Architecture](#technical-architecture)
+- [Implementation Details](#implementation-details)
+- [Installation and Local Development](#installation-and-local-development)
+- [Production Build](#production-build)
+- [Repository Structure](#repository-structure)
+- [Roadmap](#roadmap)
+- [License](#license)
+
+---
+
+## Executive Summary
+WebOS is a browser-native desktop interface that replicates key operating system workflows in a modern web application.
+
+The project demonstrates frontend architecture for multi-window interaction, desktop-style navigation, and app orchestration in a single-page environment.
+
+Primary goals:
+- Deliver a polished Windows-inspired interaction model
+- Provide a modular app surface for future expansion
+- Showcase product-oriented UI engineering and state management patterns
+
+---
+
+## Product Scope
+WebOS is designed as an interactive system rather than a conventional website.
+
+Users can:
+- progress through a startup sequence,
+- operate a desktop workspace,
+- launch and manage multiple apps,
+- and interact with persistent system-style controls (taskbar, clock, and windows).
+
+---
+
+## Capabilities
+### Startup and Access Flow
 - Boot screen
 - Lock screen
 - Login screen
 
-### Desktop
-- App icons on the desktop
-- Single-click app opening
-- Right-click desktop menu for wallpaper changes
-- Right-click app icon menu (Open, Rename UI, Delete UI)
+### Desktop Experience
+- App icons and icon interactions
+- Desktop context menu actions
+- Wallpaper switching support
 
-### Taskbar
-- Start button
-- Running app buttons
-- Clock and tray area
+### Window Management
+- Drag and reposition windows
+- Minimize, maximize/restore, and close
+- Foreground focus management
 
-### Window System
-- Drag windows freely
-- Minimize, maximize/restore, and close controls
-- Menu bar per window
-- Proper focus stacking (active window comes to front)
+### Taskbar and System Layer
+- Running app indicators
+- App switching from taskbar
+- Clock/tray presentation
 
-### File Explorer
-- Expandable folder tree
-- Address bar path navigation
-- Back, forward, and up navigation history
-- Create, rename, and delete actions
+### Built-in Applications
+- File Explorer
+- Notes
+- Focus App (timer + task workflow)
+- Additional in-browser app views
 
+### File Explorer Functions
+- Folder tree navigation
+- Path/address-based navigation
+- Back, forward, and up traversal
+- Create, rename, and delete operations
 
+---
+
+## Technical Architecture
+- Framework: React 19
+- Build Runtime: React Scripts (Create React App)
+- Language: JavaScript (ES6+)
+- Styling: CSS
+- UI Assets: React Icons
+
+Core architecture is component-driven with dedicated modules for:
+- desktop rendering,
+- application windows,
+- welcome/startup flow,
+- app-specific logic,
+- and shared context/hooks.
+
+---
+
+## Implementation Details
+This project emphasizes:
+- UI state coordination across multiple concurrent windows,
+- reusable desktop and application primitives,
+- interaction consistency across mouse and keyboard workflows,
+- and progressive refinement of app-level UI/UX patterns.
+
+---
+
+## Installation and Local Development
+### Prerequisites
+- Node.js 20+
+- npm
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/ponmanivasahan/WebOS.git
+cd WebOS
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Start the development server
+```bash
+npm start
+```
+
+The project runs using `react-scripts start` in development mode.
+
+---
+
+## Production Build
+```bash
+npm run build
+```
+
+Compiled production artifacts are generated in the `build/` directory.
+
+---
+
+## Repository Structure
+```text
+src/
+  components/
+    apps/
+    desktop/
+    welcome/
+    window/
+  context/
+  hooks/
+  assets/
+```
+
+Primary entry points:
+- `src/index.js`
+- `src/App.js`
+
+---
+
+## Roadmap
+- Strengthen Start Menu implementation
+- Expand Settings application depth
+- Extend File Explorer workflows
+- Add additional desktop apps and system utilities
+- Continue UX, accessibility, and performance optimization
+
+---
+
+## License
+This project is licensed under **AGPL-3.0**.
