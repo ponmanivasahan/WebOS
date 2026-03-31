@@ -17,7 +17,7 @@ import genericAppIcon from '../../assets/taskbar/generic-app.svg';
 import devIcon from '../../assets/taskbar/dev.png';
 import { useOS } from '../../context/OSContext';
 
-export default function Taskbar({ windows = [], activeWinId, onOpenApp, availableApps = [] }) {
+export default function Taskbar({ windows = [], activeWinId, onOpenApp, availableApps = [], onLogout }) {
   const { soundVolume, setSoundVolume, brightness, setBrightness } = useOS();
   const [isStartOpen, setIsStartOpen] = useState(false);
   const [isQuickOpen, setIsQuickOpen] = useState(false);
@@ -27,6 +27,7 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
   const [isTrayOverflowOpen, setIsTrayOverflowOpen] = useState(false);
   const [taskbarContext, setTaskbarContext] = useState(null);
   const [devOpen, setDevOpen] = useState(false);
+  const [startQuery, setStartQuery] = useState('');
 
   const startMenuRef = useRef(null);
   const quickPanelRef = useRef(null);
@@ -108,6 +109,27 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
     ];
   }, [windows]);
 
+  const startSearchResults = useMemo(() => {
+    const q = startQuery.trim().toLowerCase();
+    if (!q) return [];
+
+    const merged = [
+      ...startPinnedApps.map((app) => ({ appId: app.appId, label: app.label })),
+      ...recommendedApps,
+    ];
+
+    const byAppId = new Map();
+    merged.forEach((app) => {
+      if (!app.appId || byAppId.has(app.appId)) return;
+      const searchable = `${app.label} ${app.appId}`.toLowerCase();
+      if (searchable.includes(q)) {
+        byAppId.set(app.appId, app);
+      }
+    });
+
+    return Array.from(byAppId.values());
+  }, [startQuery, startPinnedApps, recommendedApps]);
+
   useEffect(() => {
     const onWindowDown = (e) => {
       const target = e.target;
@@ -146,6 +168,10 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
     taskbarContext,
   ]);
 
+  useEffect(() => {
+    if (!isStartOpen) setStartQuery('');
+  }, [isStartOpen]);
+
   const launchApp = (entry) => {
     if (entry.type === 'internal' && entry.appId) {
       onOpenApp?.(entry.appId);
@@ -157,6 +183,17 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
       setIsTrayOverflowOpen(false);
       setTaskbarContext(null);
     }
+  };
+
+  const handleLogout = () => {
+    setIsStartOpen(false);
+    setIsQuickOpen(false);
+    setIsNotificationsOpen(false);
+    setIsCalendarOpen(false);
+    setIsAppOverflowOpen(false);
+    setIsTrayOverflowOpen(false);
+    setTaskbarContext(null);
+    onLogout?.();
   };
 
   const openTaskbarContextMenu = (e, type, entry) => {
@@ -198,6 +235,7 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
         items: [
           { label: 'Open Start', action: () => setIsStartOpen(true) },
           { label: 'Installed apps', action: () => setIsStartOpen(true) },
+          { label: 'Power', action: handleLogout },
           { separator: true },
           ...commonItems,
         ],
@@ -391,36 +429,72 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
       {isStartOpen && (
         <div className="start-menu" ref={startMenuRef}>
           <div className="start-menu-search-row">
-            <input className="start-menu-search" value="Search for apps, settings, and documents" readOnly />
+            <input
+              className="start-menu-search"
+              value={startQuery}
+              onChange={(e) => setStartQuery(e.target.value)}
+              placeholder="Search for apps, settings, and documents"
+              aria-label="Search apps"
+            />
           </div>
 
-          <div className="start-menu-section-head">
-            <span>Pinned</span>
-          </div>
-          <div className="start-menu-grid">
-            {startPinnedApps.map((entry) => (
-              <button key={entry.id} type="button" className="start-menu-app" onClick={() => launchApp(entry)}>
-                <TaskbarAppIcon appId={entry.appId} />
-                <span>{entry.label}</span>
-              </button>
-            ))}
-          </div>
+          <div className="start-menu-content">
 
-          <div className="start-menu-section-head start-menu-recommended-head">
-            <span>Recommended</span>
-          </div>
-          <div className="start-menu-recommended">
-            {recommendedApps.map((app) => (
-              <button
-                key={`${app.appId}-${app.label}`}
-                type="button"
-                className="start-menu-recommended-item"
-                onClick={() => launchApp({ type: 'internal', appId: app.appId })}
-              >
-                <TaskbarAppIcon appId={app.appId} />
-                <span>{app.label}</span>
-              </button>
-            ))}
+          {startQuery.trim() ? (
+            <>
+              <div className="start-menu-section-head">
+                <span>Results</span>
+              </div>
+              <div className="start-menu-grid">
+                {startSearchResults.map((app) => (
+                  <button
+                    key={`${app.appId}-${app.label}`}
+                    type="button"
+                    className="start-menu-app"
+                    onClick={() => launchApp({ type: 'internal', appId: app.appId })}
+                  >
+                    <TaskbarAppIcon appId={app.appId} />
+                    <span>{app.label}</span>
+                  </button>
+                ))}
+              </div>
+              {startSearchResults.length === 0 && (
+                <div className="start-menu-no-results">No apps found.</div>
+              )}
+            </>
+          ) : (
+            <>
+              <div className="start-menu-section-head">
+                <span>Pinned</span>
+              </div>
+              <div className="start-menu-grid">
+                {startPinnedApps.map((entry) => (
+                  <button key={entry.id} type="button" className="start-menu-app" onClick={() => launchApp(entry)}>
+                    <TaskbarAppIcon appId={entry.appId} />
+                    <span>{entry.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="start-menu-section-head start-menu-recommended-head">
+                <span>Recommended</span>
+              </div>
+              <div className="start-menu-recommended">
+                {recommendedApps.map((app) => (
+                  <button
+                    key={`${app.appId}-${app.label}`}
+                    type="button"
+                    className="start-menu-recommended-item"
+                    onClick={() => launchApp({ type: 'internal', appId: app.appId })}
+                  >
+                    <TaskbarAppIcon appId={app.appId} />
+                    <span>{app.label}</span>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
           </div>
 
           <div className="start-menu-footer">
@@ -432,10 +506,15 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
                 setDevOpen(true);
               }}
             >
-              <TaskbarIconImage src={devIcon} alt="" className="taskbar-icon-img" />
+              <TaskbarIconImage src={devIcon} alt="" className="taskbar-icon-img start-menu-user-icon" />
               <span>Developer Info</span>
             </button>
-            <button type="button" className="start-menu-power" aria-label="Power">
+            <button
+              type="button"
+              className="start-menu-power"
+              aria-label="Power"
+              onClick={handleLogout}
+            >
               ⏻
             </button>
           </div>

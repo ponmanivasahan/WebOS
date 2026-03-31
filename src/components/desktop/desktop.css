@@ -101,10 +101,10 @@
     left: 0;
     right: 0;
   height: 48px;
-  background: rgba(13, 13, 13, 0.92);
+  background: rgba(248, 248, 248, 0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: none;
     display: flex;
     align-items: center;
@@ -130,7 +130,7 @@
   border: none;
   border-radius: 5px;
   background: transparent;
-  color: #fff;
+  color: #111;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -149,7 +149,7 @@
 }
 
 .taskbar-icon-btn:hover {
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .taskbar-icon-btn.is-open::after {
@@ -160,22 +160,22 @@
   width: 4px;
   height: 4px;
   transform: translateX(-50%);
-  background: #fff;
+  background: #0067c0;
   border-radius: 999px;
 }
 
 .taskbar-icon-btn.is-focused {
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 -2px 0 #fff;
+  background: rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 -2px 0 #0067c0;
 }
 
 .taskbar-start-btn {
-  color: #fff;
+  color: #111;
   margin-right: 2px;
 }
 
 .taskbar-start-btn.is-active {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.12);
 }
 
 .taskbar-tray {
@@ -198,7 +198,7 @@
   height: 48px;
     border: none;
   background: transparent;
-  color: #fff;
+  color: #1b1b1b;
   border-radius: 0;
     transition: background 120ms ease;
     cursor: pointer;
@@ -208,7 +208,7 @@
 }
 
 .taskbar-tray-btn.is-active {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .taskbar-chevron {
@@ -226,7 +226,7 @@
 }
 
 .taskbar-tray-btn:hover {
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .taskbar-language {
@@ -250,7 +250,7 @@
   min-width: 76px;
   height: 48px;
   padding: 0 10px 0 6px;
-  color: #fff;
+  color: #1a1a1a;
   border: none;
   background: transparent;
   border-radius: 0;
@@ -260,11 +260,11 @@
 }
 
 .taskbar-clock:hover {
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .taskbar-clock.is-active {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .taskbar-clock-value {
@@ -292,12 +292,21 @@
   bottom: 56px;
   transform: translateX(-50%);
   width: min(610px, calc(100vw - 20px));
-  background: rgba(24, 24, 24, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  height: min(620px, calc(100vh - 84px));
+  background: rgba(250, 250, 250, 0.97);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  box-shadow: 0 28px 48px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 28px 48px rgba(0, 0, 0, 0.2);
   padding: 16px;
   z-index: 1400;
+  display: flex;
+  flex-direction: column;
+}
+
+.start-menu-content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
 
 .start-menu-search-row {
@@ -307,24 +316,24 @@
 .start-menu-search {
     width: 100%;
     height: 38px;
-    border: 1px solid rgba(255,255,255,0.15);   
+    border: 1px solid rgba(0,0,0,0.12);
     border-radius: 8px;
-    background: rgba(255,255,255,0.06);
-    color: #e8e8e8;
+    background: #ffffff;
+    color: #1a1a1a;
     font-size: 13px;
     padding: 0 12px;
     outline: none;
 }
 
 .start-menu-search:focus{
-  border-color: rgba(255,255,255,0.3);
+  border-color: rgba(0,103,192,0.45);
 }
 .start-menu-section-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
-  color: #e6f3ff;
+  color: #232323;
   font-size: 13px;
   font-weight: 700;
 }
@@ -347,10 +356,10 @@
   gap: 6px;
   height: 80px;
   padding: 8px 6px;
-  color: #ecf5ff;
+  color: #1f1f1f;
   font-size: 11px;
   text-align: center;
-  background: rgba(255,255,255,0.05); 
+  background: rgba(0,0,0,0.035);
   border: none;
   border-radius: 6px;
   transition: background 120ms ease;
@@ -363,7 +372,8 @@
 }
 
 .start-menu-app:hover {
-    background: rgba(255,255,255,0.12);}
+  background: rgba(0,0,0,0.08);
+}
 
 .start-menu-app span {
   max-width: 78px;
@@ -383,8 +393,8 @@
   align-items: center;
   gap: 9px;
   border: none;
-  background: rgba(255,255,255,0.05);
-  color: #eaf5ff;
+  background: rgba(0,0,0,0.035);
+  color: #1f1f1f;
   border-radius: 8px;
   height: 38px;
   padding: 0 10px;
@@ -392,7 +402,7 @@
 }
 
 .start-menu-recommended-item:hover {
-   background: rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.08);
 }
 
 .start-menu-recommended-item span {
@@ -403,38 +413,56 @@
 }
 
 .start-menu-footer {
-  margin-top: 14px;
+  margin-top: 12px;
   padding-top: 10px;
-  border-top: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(0,0,0,0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0;
 }
 
 .start-menu-user {
   border: none;
   background: transparent;
-  color: #e9f4ff;
+  color: #1b1b1b;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 32px;
-  padding: 0 6px;
+  height: 34px;
+  padding: 0 8px;
   border-radius: 8px;
 }
 
 .start-menu-user:hover,
 .start-menu-power:hover {
-  background: rgba(255,255,255,0.10); 
+  background: rgba(0,0,0,0.08);
+}
+
+.start-menu-user-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: cover;
 }
 
 .start-menu-power {
   border: none;
   background: transparent;
-  color: #e9f4ff;
-  width: 32px;
-  height: 32px;
+  color: #1f1f1f;
+  min-width: 34px;
+  height: 34px;
   border-radius: 8px;
+  padding: 0;
+  font-size: 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.start-menu-no-results {
+  font-size: 12px;
+  color: #5f5f5f;
+  padding: 8px 2px 0;
 }
 
 .tray-panel {
@@ -442,16 +470,16 @@
   right: 8px;
   bottom: 56px;
   width: 330px;
-  background: rgba(24, 24, 24, 0.97);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(250, 250, 250, 0.98);
+  border: 1px solid rgba(0,0,0,0.12);
   border-radius: 12px;
-  box-shadow: 0 24px 44px rgba(0, 0, 0,0.7);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
   padding: 12px;
   z-index: 1400;
 }
 
 .tray-panel-title {
-  color: #e9f4ff;
+  color: #1e1e1e;
   font-size: 13px;
   font-weight: 700;
   margin-bottom: 10px;
@@ -467,8 +495,8 @@
   border: none;
   height: 34px;
   border-radius: 8px;
-  background: rgba(255,255,255,0.08);
-  color: #e9f3ff;
+  background: rgba(0,0,0,0.06);
+  color: #1d1d1d;
   cursor: pointer;
     transition: background 120ms ease;
     font-size: 12px;
@@ -481,7 +509,7 @@
 
 .tray-slider-row {
   margin-top: 12px;
-  color: #d7e8f8;
+  color: #3a3a3a;
   font-size: 12px;
   display: flex;
   flex-direction: column;
@@ -497,10 +525,10 @@
 }
 
 .notification-card {
-  background: rgba(255,255,255,0.06); 
+  background: rgba(0,0,0,0.05);
   border-radius: 10px;
   padding: 10px;
-  color: #e5f3ff;
+  color: #222;
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -509,7 +537,7 @@
 
 .notification-card strong {
   font-size: 12px;
-  color: #fff;
+  color: #1c1c1c;
 }
 
 .notification-card span {
@@ -529,8 +557,8 @@
   bottom: 56px;
   transform: translateX(-50%);
   width: min(420px, calc(100vw - 16px));
-  background: rgba(24, 24, 24, 0.97);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(250, 250, 250, 0.98);
+  border: 1px solid rgba(0,0,0,0.12);
   border-radius: 14px;
   box-shadow: 0 24px 44px rgba(8, 14, 22, 0.52);
   padding: 12px;
@@ -547,8 +575,8 @@
   height: 44px;
   border: none;
   border-radius: 8px;
-  background: rgba(255,255,255,0.06);
-  color: #e9f4ff;
+  background: rgba(0,0,0,0.05);
+  color: #232323;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -557,7 +585,7 @@
 }
 
 .taskbar-overflow-app:hover {
-  background: rgba(255,255,255,0.12); 
+  background: rgba(0,0,0,0.08);
 }
 
 .taskbar-overflow-app span {
@@ -579,8 +607,8 @@
 .tray-overflow-item {
   border: none;
   border-radius: 8px;
-  background: rgba(255,255,255,0.12); 
-  color: #e6f3ff;
+  background: rgba(0,0,0,0.07);
+  color: #1f1f1f;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -590,7 +618,7 @@
 }
 
 .tray-overflow-item:hover {
-  background: rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.1);
 }
 
 .tray-panel-calendar {
@@ -604,7 +632,7 @@
 }
 
 .calendar-weekdays span {
-  color: #aaa;
+  color: #6a6a6a;
   font-size: 11px;
   text-align: center;
 }
@@ -620,18 +648,18 @@
     height: 30px;
     border-radius: 5px;   
     background: transparent; 
-    color: #e0e0e0;
+    color: #2a2a2a;
     font-size: 12px;
     cursor: pointer;
     transition: background 120ms ease;
 }
  
 .calendar-day:hover {
-    background: rgba(255,255,255,0.10); 
+  background: rgba(0,0,0,0.08);
 }
 
 .calendar-day.is-muted {
-  opacity: 0.35;
+  opacity: 0.42;
 }
 
 .calendar-day.is-today {
@@ -642,8 +670,17 @@
 
 .calendar-footer {
   margin-top: 10px;
-  color: #aaa;
+  color: #6a6a6a;
   font-size: 12px;
+}
+
+.taskbar-tray {
+  gap: 1px;
+  padding: 0 6px;
+}
+
+.taskbar-language {
+  min-width: 48px;
 }
 
 .taskbar-context-menu {

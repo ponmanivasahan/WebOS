@@ -76,6 +76,13 @@ function App(){
       prev.map((w)=>w.id===id ? {...w,title}:w)
     );
   };
+
+  const handleLogout=()=>{
+    setWindows([]);
+    setActiveWinId(null);
+    setStage('welcome');
+  };
+
   return(
     <OSProvider>
       {stage==='welcome' && (
@@ -83,7 +90,7 @@ function App(){
       )}
       {stage==='desktop' && (
         <>
-        <Desktop openWindows={windows} activeWinId={activeWinId} onOpenApp={handleOpenApp} />
+        <Desktop openWindows={windows} activeWinId={activeWinId} onOpenApp={handleOpenApp} onLogout={handleLogout} />
 
         <WindowManager
           windows={windows}

@@ -119,7 +119,7 @@ const BUILTIN_WALLPAPER_MAP=BUILTIN_WALLPAPERS.reduce((acc,item)=>{
     return acc;
 },{});
 
-export default function Desktop({openWindows = [], activeWinId, onOpenApp}) {
+export default function Desktop({openWindows = [], activeWinId, onOpenApp, onLogout}) {
     const {wallpaper,setWallpaper,brightness}=useOS();
     const {createFolder,deleteEntry,renameEntry,listDir}=useFileSystem();
     const [selectedIcon,setSelectedIcon]=useState(null);
@@ -394,6 +394,7 @@ export default function Desktop({openWindows = [], activeWinId, onOpenApp}) {
                 windows={openWindows}
                 activeWinId={activeWinId}
                 onOpenApp={onOpenApp}
+                onLogout={onLogout}
                 availableApps={DESKTOP_APPS.map((app) => ({ appId: app.appId, label: app.label }))}
             />
 
