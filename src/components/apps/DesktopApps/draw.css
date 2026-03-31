@@ -242,3 +242,115 @@
     opacity: 0;
     cursor: pointer;
 }
+.da-opacity-row{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 4px;
+}
+.da-opacity-label{
+    font-size: 10px;
+    color: #9a9a9a;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.da-opacity-slider{
+    width: 70px;
+    accent-color: #0067c0;
+    cursor: pointer;
+}
+.da-opacity-val{
+    font-size: 10px;
+    font-weight: 600;
+    color: #5a5a5a;
+    min-width: 28px;
+    text-align: right;
+}
+.da-actions{
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px;
+    background: #f0f0f0;
+    border: 1px solid rgba(0,0,0,0.07);
+    border-radius: 8px;
+}
+.da-workspace{
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  background: #f3f3f3;
+}
+.da-canvas-scroll{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow: auto;
+}
+.da-canvas{
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.07);
+    display: block;
+    flex-shrink: 0;
+}
+
+.da-canvas.c-pen{
+    cursor: crosshair;
+}
+.da-canvas.c-eraser{
+    cursor: cell;
+}
+.da-canvas.c-line{
+    cursor: crosshair;
+}
+.da-canvas.c-rect{
+    cursor: crosshair;
+}
+.da-canvas.c-circle{
+    cursor: crosshair;
+}
+.da-canvas.c-triangle{
+    cursor: crosshair;
+}
+.da-canvas.c-fill{
+    cursor: copy;
+}
+.da-canvas.c-text{
+    cursor: text;
+}
+.da-canvas.c-select{
+    cursor: default;
+}
+
+.da-statusbar{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 14px;
+    background: #ffffff;
+    border-top: 1px solid rgba(0,0,0,0.07);
+    min-height: 26px;
+    flex-shrink: 0;
+}
+.da-status-item{
+    font-size: 10px;
+    color: #9a9a9a;
+    white-space: nowrap;
+}
+.da-status-item strong{
+    color:#5a5a5a;
+    font-weight: 600;
+}
+.da-status-sep{
+    width: 1px;
+    height: 10px;
+    background: rgba(0,0,0,0.12);
+}
+.da-status-spacer{
+    flex: 1;
+}
