@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-
+import './draw.css';
 const TOOLS=[
     {key:'pen',icon:'pencil',label:'Pen'},
     {key:'eraser',icon:'eraser',label:'Eraser'},

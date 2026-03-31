@@ -1,0 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+ *,
+ *::before,
+ *::after{
+    box-sizing: border-box;
+    margin: 0; 
+    padding: 0;
+}
+.da-shell{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: #f3f3f3;
+    font-family: 'DM Sans', 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+    color: #1a1a1a;
+    overflow: hidden;
+    user-select: none;
+}
+
+.da-titlebar{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 44px;
+    padding: 0 14px;
+    background: #ffffff;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.da-logo{
+    width: 26px;
+    height: 26px;
+    background: #0067c0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,103,192,0.28);
+}
+
+.da-title{
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+    flex: 1;
+    letter-spacing: -0.1px;
+}
+
+.da-title-meta{
+    font-size: 11px;
+    color: #9a9a9a;
+    font-weight: 400;
+}
+.da-ribbon{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: #ffffff;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.da-section{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.da-section-label{
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #9a9a9a;
+    padding: 0 2px;
+}
+.da-section-row{
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 3px;
+    background: #f0f0f0;
+    border: 1px solid rgba(0,0,0,0.07);
+    border-radius: 8px;
+}
+.da-ribbon-sep{
+    width: 1px;
+    height: 44px;
+    background: rgba(0,0,0,0.12);
+    margin: 0 2px;
+    flex-shrink: 0;
+}
+.da-tool-btn{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 36px;
+    height: 42px;
+    padding: 4px 6px;
+    font-size: 9px;
+    font-weight: 500;
+    font-family: 'DM Sans', 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+    color: #5a5a5a;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+    white-space: nowrap;
+}
+
+.da-tool-btn:hover{
+  background: #e8e8e8;
+  color: #1a1a1a;
+}
+.da-tool-btn.active{
+    background: #ffffff;
+    color: #0067c0;
+    border-color: rgba(0,0,0,0.12);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    font-weight: 600;
+}
+.da-tool-icon{
+    font-size: 17px;
+    line-height: 1;
+}
+.da-sm-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 10px;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'DM Sans', 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+    color: #5a5a5a;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+    white-space: nowrap;
+}
+.da-sm-btn:hover{
+    background: #e8e8e8;
+    color: #1a1a1a;
+    border-color: rgba(0,0,0,0.07);
+}
+.da-sm-btn.active{
+    background: #ffffff;
+    color: #0067c0;
+    border-color: rgba(0,0,0,0.12);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.da-sm-btn:disabled{
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+.da-sm-btn:disabled:hover{
+    background: transparent;
+    color: #5a5a5a;
+    border-color: transparent;
+}
+.da-sm-btn.danger:hover{
+    background: rgba(196,43,28,0.08);
+    color: #c42b1c;
+    border-color: rgba(196,43,28,0.18);
+}
+.da-stroke-pick{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 28px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.1s, border-color 0.1s;
+}
+.da-stroke-pick:hover{
+    background: #e8e8e8;
+     border-color: rgba(0,0,0,0.07);
+}
+.da-stroke-pick.active{ 
+    background: #ffffff; 
+    border-color: rgba(0,0,0,0.12); 
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08); 
+}
+.da-swatches{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    max-width: 120px;
+}
+.da-swatch{
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.1s, border-color 0.1s, box-shadow 0.1s;
+    flex-shrink: 0;
+}
+
+.da-swatch:hover{
+    transform: scale(1.2); 
+}
+.da-swatch.active{
+    border-color: #1a1a1a;
+    box-shadow: 0 00 0 1px #ffffff;
+    transform: scale(1.12);
+}
+.da-custom-wrap{
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid rgba(0,0,0,0.12);
+    transition: border-color 0.1s;
+    flex-shrink: 0;
+}
+.da-custom-wrap:hover{
+    border-color: #1a1a1a;
+}
+.da-custom-input{
+    position: absolute;
+    inset: -4px;
+    width: calc(100%+8px);
+    height: calc(100%+8px);
+    opacity: 0;
+    cursor: pointer;
+}
