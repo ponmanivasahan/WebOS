@@ -7,6 +7,8 @@ import VSCode from '../apps/DesktopApps/VSCode';
 import Terminal from '../apps/DesktopApps/Terminal';
 import Chrome from '../apps/DesktopApps/Chrome';
 import Draw from '../apps/DesktopApps/Draw';
+import SlowRoads from '../apps/Games/SlowRoads';
+import Minecraft from '../apps/Games/MineCraft';
 import vscodeIcon from '../../assets/taskbar/vs.png';
 import terminalIcon from '../../assets/taskbar/terminal.png';
 import chromeIcon from '../../assets/taskbar/chrome.png';
@@ -14,6 +16,9 @@ import fileExplorerIcon from '../../assets/taskbar/fileexp.png';
 import taskManagerIcon from '../../assets/taskbar/taskmanager.png';
 import notesIcon from '../../assets/taskbar/notepad.png';
 import drawIcon from '../../assets/draw.png';
+import slowRoadsIcon from '../../assets/slowroads.png';
+import minecraftIcon from '../../assets/Minecraft.png';
+import genericAppIcon from '../../assets/taskbar/generic-app.svg';
 
 const APP_DEFAULTS = {
   'file-explorer':{ width: 720, height: 480, title: 'File Explorer'},
@@ -23,6 +28,8 @@ const APP_DEFAULTS = {
   'terminal': { width: 760, height: 500, title: 'Terminal' },
   'chrome': { width: 960, height: 600, title: 'Chrome' },
   'draw': { width: 980, height: 640, title: 'Paint' },
+  'slowroads': { width: 1080, height: 680, title: 'Slow Roads' },
+  'minecraft': { width: 1080, height: 680, title: 'Minecraft' },
 };
 
 const getAppIcon = (appId) => {
@@ -33,6 +40,8 @@ const getAppIcon = (appId) => {
   if (appId === 'terminal') return <AppIcon src={terminalIcon} alt="Terminal" />;
   if (appId === 'chrome') return <AppIcon src={chromeIcon} alt="Chrome" />;
   if (appId === 'draw') return <AppIcon src={drawIcon} alt="Paint" />;
+  if (appId === 'slowroads') return <AppIcon src={slowRoadsIcon} alt="Slow Roads" />;
+  if (appId === 'minecraft') return <AppIcon src={minecraftIcon} alt="Minecraft" />;
   return null;
 };
 
@@ -44,6 +53,8 @@ const APP_MENUS = {
   'terminal':[],
   'chrome':[],
   'draw':[],
+  'slowroads':[],
+  'minecraft':[],
 };
 
 const APP_COMPONENTS = {
@@ -54,6 +65,8 @@ const APP_COMPONENTS = {
   'terminal': Terminal,
   'chrome': Chrome,
   'draw': Draw,
+  'slowroads': SlowRoads,
+  'minecraft': Minecraft,
 };
 
 export default function WindowManager({

@@ -31,6 +31,9 @@ import vscodeIcon from '../../assets/taskbar/vs.png';
 import terminalIcon from '../../assets/taskbar/terminal.png';
 import chromeIcon from '../../assets/taskbar/chrome.png';
 import drawIcon from '../../assets/draw.png';
+import slowRoadsIcon from '../../assets/slowroads.png';
+import MinecraftIcon from '../../assets/Minecraft.png';
+import Minecraft from './../apps/Games/MineCraft';
 
 const DESKTOP_APPS=[
     {
@@ -74,6 +77,18 @@ const DESKTOP_APPS=[
         label:'Notepad',
         appId:'notes',
         icon:<IconImage src={notesIcon} alt='Notepad' />,
+    },
+    {
+        id:'slowroads',
+        label:'Slow Roads',
+        appId:'slowroads',
+        icon:<IconImage src={slowRoadsIcon} alt='Slow Roads' />,
+    },
+    {
+        id:'minecraft',
+        label:'Minecraft',
+        appId:'minecraft',
+        icon:<IconImage src={MinecraftIcon} alt='Minecraft' />,
     },
 ];
 

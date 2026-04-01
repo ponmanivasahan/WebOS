@@ -9,13 +9,15 @@ import chromeIcon from '../../assets/taskbar/chrome.png';
 import taskManagerIcon from '../../assets/taskbar/taskmanager.png';
 import notesIcon from '../../assets/taskbar/notepad.png';
 import drawIcon from '../../assets/draw.png';
+import slowRoadsIcon from '../../assets/slowroads.png';
 import settingsIcon from '../../assets/taskbar/settings.png';
+import genericAppIcon from '../../assets/taskbar/generic-app.svg';
 import soundIcon from '../../assets/taskbar/sound.png';
 import notificationIcon from '../../assets/taskbar/notification.png';
 import batteryIcon from '../../assets/taskbar/battery.png';
 import chevronUpIcon from '../../assets/taskbar/chevronup.png';
-import genericAppIcon from '../../assets/taskbar/generic-app.svg';
 import devIcon from '../../assets/taskbar/dev.png';
+import MinecraftIcon from '../../assets/Minecraft.png';
 
 export default function Taskbar({ windows = [], activeWinId, onOpenApp, availableApps = [], onLogout }) {
   const [isStartOpen, setIsStartOpen] = useState(false);
@@ -34,17 +36,17 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
   const taskbarContextRef = useRef(null);
 
   const projectApps = useMemo(
-    () => availableApps.filter((app) => app.appId && app.appId !== 'file-explorer'),
+    () => availableApps.filter((app) => app.appId && app.appId !== 'file-explorer' && app.appId !== 'vscode'),
     [availableApps]
   );
 
-  const MAX_VISIBLE_PINNED = 7;
+  const MAX_VISIBLE_PINNED = 9;
 
   const pinnedApps = useMemo(() => {
     const base = [
       { id: 'file-explorer', appId: 'file-explorer', label: 'File Explorer', type: 'internal' },
       { id: 'chrome', appId: 'chrome', label: 'Chrome', type: 'internal' },
-      { id: 'vscode', appId: 'vscode', label: 'VS Code', type: 'internal' },
+      // { id: 'vscode', appId: 'vscode', label: 'VS Code', type: 'internal' },
       { id: 'terminal', appId: 'terminal', label: 'Terminal', type: 'internal' },
       { id: 'notes', appId: 'notes', label: 'Notepad', type: 'internal' },
       { id: 'task-manager', appId: 'task-manager', label: 'Task Manager', type: 'internal' },
@@ -630,5 +632,7 @@ function TaskbarAppIcon({ appId }) {
   if (appId === 'terminal') return <TaskbarIconImage src={terminalIcon} alt="" className="taskbar-icon-img" />;
   if (appId === 'chrome') return <TaskbarIconImage src={chromeIcon} alt="" className="taskbar-icon-img" />;
   if (appId === 'draw') return <TaskbarIconImage src={drawIcon} alt="" className="taskbar-icon-img" />;
+  if (appId === 'slowroads') return <TaskbarIconImage src={slowRoadsIcon} alt="" className="taskbar-icon-img" />;
+  if (appId === 'minecraft') return <TaskbarIconImage src={MinecraftIcon} alt="" className="taskbar-icon-img" />;
   return <TaskbarIconImage src={genericAppIcon} alt="" className="taskbar-icon-img" />;
 }

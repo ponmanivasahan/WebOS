@@ -1,0 +1,21 @@
+.minecraft-app-shell {
+	height: 100%;
+	width: 100%;
+	min-height: 0;
+	background: #000;
+	overflow: hidden;
+}
+
+.minecraft-iframe {
+	height: 100%;
+	width: 100%;
+	display: block;
+	min-height: 100%;
+	outline: none;
+	border: none;
+	border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.app-window.is-maximized .minecraft-iframe {
+	border-radius: 0;
+}

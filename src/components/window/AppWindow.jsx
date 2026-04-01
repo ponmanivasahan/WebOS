@@ -12,6 +12,10 @@ export default function AppWindow({
   const titleInputRef=useRef(null);
   const [isEditingTitle,setIsEditingTitle]=useState(false);
   const [titleDraft,setTitleDraft]=useState(title);
+  const [viewport, setViewport] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
   useEffect(()=>{
     if(!isEditingTitle) setTitleDraft(title);
@@ -23,6 +27,15 @@ export default function AppWindow({
       titleInputRef.current.select();
     }
   },[isEditingTitle]);
+
+  useEffect(() => {
+    const onResize = () => {
+      setViewport({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   const commitTitleEdit=useCallback(()=>{
     const next=titleDraft.trim();
@@ -104,16 +117,32 @@ export default function AppWindow({
     const TASKBAR_H=48;
     const WINDOW_SIDE_GAP=isMaximized ? 0 : 8;
     const BOTTOM_GAP=isMaximized ? 0 : 8;
-    const maxWidth=Math.max(240,window.innerWidth-(WINDOW_SIDE_GAP*2));
-    const maxHeight=Math.max(140,window.innerHeight-TASKBAR_H-BOTTOM_GAP);
+    const maxWidth=Math.max(240,viewport.width-(WINDOW_SIDE_GAP*2));
+    const maxHeight=Math.max(140,viewport.height-TASKBAR_H-BOTTOM_GAP);
     const safeWidth=Math.min(width,maxWidth);
     const safeHeight=Math.min(height,maxHeight);
-    const safeX=Math.max(WINDOW_SIDE_GAP,Math.min(x,window.innerWidth-WINDOW_SIDE_GAP-safeWidth));
-    const safeY=Math.max(0,Math.min(y,window.innerHeight-TASKBAR_H-safeHeight));
+    const safeX=Math.max(WINDOW_SIDE_GAP,Math.min(x,viewport.width-WINDOW_SIDE_GAP-safeWidth));
+    const safeY=Math.max(0,Math.min(y,viewport.height-TASKBAR_H-safeHeight));
+
+    const windowStyle = isMaximized
+      ? {
+          left: 0,
+          top: 0,
+          width: viewport.width,
+          height: Math.max(140, viewport.height - TASKBAR_H),
+          zIndex: isActive ? 200 : 100,
+        }
+      : {
+          left: safeX,
+          top: safeY,
+          width: safeWidth,
+          height: safeHeight,
+          zIndex: isActive ? 200 : 100,
+        };
 
     return(
       <div className={['app-window',isActive ? 'is-active' : '',isMinimized?'is-minimized':'',isMaximized ? 'is-maximized' : '',].filter(Boolean).join(' ')}
-        style={{left:safeX,top:safeY,width:safeWidth,height:safeHeight,zIndex:isActive ? 200:100,}}
+        style={windowStyle}
         onMouseDown={()=>onFocus?.(id)}>
             {!isMaximized && ['n','s','e','w','nw','ne','sw','se'].map((dir) => (
         <div

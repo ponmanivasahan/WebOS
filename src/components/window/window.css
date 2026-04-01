@@ -185,9 +185,16 @@
 
 .win-body{
     flex: 1;
-    overflow: auto;
+    min-height: 0;
+    display: flex;
+    overflow: hidden;
     background: rgba(233, 242, 252, 0.9);
     position: relative;
+}
+
+.win-body > * {
+    flex: 1;
+    min-height: 0;
 }
 
 .win-body-inset{
