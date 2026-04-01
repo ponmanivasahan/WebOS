@@ -15,22 +15,19 @@ import notificationIcon from '../../assets/taskbar/notification.png';
 import batteryIcon from '../../assets/taskbar/battery.png';
 import genericAppIcon from '../../assets/taskbar/generic-app.svg';
 import devIcon from '../../assets/taskbar/dev.png';
-import { useOS } from '../../context/OSContext';
 
 export default function Taskbar({ windows = [], activeWinId, onOpenApp, availableApps = [], onLogout }) {
-  const { soundVolume, setSoundVolume, brightness, setBrightness } = useOS();
   const [isStartOpen, setIsStartOpen] = useState(false);
-  const [isQuickOpen, setIsQuickOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isAppOverflowOpen, setIsAppOverflowOpen] = useState(false);
   const [isTrayOverflowOpen, setIsTrayOverflowOpen] = useState(false);
+  const [calendarDate, setCalendarDate] = useState(new Date());
   const [taskbarContext, setTaskbarContext] = useState(null);
   const [devOpen, setDevOpen] = useState(false);
   const [startQuery, setStartQuery] = useState('');
 
   const startMenuRef = useRef(null);
-  const quickPanelRef = useRef(null);
   const notificationsPanelRef = useRef(null);
   const calendarPanelRef = useRef(null);
   const appOverflowPanelRef = useRef(null);
@@ -76,7 +73,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
   const overflowPinnedApps = useMemo(() => pinnedApps.slice(MAX_VISIBLE_PINNED), [pinnedApps]);
 
   const openAppIds = useMemo(() => new Set(windows.map((win) => win.appId)), [windows]);
-  const calendarData = useMemo(() => getCalendarData(new Date()), []);
   const hiddenTrayApps = useMemo(
     () => [
       { id: 'security', label: 'Windows Security', icon: notificationIcon },
@@ -139,9 +135,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
       if (isCalendarOpen && calendarPanelRef.current && !calendarPanelRef.current.contains(target)) {
         setIsCalendarOpen(false);
       }
-      if (isQuickOpen && quickPanelRef.current && !quickPanelRef.current.contains(target)) {
-        setIsQuickOpen(false);
-      }
       if (isNotificationsOpen && notificationsPanelRef.current && !notificationsPanelRef.current.contains(target)) {
         setIsNotificationsOpen(false);
       }
@@ -160,7 +153,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
     return () => window.removeEventListener('mousedown', onWindowDown);
   }, [
     isStartOpen,
-    isQuickOpen,
     isNotificationsOpen,
     isCalendarOpen,
     isAppOverflowOpen,
@@ -172,11 +164,16 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
     if (!isStartOpen) setStartQuery('');
   }, [isStartOpen]);
 
+  useEffect(() => {
+    if (isCalendarOpen) {
+      setCalendarDate(new Date());
+    }
+  }, [isCalendarOpen]);
+
   const launchApp = (entry) => {
     if (entry.type === 'internal' && entry.appId) {
       onOpenApp?.(entry.appId);
       setIsStartOpen(false);
-      setIsQuickOpen(false);
       setIsNotificationsOpen(false);
       setIsCalendarOpen(false);
       setIsAppOverflowOpen(false);
@@ -187,7 +184,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
 
   const handleLogout = () => {
     setIsStartOpen(false);
-    setIsQuickOpen(false);
     setIsNotificationsOpen(false);
     setIsCalendarOpen(false);
     setIsAppOverflowOpen(false);
@@ -263,7 +259,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
       y,
       title: 'System tray',
       items: [
-        { label: 'Open quick settings', action: () => setIsQuickOpen(true) },
         { label: 'Open notifications', action: () => setIsNotificationsOpen(true) },
         { separator: true },
         ...commonItems,
@@ -334,28 +329,20 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
           </button>
           <button
             type="button"
-            className={`taskbar-tray-btn${isQuickOpen ? ' is-active' : ''}`}
+            className="taskbar-tray-btn"
             title="Settings"
             aria-label="Settings"
-            onClick={() => {
-              setIsQuickOpen((v) => !v);
-              setIsNotificationsOpen(false);
-              setIsTrayOverflowOpen(false);
-            }}
+            onClick={() => {}}
             onContextMenu={(e) => openTaskbarContextMenu(e, 'tray')}
           >
             <TaskbarIconImage src={settingsIcon} alt="" className="taskbar-tray-img" />
           </button>
           <button
             type="button"
-            className={`taskbar-tray-btn${isQuickOpen ? ' is-active' : ''}`}
+            className="taskbar-tray-btn"
             title="Sound"
             aria-label="Sound"
-            onClick={() => {
-              setIsQuickOpen((v) => !v);
-              setIsNotificationsOpen(false);
-              setIsTrayOverflowOpen(false);
-            }}
+            onClick={() => {}}
             onContextMenu={(e) => openTaskbarContextMenu(e, 'tray')}
           >
             <TaskbarIconImage src={soundIcon} alt="" className="taskbar-tray-img" />
@@ -370,7 +357,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
             aria-label="Notifications"
             onClick={() => {
               setIsNotificationsOpen((v) => !v);
-              setIsQuickOpen(false);
               setIsTrayOverflowOpen(false);
             }}
             onContextMenu={(e) => openTaskbarContextMenu(e, 'tray')}
@@ -384,8 +370,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
             isActive={isCalendarOpen}
             onClick={() => {
               setIsCalendarOpen((v) => !v);
-              setIsNotificationsOpen(false);
-              setIsQuickOpen(false);
             }}
             onContextMenu={(e) => openTaskbarContextMenu(e, 'clock')}
           />
@@ -412,19 +396,7 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
         </div>
       )}
 
-      {isTrayOverflowOpen && (
-        <div className="tray-panel tray-overflow-panel" ref={trayOverflowPanelRef}>
-          <div className="tray-panel-title">Hidden icons</div>
-          <div className="tray-overflow-list">
-            {hiddenTrayApps.map((item) => (
-              <button key={item.id} type="button" className="tray-overflow-item" onContextMenu={(e) => openTaskbarContextMenu(e, 'tray')}>
-                <TaskbarIconImage src={item.icon} alt="" className="taskbar-tray-img" />
-                <span>{item.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+
 
       {isStartOpen && (
         <div className="start-menu" ref={startMenuRef}>
@@ -521,40 +493,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
         </div>
       )}
 
-      {isQuickOpen && (
-        <div className="tray-panel" ref={quickPanelRef}>
-          <div className="tray-panel-title">Quick settings</div>
-          <div className="tray-toggle-grid">
-            <button type="button" className="tray-toggle is-on">Wi-Fi</button>
-            <button type="button" className="tray-toggle is-on">Bluetooth</button>
-            <button type="button" className="tray-toggle">Airplane</button>
-            <button type="button" className="tray-toggle is-on">Night light</button>
-          </div>
-          <div className="tray-slider-row">
-            <span>Volume {Math.round(soundVolume)}%</span>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              value={soundVolume}
-              onChange={(e) => setSoundVolume(Number(e.target.value))}
-            />
-          </div>
-          <div className="tray-slider-row">
-            <span>Brightness {Math.round(brightness)}%</span>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              value={brightness}
-              onChange={(e) => setBrightness(Number(e.target.value))}
-            />
-          </div>
-        </div>
-      )}
-
       {isNotificationsOpen && (
         <div className="tray-panel tray-panel-notifications" ref={notificationsPanelRef}>
           <div className="tray-panel-title">Notifications</div>
@@ -571,14 +509,45 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
 
       {isCalendarOpen && (
         <div className="tray-panel tray-panel-calendar" ref={calendarPanelRef}>
-          <div className="tray-panel-title">{calendarData.monthLabel}</div>
+          <div className="calendar-date-header">
+            <span>{calendarDate.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+            <button
+              type="button"
+              className="calendar-close-btn"
+              onClick={() => setIsCalendarOpen(false)}
+              title="Close"
+            >
+              ✕
+            </button>
+          </div>
+          <div className="calendar-header">
+            <button
+              type="button"
+              className="calendar-nav-btn"
+              onClick={() => setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1))}
+              title="Previous month"
+            >
+              ▲
+            </button>
+            <div className="calendar-month-year">
+              {calendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+            </div>
+            <button
+              type="button"
+              className="calendar-nav-btn"
+              onClick={() => setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1))}
+              title="Next month"
+            >
+              ▼
+            </button>
+          </div>
           <div className="calendar-weekdays">
-            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((name) => (
+            {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((name) => (
               <span key={name}>{name}</span>
             ))}
           </div>
           <div className="calendar-grid">
-            {calendarData.days.map((dayCell) => (
+            {getCalendarData(calendarDate, new Date()).days.map((dayCell) => (
               <button
                 key={dayCell.key}
                 type="button"
@@ -588,7 +557,12 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
               </button>
             ))}
           </div>
-          <div className="calendar-footer">{calendarData.fullDate}</div>
+          <div className="calendar-time-section">
+            <button type="button" className="calendar-time-btn">-</button>
+            <span className="calendar-time-value">30 mins</span>
+            <button type="button" className="calendar-time-btn">+</button>
+            <button type="button" className="calendar-focus-btn">| Focus</button>
+          </div>
         </div>
       )}
 
@@ -627,7 +601,7 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
   );
 }
 
-function getCalendarData(now) {
+function getCalendarData(now, today) {
   const y = now.getFullYear();
   const m = now.getMonth();
   const firstDay = new Date(y, m, 1).getDay();
@@ -652,9 +626,9 @@ function getCalendarData(now) {
     }
 
     const isToday =
-      dateObj.getDate() === now.getDate() &&
-      dateObj.getMonth() === now.getMonth() &&
-      dateObj.getFullYear() === now.getFullYear();
+      dateObj.getDate() === today.getDate() &&
+      dateObj.getMonth() === today.getMonth() &&
+      dateObj.getFullYear() === today.getFullYear();
 
     days.push({
       key: `${dateObj.getFullYear()}-${dateObj.getMonth()}-${dayValue}-${i}`,
