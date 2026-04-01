@@ -1026,27 +1026,15 @@
     align-items: center;
     gap: 5px;
     font-size: 12px;
-    font-weight: 600;
-    color: rgba(0,0,0,0.68);
-    padding: 3px 9px;
-    background: #eceff3;
-    border: 1px solid #d5dbe4;
-    border-radius: 6px;
+    font-weight: 500;
+    color: rgba(0,0,0,0.74);
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
     white-space: nowrap;
     flex-shrink: 0;
-    transition: all 0.2s;
-}
-.fa-due.overdue{
-    color: #ff6b6b;
-    background: rgba(255, 107, 107, 0.12);
-    border-color: rgba(255, 107, 107, 0.3);
-    font-weight: 700;
-}
-.fa-due.today{
-    color: #51cf66;
-    background: rgba(81, 207, 102, 0.12);
-    border-color: rgba(81, 207, 102, 0.3);
-    font-weight: 700;
+    transition: color 0.2s;
 }
 .fa-row-actions{
     display: flex;

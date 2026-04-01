@@ -83,15 +83,7 @@ const I={
 const pad=(n) =>String(n).padStart(2,'0');
 const fmt=(s) =>`${pad(Math.floor(s/60))}:${pad(s % 60)}`;
 
-function dueCls(d){
-  if(!d) return '';
-  const t=new Date().toISOString().slice(0, 10);
-  if (d<t) return 'overdue';
-  if (d === t) return 'today';
-  return '';
-}
-
-function fmtDue(d, t){return [d, t].filter(Boolean).join(' ');}
+function fmtDue(d){return d || '';}
 
 function TimerView(){
   const [modeIdx,setModeIdx]=useState(0);
@@ -303,9 +295,9 @@ function TaskRow({
         </span>
       )}
 
-      {(task.dueDate || task.dueTime) && (
-        <span className={`fa-due ${dueCls(task.dueDate)}`}>
-          {I.clock}&nbsp;{fmtDue(task.dueDate, task.dueTime)}
+      {task.dueDate && (
+        <span className="fa-due">
+          {I.clock}&nbsp;{fmtDue(task.dueDate)}
         </span>
       )}
 

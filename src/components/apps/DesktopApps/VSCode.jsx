@@ -8,8 +8,7 @@ export default function VSCode(){
 				<span>RUN</span>
 			</aside>
 			<main className="mock-vscode-editor">
-				<div className="mock-vscode-tabs">App.js | Taskbar.jsx | windowManager.jsx</div>
-				<pre className="mock-vscode-code">{`const startMenu = useMemo(() => ({\n  layout: 'windows-11',\n  mode: 'local-apps-only'\n}), []);`}</pre>
+				<div className="mock-vscode-tabs">COMING IN NEXT UPDATE</div>
 			</main>
 		</div>
 	);

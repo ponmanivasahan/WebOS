@@ -13,12 +13,12 @@ import settingsIcon from '../../assets/taskbar/settings.png';
 import soundIcon from '../../assets/taskbar/sound.png';
 import notificationIcon from '../../assets/taskbar/notification.png';
 import batteryIcon from '../../assets/taskbar/battery.png';
+import chevronUpIcon from '../../assets/taskbar/chevronup.png';
 import genericAppIcon from '../../assets/taskbar/generic-app.svg';
 import devIcon from '../../assets/taskbar/dev.png';
 
 export default function Taskbar({ windows = [], activeWinId, onOpenApp, availableApps = [], onLogout }) {
   const [isStartOpen, setIsStartOpen] = useState(false);
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isAppOverflowOpen, setIsAppOverflowOpen] = useState(false);
   const [isTrayOverflowOpen, setIsTrayOverflowOpen] = useState(false);
@@ -28,7 +28,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
   const [startQuery, setStartQuery] = useState('');
 
   const startMenuRef = useRef(null);
-  const notificationsPanelRef = useRef(null);
   const calendarPanelRef = useRef(null);
   const appOverflowPanelRef = useRef(null);
   const trayOverflowPanelRef = useRef(null);
@@ -135,9 +134,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
       if (isCalendarOpen && calendarPanelRef.current && !calendarPanelRef.current.contains(target)) {
         setIsCalendarOpen(false);
       }
-      if (isNotificationsOpen && notificationsPanelRef.current && !notificationsPanelRef.current.contains(target)) {
-        setIsNotificationsOpen(false);
-      }
       if (isAppOverflowOpen && appOverflowPanelRef.current && !appOverflowPanelRef.current.contains(target)) {
         setIsAppOverflowOpen(false);
       }
@@ -153,7 +149,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
     return () => window.removeEventListener('mousedown', onWindowDown);
   }, [
     isStartOpen,
-    isNotificationsOpen,
     isCalendarOpen,
     isAppOverflowOpen,
     isTrayOverflowOpen,
@@ -174,7 +169,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
     if (entry.type === 'internal' && entry.appId) {
       onOpenApp?.(entry.appId);
       setIsStartOpen(false);
-      setIsNotificationsOpen(false);
       setIsCalendarOpen(false);
       setIsAppOverflowOpen(false);
       setIsTrayOverflowOpen(false);
@@ -184,7 +178,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
 
   const handleLogout = () => {
     setIsStartOpen(false);
-    setIsNotificationsOpen(false);
     setIsCalendarOpen(false);
     setIsAppOverflowOpen(false);
     setIsTrayOverflowOpen(false);
@@ -259,8 +252,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
       y,
       title: 'System tray',
       items: [
-        { label: 'Open notifications', action: () => setIsNotificationsOpen(true) },
-        { separator: true },
         ...commonItems,
       ],
     });
@@ -321,11 +312,10 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
             aria-label="Overflow"
             onClick={() => {
               setIsTrayOverflowOpen((v) => !v);
-              setIsNotificationsOpen(false);
             }}
             onContextMenu={(e) => openTaskbarContextMenu(e, 'tray')}
           >
-            <span className="taskbar-chevron">^</span>
+            <TaskbarIconImage src={chevronUpIcon} alt="" className="taskbar-chevron-img" />
           </button>
           <button
             type="button"
@@ -352,13 +342,10 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
           </button>
           <button
             type="button"
-            className={`taskbar-tray-btn${isNotificationsOpen ? ' is-active' : ''}`}
+            className="taskbar-tray-btn"
             title="Notifications"
             aria-label="Notifications"
-            onClick={() => {
-              setIsNotificationsOpen((v) => !v);
-              setIsTrayOverflowOpen(false);
-            }}
+            onClick={() => {}}
             onContextMenu={(e) => openTaskbarContextMenu(e, 'tray')}
           >
             <TaskbarIconImage src={notificationIcon} alt="" className="taskbar-tray-img" />
@@ -489,20 +476,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
             >
               ⏻
             </button>
-          </div>
-        </div>
-      )}
-
-      {isNotificationsOpen && (
-        <div className="tray-panel tray-panel-notifications" ref={notificationsPanelRef}>
-          <div className="tray-panel-title">Notifications</div>
-          <div className="notification-card">
-            <strong>System</strong>
-            <span>Your desktop is running in Windows 11 mode.</span>
-          </div>
-          <div className="notification-card">
-            <strong>Taskbar</strong>
-            <span>Pinned apps launch as internal windows now.</span>
           </div>
         </div>
       )}
