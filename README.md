@@ -1,189 +1,182 @@
-<!--
- Copyright (C) 2026 ponmanivasahan
-
- This file is part of WebOS.
-
- WebOS is free software: you can redistribute it and/or modify
- it under the terms of the AGPL-3.0 License.
--->
-
-<h1 align="center">WebOS</h1>
-
 <p align="center">
-  Enterprise-style browser desktop experience built with React.
+  <img src="./public/banner.png" alt="WebOS Banner" width="100%" />
 </p>
 
-<p align="center">
-  <a href="https://github.com/ponmanivasahan/WebOS">GitHub Repository</a>
-</p>
+# WebOS
 
-<p align="center">
-  <img src="https://img.shields.io/badge/React-%5E19.2.4-2a5f92?style=for-the-badge&logo=react&logoColor=white" alt="React 19.2.4">
-  <img src="https://img.shields.io/badge/React%20Scripts-5.0.1-2a5f92?style=for-the-badge&logo=createreactapp&logoColor=white" alt="React Scripts 5.0.1">
-  <img src="https://img.shields.io/github/last-commit/ponmanivasahan/WebOS?style=for-the-badge" alt="Last Commit">
-  <img src="https://img.shields.io/github/commit-activity/w/ponmanivasahan/WebOS?style=for-the-badge" alt="Commit Activity">
-</p>
-
----
+WebOS is a Windows-inspired desktop experience built in React. It runs fully in the browser with a startup flow, desktop icons, draggable/resizable windows, taskbar interactions, and multiple built-in apps.
 
 ## Table of Contents
-- [Executive Summary](#executive-summary)
-- [Product Scope](#product-scope)
-- [Capabilities](#capabilities)
-- [Technical Architecture](#technical-architecture)
-- [Implementation Details](#implementation-details)
-- [Installation and Local Development](#installation-and-local-development)
-- [Production Build](#production-build)
-- [Repository Structure](#repository-structure)
-- [Roadmap](#roadmap)
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Features](#features)
+- [How To Use](#how-to-use)
+- [Run Locally](#run-locally)
+- [Build For Production](#build-for-production)
+- [Project Structure](#project-structure)
+- [Collaboration](#collaboration)
 - [License](#license)
 
----
+## Overview
 
-## Executive Summary
-WebOS is a browser-native desktop interface that replicates key operating system workflows in a modern web application.
+This project simulates an operating system interface in the browser, including:
 
-The project demonstrates frontend architecture for multi-window interaction, desktop-style navigation, and app orchestration in a single-page environment.
+- startup screens (boot, lock, login)
+- desktop app launchers
+- taskbar + start menu behavior
+- multi-window app management
+- utility and game apps
 
-Primary goals:
-- Deliver a polished Windows-inspired interaction model
-- Provide a modular app surface for future expansion
-- Showcase product-oriented UI engineering and state management patterns
+## Tech Stack
 
----
+- React 19
+- react-scripts 5
+- JavaScript (ES6+)
+- CSS
+- react-icons
 
-## Product Scope
-WebOS is designed as an interactive system rather than a conventional website.
+## Features
 
-Users can:
-- progress through a startup sequence,
-- operate a desktop workspace,
-- launch and manage multiple apps,
-- and interact with persistent system-style controls (taskbar, clock, and windows).
+### System Experience
 
----
-
-## Capabilities
-### Startup and Access Flow
-- Boot screen
-- Lock screen
-- Login screen
-
-### Desktop Experience
-- App icons and icon interactions
-- Desktop context menu actions
+- Boot screen, lock screen, and login flow
+- Desktop with draggable app icons
+- Desktop right-click context menu
 - Wallpaper switching support
+- Brightness overlay support
 
 ### Window Management
-- Drag and reposition windows
+
+- Open multiple apps simultaneously
+- Focus active windows
+- Drag windows to reposition
 - Minimize, maximize/restore, and close
-- Foreground focus management
+- Start maximized for selected apps
 
-### Taskbar and System Layer
-- Running app indicators
-- App switching from taskbar
-- Clock/tray presentation
+### Taskbar + Start Menu
 
-### Built-in Applications
+- Pinned apps and running app indicators
+- Overflow for extra pinned apps
+- Start menu with search
+- Recommended and pinned app launch entries
+- Calendar panel from taskbar clock
+- Developer info entry from Start menu
+- Logout action from Start menu power button
+
+### Built-In Apps
+
 - File Explorer
-- Notes
-- Focus App (timer + task workflow)
-- Additional in-browser app views
+  - folder navigation
+  - create/rename/delete operations
+- Notepad
+  - open and edit text flows
+- Focus App (Task Manager)
+  - productivity/task-oriented workflow
+- Chrome app shell
+- Terminal app shell
+- VS Code app shell (available in app registry)
+- Paint (Draw)
+- Slow Roads (embedded game)
+- Minecraft Classic (embedded game)
 
-### File Explorer Functions
-- Folder tree navigation
-- Path/address-based navigation
-- Back, forward, and up traversal
-- Create, rename, and delete operations
+## How To Use
 
----
+### 1) Start the OS
 
-## Technical Architecture
-- Framework: React 19
-- Build Runtime: React Scripts (Create React App)
-- Language: JavaScript (ES6+)
-- Styling: CSS
-- UI Assets: React Icons
+- Run the app.
+- Proceed through boot, lock, and login screens.
 
-Core architecture is component-driven with dedicated modules for:
-- desktop rendering,
-- application windows,
-- welcome/startup flow,
-- app-specific logic,
-- and shared context/hooks.
+### 2) Use the Desktop
 
----
+- Double-click a desktop icon to open an app.
+- Drag icons to reposition them.
+- Right-click desktop to open context actions.
 
-## Implementation Details
-This project emphasizes:
-- UI state coordination across multiple concurrent windows,
-- reusable desktop and application primitives,
-- interaction consistency across mouse and keyboard workflows,
-- and progressive refinement of app-level UI/UX patterns.
+### 3) Use Windows
 
----
+- Drag title bar to move a window.
+- Click maximize to switch between normal/maximized view.
+- Click minimize to hide to taskbar.
+- Click close to remove the app window.
 
-## Installation and Local Development
+### 4) Use the Taskbar
+
+- Click a pinned app icon to launch/focus app.
+- Use Start button for app search and quick launch.
+- Use clock area to open calendar.
+- Use Start menu power to logout.
+
+### 5) Use File Explorer
+
+- Browse folders from the explorer view.
+- Create, rename, and delete entries.
+- Navigate using explorer controls.
+
+### 6) Use Games
+
+- Open Slow Roads from desktop/taskbar icon.
+- Open Minecraft from desktop/taskbar icon.
+- Games are embedded in iframes and scale inside app windows.
+
+## Run Locally
+
 ### Prerequisites
-- Node.js 20+
+
+- Node.js
 - npm
 
-### 1. Clone the repository
+### Install and Start
+
 ```bash
 git clone https://github.com/ponmanivasahan/WebOS.git
 cd WebOS
-```
-
-### 2. Install dependencies
-```bash
 npm install
-```
-
-### 3. Start the development server
-```bash
 npm start
 ```
 
-The project runs using `react-scripts start` in development mode.
+The app starts in development mode on your local server.
 
----
+## Build For Production
 
-## Production Build
 ```bash
 npm run build
 ```
 
-Compiled production artifacts are generated in the `build/` directory.
+Production files are generated in the `build/` folder.
 
----
+## Project Structure
 
-## Repository Structure
 ```text
 src/
+  assets/
   components/
     apps/
+      DesktopApps/
+      FileExplorer/
+      Games/
+      Notes/
+      TaskManager/
     desktop/
     welcome/
     window/
   context/
   hooks/
-  assets/
 ```
 
-Primary entry points:
+Main entry files:
+
 - `src/index.js`
 - `src/App.js`
 
----
+## Collaboration
 
-## Roadmap
-- Strengthen Start Menu implementation
-- Expand Settings application depth
-- Extend File Explorer workflows
-- Add additional desktop apps and system utilities
-- Continue UX, accessibility, and performance optimization
+If you want to collaborate on this project, DM me on Slack:
 
----
+- `vasupks01`
 
 ## License
-This project is licensed under **AGPL-3.0**.
+
+No license is provided for this repository.
+
+All rights reserved by default.
