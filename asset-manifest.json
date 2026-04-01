@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/WebOS/static/css/main.576338fa.css",
-    "main.js": "/WebOS/static/js/main.da78421e.js",
+    "main.js": "/WebOS/static/js/main.09edbe9d.js",
     "static/js/453.e8d791f1.chunk.js": "/WebOS/static/js/453.e8d791f1.chunk.js",
     "static/media/desktop.png": "/WebOS/static/media/desktop.f39ba88ef238b5081b16.png",
     "static/media/background1.png": "/WebOS/static/media/background1.b50976e307d073adb44d.png",
@@ -21,11 +21,11 @@
     "static/media/windows.svg": "/WebOS/static/media/windows.1d3dd96aaa264161855f711aa665903b.svg",
     "static/media/generic-app.svg": "/WebOS/static/media/generic-app.2e3fa0459cbd37276a05aa453ed0f058.svg",
     "main.576338fa.css.map": "/WebOS/static/css/main.576338fa.css.map",
-    "main.da78421e.js.map": "/WebOS/static/js/main.da78421e.js.map",
+    "main.09edbe9d.js.map": "/WebOS/static/js/main.09edbe9d.js.map",
     "453.e8d791f1.chunk.js.map": "/WebOS/static/js/453.e8d791f1.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.576338fa.css",
-    "static/js/main.da78421e.js"
+    "static/js/main.09edbe9d.js"
   ]
 }
