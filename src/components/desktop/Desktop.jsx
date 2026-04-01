@@ -264,6 +264,8 @@ export default function Desktop({openWindows = [], activeWinId, onOpenApp, onLog
             x:e.clientX,
             y:e.clientY,
             items:[
+                {label:'Personalize',icon:<MdBrush />,action:()=>setShowWallpaperPicker(true)},
+                {separator:true},
                 {label:'View',icon:<MdGridView />,hasArrow:true,action:()=>{}},
                 {label:'Sort by',icon:<MdSort />,hasArrow:true,action:()=>{}},
                 {label:'Refresh',icon:<MdRefresh />,action:handleRefreshDesktop},
@@ -272,8 +274,6 @@ export default function Desktop({openWindows = [], activeWinId, onOpenApp, onLog
                 {label:'New',icon:<MdAddCircleOutline />,hasArrow:true,action:handleCreateFolder},
                 {separator:true},
                 {label:'Display settings',icon:<MdDisplaySettings />,action:()=>{}},
-                {label:'Personalize',icon:<MdBrush />,action:()=>setShowWallpaperPicker(true)},
-                {separator:true},
                 {label:'Rename with PowerRename',icon:<MdDriveFileRenameOutline />,action:()=>{}},
                 {label:'Open in Terminal',icon:<MdTerminal />,action:()=>onOpenApp?.('terminal')},
                 {separator:true},
