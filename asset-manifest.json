@@ -1,0 +1,31 @@
+{
+  "files": {
+    "main.css": "/WebOS/static/css/main.576338fa.css",
+    "main.js": "/WebOS/static/js/main.da78421e.js",
+    "static/js/453.e8d791f1.chunk.js": "/WebOS/static/js/453.e8d791f1.chunk.js",
+    "static/media/desktop.png": "/WebOS/static/media/desktop.f39ba88ef238b5081b16.png",
+    "static/media/background1.png": "/WebOS/static/media/background1.b50976e307d073adb44d.png",
+    "static/media/background.png": "/WebOS/static/media/background.4a28c71670a6a0eabb76.png",
+    "static/media/dev.png": "/WebOS/static/media/dev.02904cdc9dfc98d66178.png",
+    "static/media/desktopbg.png": "/WebOS/static/media/desktopbg.c7aa831b09115ad9e7a0.png",
+    "static/media/background2.png": "/WebOS/static/media/background2.e31c73a0202149e45d28.png",
+    "static/media/chrome.png": "/WebOS/static/media/chrome.e55e7aae725a1b7c8059.png",
+    "static/media/Minecraft.png": "/WebOS/static/media/Minecraft.2c96e6c74eb6a1ae73e3.png",
+    "static/media/slowroads.png": "/WebOS/static/media/slowroads.e2c2875a02c9f352d4ab.png",
+    "static/media/fileexp.png": "/WebOS/static/media/fileexp.91b4f1ac8028a3b9e20b.png",
+    "static/media/notepad.png": "/WebOS/static/media/notepad.950bfa5c3812057fae4d.png",
+    "static/media/terminal.png": "/WebOS/static/media/terminal.c0fe03f6856b81078592.png",
+    "static/media/wfw311.ogv": "/WebOS/static/media/wfw311.dd8cad2254b6cbf20426.ogv",
+    "static/media/taskmanager.png": "/WebOS/static/media/taskmanager.3238fef1d6e327318b80.png",
+    "index.html": "/WebOS/index.html",
+    "static/media/windows.svg": "/WebOS/static/media/windows.1d3dd96aaa264161855f711aa665903b.svg",
+    "static/media/generic-app.svg": "/WebOS/static/media/generic-app.2e3fa0459cbd37276a05aa453ed0f058.svg",
+    "main.576338fa.css.map": "/WebOS/static/css/main.576338fa.css.map",
+    "main.da78421e.js.map": "/WebOS/static/js/main.da78421e.js.map",
+    "453.e8d791f1.chunk.js.map": "/WebOS/static/js/453.e8d791f1.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.576338fa.css",
+    "static/js/main.da78421e.js"
+  ]
+}
