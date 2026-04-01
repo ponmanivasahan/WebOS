@@ -6,7 +6,9 @@ const STORAGE_KEY='aurora_notes';
 const NOTE_CONTENTS_KEY='aurora_note_file_contents';
 const DOCS_PATH='/Documents';
 
-const WELCOME_TEXT='Welcome to your Notes app.\n\nWishing you a great day and smooth work ahead.\nUse + to create new files, then write and organize your ideas freely.\n\nYou are doing great. Keep going.';
+const LEGACY_WELCOME_TEXT='Welcome to your Notes app.\n\nWishing you a great day and smooth work ahead.\nUse + to create new files, then write and organize your ideas freely.\n\nYou are doing great. Keep going.';
+
+const WELCOME_TEXT='Welcome to WebOS v1.0.\n\nThanks for trying this project. Remaining features will come in the next update (v1.0.1).\n\nQuick guide:\n- Change background: right-click on desktop -> Personalize -> choose wallpaper or upload your own image.\n- Logout: open the Start (Windows) button and use the power/logout option.\n- Check Developer Info in Start menu for project and developer details.\n\nEnjoy exploring WebOS.';
 
 function toFileBaseName(title){
     const cleaned=(title || 'Untitled').replace(/[\\/:*?"<>|]/g,' ').replace(/\s+/g,' ').trim();
@@ -25,7 +27,16 @@ function loadNotes(){
     try{
         const raw=localStorage.getItem(STORAGE_KEY);
         const parsed=raw ? JSON.parse(raw) : null;
-        if(Array.isArray(parsed) && parsed.length>0) return parsed;
+        if(Array.isArray(parsed) && parsed.length>0){
+            return parsed.map((note)=>{
+                const isWelcomeFile=note?.fileName==='Welcome.txt' || note?.title==='Welcome';
+                if(!isWelcomeFile) return note;
+                if(note.body===LEGACY_WELCOME_TEXT){
+                    return {...note,body:WELCOME_TEXT};
+                }
+                return note;
+            });
+        }
         return [
             {
                 id:'default_1',

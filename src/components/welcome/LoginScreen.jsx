@@ -164,7 +164,9 @@ export default function LoginScreen({onAuthenticate}){
                     )}
 
                     <div className="login-note">
-                        See the project description for the password.
+                        Welcome to Aurora OS.
+                        This is version 1.0.
+                        With Out forgetting checkout Notes App.
                     </div>
                 </div>
 

@@ -112,6 +112,7 @@ const newTab=(url="newtab",title="New Tab")=>({
 	id:_tabId++,url,displayUrl:url==="newtab" ? "" :url,title,favicon:null,
 	loading:false,canBack:false,canForward:false,history:url==="newtab"?[]:[url],
 	histIdx:url==="newtab" ? -1:0, starred:false, frameBlocked:false,
+	unsupportedUrl:null,
 });
 
 const isSecure=(url)=>url.startsWith("https://") || url==="newtab";
@@ -138,6 +139,17 @@ const getTitle=(url)=>{
 }
 
 const isProxyFallbackUrl=(url)=>url.startsWith("https://r.jina.ai/http://");
+
+const isWikipediaUrl=(url)=>{
+	if(url==="newtab") return true;
+	try{
+		const {hostname}=new URL(url);
+		return hostname==="wikipedia.org" || hostname.endsWith(".wikipedia.org");
+	}
+	catch{
+		return false;
+	}
+};
 
 const getInAppFallbackUrl=(url)=>{
 	if(url==="newtab" || isProxyFallbackUrl(url)) return url;
@@ -182,10 +194,13 @@ export default function Chrome(){
 	};
 	 const navigate=(id,rawUrl)=>{
 		const url=parseUrl(rawUrl);
+		const wikipediaOnly=isWikipediaUrl(url);
 		updateTab(id,{
-			url,displayUrl:url==="newtab" ? "" : url,
-			title:getTitle(url),loading:url !=="newtab",history:[url],
+			url:wikipediaOnly ? url : "newtab",
+			displayUrl:url==="newtab" ? "" : url,
+			title:getTitle(url),loading:wikipediaOnly && url !=="newtab",history:[url],
 			histIdx:0,canBack:false,canForward:false,frameBlocked:false,
+			unsupportedUrl:wikipediaOnly ? null : url,
 		});
 	 };
 
@@ -253,7 +268,10 @@ export default function Chrome(){
 		}
 	  };
        const goHome=()=>navigate(active.id,"newtab");
-	   const reload=()=>updateTab(active.id,{loading:true,frameBlocked:false});
+	  const reload=()=>{
+		if(active.unsupportedUrl) return;
+		updateTab(active.id,{loading:true,frameBlocked:false});
+	  };
 
 	   useEffect(()=>{
            if(!addrFocused){
@@ -368,7 +386,11 @@ export default function Chrome(){
 					</div>
 				   )}
 
-				   {tab.url==="newtab" ? (
+				   {tab.unsupportedUrl ? (
+					<div className="chrome-blocked-overlay">
+						<UpcomingMessage requestedUrl={tab.unsupportedUrl} onNavigate={(u)=>navigate(tab.id,u)} />
+					</div>
+				   ) : tab.url==="newtab" ? (
 					<NewTabPage onNavigate={(url)=>navigate(tab.id,url)} />
 				   ):(
 					<>
@@ -482,6 +504,24 @@ function CorsMessage({url,onNavigate}){
 		<button className="chrome-blocked-btn secondary" onClick={()=>onNavigate("newtab")}>
 			Back to new tab
 		</button>
+		</>
+	);
+}
+
+function UpcomingMessage({requestedUrl,onNavigate}){
+	return(
+		<>
+		 <svg viewBox="0 0 64 64" width="64" height="64" style={{ marginBottom: 16 }}>
+			<circle cx="32" cy="32" r="30" fill="none" stroke="#dadce0" strokeWidth="3" />
+			<text x="32" y="42" textAnchor="middle" fontSize="32" fill="#8a9096">i</text>
+		 </svg>
+		 <h2>Coming in next update</h2>
+		 <p>
+			<strong>{requestedUrl}</strong> is not available yet in this version.
+			 For now, Chrome supports Wikipedia only.
+		 </p>
+		 <button className="chrome-blocked-btn" onClick={()=>onNavigate("https://en.wikipedia.org")}>Open Wikipedia</button>
+		 <button className="chrome-blocked-btn secondary" onClick={()=>onNavigate("newtab")}>Back to new tab</button>
 		</>
 	);
 }
