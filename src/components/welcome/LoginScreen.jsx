@@ -1,8 +1,11 @@
 import {useState,useEffect,useRef} from 'react'
 import './welcome.css';
 import background from '../../assets/background2.png';
+import loginSound from '../../assets/wfw311.ogv';
+import { useOS } from '../../context/OSContext';
 const CORRECT_PASSWORD='Miss You';
 export default function LoginScreen({onAuthenticate}){
+    const {soundVolume}=useOS();
     const [password,setPassword]=useState('')
     const [error,setError]=useState('');
     const [success,setSuccess]=useState(false);
@@ -18,12 +21,21 @@ export default function LoginScreen({onAuthenticate}){
         setTimeout(()=>inputRef.current?.focus(),250);
     },[]);
 
+    const playLoginSound=()=>{
+        const audio=new Audio(loginSound);
+        audio.volume=Math.min(1,Math.max(0,(Number(soundVolume) || 0)/100));
+        audio.play().catch(()=>{
+            /* ignore autoplay/playback errors */
+        });
+    };
+
     const submit=()=>{
         if(!password || success || isLocked) return;
         if(password.trim().toLowerCase()===CORRECT_PASSWORD.toLowerCase()){
             setSuccess(true);
             setError('');
-            setTimeout(onAuthenticate,320);
+            playLoginSound();
+            onAuthenticate?.();
         }
         else{
             const a=attempts+1;

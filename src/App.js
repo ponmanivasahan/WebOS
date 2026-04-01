@@ -5,11 +5,15 @@ import Desktop from './components/desktop/Desktop';
 import WindowManager from './components/window/windowManager';
 import './index.css'
 
+const AUTH_STAGE_STORAGE_KEY='webos_auth_stage';
+const AUTH_LOGGED_IN_STORAGE_KEY='webos_is_logged_in';
 
 function App(){
   const [stage,setStage]=useState(()=>{
     try{
-      const saved=localStorage.getItem('webos_auth_stage');
+      const isLoggedIn=localStorage.getItem(AUTH_LOGGED_IN_STORAGE_KEY)==='true';
+      if(isLoggedIn) return 'desktop';
+      const saved=localStorage.getItem(AUTH_STAGE_STORAGE_KEY);
       return saved || 'welcome';
     }catch{
       return 'welcome';
@@ -18,7 +22,10 @@ function App(){
 
   useEffect(()=>{
     try{
-      localStorage.setItem('webos_auth_stage',stage);
+      localStorage.setItem(AUTH_STAGE_STORAGE_KEY,stage);
+      if(stage==='desktop'){
+        localStorage.setItem(AUTH_LOGGED_IN_STORAGE_KEY,'true');
+      }
     }catch{
       /* ignore storage errors */
     }
@@ -80,6 +87,11 @@ function App(){
   const handleLogout=()=>{
     setWindows([]);
     setActiveWinId(null);
+    try{
+      localStorage.setItem(AUTH_LOGGED_IN_STORAGE_KEY,'false');
+    }catch{
+      /* ignore storage errors */
+    }
     setStage('welcome');
   };
 
