@@ -258,6 +258,44 @@
     }
 }
 
+@media (max-width: 600px){
+    .lock-screen{
+        align-items:center;
+        justify-content:flex-end;
+        padding:calc(env(safe-area-inset-top, 0px) + 42px) 18px calc(env(safe-area-inset-bottom, 0px) + 36px);
+    }
+
+    .lock-content{
+        width:min(100%, 420px);
+        align-items:center;
+        text-align:center;
+    }
+
+    .lock-greeting{
+        margin-bottom:10px;
+        font-size:clamp(12px, 3.6vw, 15px);
+        letter-spacing:1.2px;
+    }
+
+    .lock-time{
+        font-size:clamp(46px, 20vw, 72px);
+    }
+
+    .lock-date{
+        margin-top:2px;
+        font-size:clamp(15px, 4.8vw, 21px);
+    }
+
+    .lock-divider{
+        margin:14px 0;
+    }
+
+    .lock-hint{
+        font-size:10px;
+        letter-spacing:1.2px;
+    }
+}
+
 .login-screen{
     background-color:#101820;
     background-image:var(--login-bg-image, none);
@@ -692,5 +730,109 @@
 
     .login-input::placeholder{
         font-size:16px;
+    }
+}
+
+@media (max-width: 600px){
+    .login-screen{
+        align-items:flex-end;
+        padding:calc(env(safe-area-inset-top, 0px) + 12px) 12px calc(env(safe-area-inset-bottom, 0px) + 12px);
+    }
+
+    .login-frame{
+        width:min(100%, 430px);
+        gap:12px;
+        padding:16px 14px 14px;
+        border-radius:12px;
+    }
+
+    .login-avatar{
+        width:96px;
+        height:96px;
+    }
+
+    .login-input-wrap,
+    .login-footer-row{
+        width:100%;
+    }
+
+    .login-input-row{
+        border-radius:10px;
+    }
+
+    .login-input{
+        min-height:44px;
+        padding:10px 12px;
+    }
+
+    .login-eye-btn{
+        width:44px;
+        min-height:44px;
+    }
+
+    .login-go-btn{
+        width:48px;
+        min-height:44px;
+    }
+
+    .login-tools-row{
+        margin-top:9px;
+    }
+
+    .login-keypad{
+        padding:10px;
+        border-radius:12px;
+    }
+
+    .login-keypad-head{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:4px;
+    }
+
+    .login-keypad-grid,
+    .login-keypad-grid.compact{
+        gap:6px;
+    }
+
+    .login-keypad-row{
+        gap:6px;
+    }
+
+    .login-keypad-key{
+        min-width:0;
+        height:40px;
+        font-size:12px;
+    }
+
+    .login-note{
+        font-size:10px;
+        line-height:1.35;
+    }
+
+    .os-btn{
+        width:100%;
+        min-width:0;
+        min-height:44px;
+        padding:10px 14px;
+    }
+}
+
+@media (max-width: 380px){
+    .login-screen{
+        padding:calc(env(safe-area-inset-top, 0px) + 10px) 10px calc(env(safe-area-inset-bottom, 0px) + 10px);
+    }
+
+    .login-frame{
+        padding:14px 10px 12px;
+    }
+
+    .login-avatar{
+        width:84px;
+        height:84px;
+    }
+
+    .login-keypad-help{
+        font-size:9px;
     }
 }
