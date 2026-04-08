@@ -11,6 +11,7 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
+  min-height: 0;
     background: #f3f3f3;
     font-family: 'DM Sans', 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
     font-size: 13px;
@@ -65,7 +66,33 @@
     flex-shrink: 0;
     flex-wrap: wrap;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,103,192,0.55) rgba(0,0,0,0.08);
 }
+
+  .da-ribbon::-webkit-scrollbar,
+  .da-statusbar::-webkit-scrollbar,
+  .da-canvas-scroll::-webkit-scrollbar{
+    height: 10px;
+    width: 10px;
+  }
+
+  .da-ribbon::-webkit-scrollbar-track,
+  .da-statusbar::-webkit-scrollbar-track,
+  .da-canvas-scroll::-webkit-scrollbar-track{
+    background: rgba(0,0,0,0.08);
+    border-radius: 999px;
+  }
+
+  .da-ribbon::-webkit-scrollbar-thumb,
+  .da-statusbar::-webkit-scrollbar-thumb,
+  .da-canvas-scroll::-webkit-scrollbar-thumb{
+    background: rgba(0,103,192,0.55);
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.5);
+  }
 .da-section{
     display: flex;
     flex-direction: column;
@@ -282,6 +309,7 @@
   overflow: hidden;
   position: relative;
   background: #f3f3f3;
+  min-height: 0;
 }
 .da-canvas-scroll{
     flex: 1;
@@ -290,8 +318,17 @@
     justify-content: center;
     padding: 20px;
     overflow: auto;
+    min-height: 0;
+}
+
+.da-canvas-stage{
+    position: relative;
+    width: min(100%, 1280px);
+    flex-shrink: 0;
 }
 .da-canvas{
+    width: 100%;
+    height: auto;
     background: #ffffff;
     border-radius: 10px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.07);
@@ -326,7 +363,6 @@
 .da-canvas.c-select{
     cursor: default;
 }
-
 .da-statusbar{
     display: flex;
     align-items: center;
@@ -336,6 +372,11 @@
     border-top: 1px solid rgba(0,0,0,0.07);
     min-height: 26px;
     flex-shrink: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,103,192,0.55) rgba(0,0,0,0.08);
 }
 .da-status-item{
     font-size: 10px;
@@ -353,4 +394,113 @@
 }
 .da-status-spacer{
     flex: 1;
+}
+
+@media (max-width: 768px){
+  .da-shell{
+    height: 100%;
+  }
+  .da-titlebar{
+    height: 40px;
+    padding: 0 10px;
+  }
+  .da-title{
+    font-size: 12px;
+  }
+  .da-title-meta{
+    display: none;
+  }
+  .da-ribbon{
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 6px 8px;
+    gap: 4px;
+  }
+  .da-section{
+    flex-shrink: 0;
+  }
+  .da-section-row{
+    padding: 2px;
+  }
+  .da-ribbon-sep{
+    display: none;
+  }
+  .da-tool-btn{
+    min-width: 32px;
+    height: 36px;
+    font-size: 8px;
+    padding: 3px;
+  }
+
+  .da-tool-icon{
+    font-size: 14px;
+  }
+
+  .da-sm-btn{
+    height: 26px;
+    font-size: 10px;
+    padding: 0 8px;
+  }
+  .da-swatches{
+    max-width: 100px;
+  }
+  .da-swatch{
+    width: 16px;
+    height: 16px;
+  }
+  .da-opacity-slider{
+    width: 60px;
+  }
+  .da-actions{
+    padding: 2px;
+    gap: 2px;
+  }
+  .da-workspace{
+    flex-direction: column;
+  }
+  .da-canvas-scroll{
+    padding: 10px;
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+  .da-canvas-stage{ width: 100%; }
+  .da-statusbar{
+    padding: 4px 8px;
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .da-status-item{
+    font-size: 9px;
+  }
+}
+@media (max-width: 480px){
+
+  .da-title{
+    font-size: 11px;
+  }
+
+  .da-tool-btn{
+    min-width: 28px;
+    height: 32px;
+  }
+
+  .da-tool-icon{
+    font-size: 12px;
+  }
+
+  .da-sm-btn{
+    font-size: 9px;
+    padding: 0 6px;
+  }
+
+  .da-swatches{
+    max-width: 80px;
+  }
+
+  .da-canvas-scroll{
+    padding: 6px;
+  }
+
+  .da-statusbar{ gap: 4px; }
 }

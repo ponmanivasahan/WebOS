@@ -102,3 +102,43 @@
     0% ,100% {opacity: 1;}
     50%{opacity: 0;}
 }
+
+@media (max-width: 768px){
+  .term-shell{
+    height: 100vh;
+    font-size: 13px;
+  }
+  .term-body{
+    padding: 10px 10px;
+    line-height: 1.4;
+  }
+  .term-line{
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+  .term-hidden-input{
+    font-size: 16px;
+  }
+  .term-input-display{
+    font-size: 13px;
+  }
+  .term-cursor{
+    width: 7px;
+  }
+}
+
+@media (max-width: 480px){
+  .term-shell{
+    font-size: 12px;
+  }
+  .term-body{
+    padding: 8px;
+  }
+  .term-line{
+    font-size: 12px;
+    letter-spacing: 0.03em;
+  }
+  .term-cursor{
+    width: 6px;
+  }
+}

@@ -84,14 +84,17 @@
         const [textActive,setTextActive]=useState(false);
         const[textPos,setTextPos]=useState({x:0,y:0});
         const [textVal,setTextVal]=useState('');
+        const canvasRect=canvasRef.current?.getBoundingClientRect();
+        const displayScaleX=(canvasRect?.width || CANVAS_W)/CANVAS_W;
+        const displayScaleY=(canvasRect?.height || CANVAS_H)/CANVAS_H;
 
         useEffect(()=>{
-            const ctx=canvasRef.current.getContext('2d');
+            const ctx=canvasRef.current.getContext('2d', { willReadFrequently: true });
             ctx.fillStyle='#ffffff';
             ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
         },[]);
 
-        const ctx=()=>canvasRef.current.getContext('2d');
+        const ctx=()=>canvasRef.current.getContext('2d', { willReadFrequently: true });
 
         const getPos=useCallback((e)=>{
             const rect=canvasRef.current.getBoundingClientRect();
@@ -210,7 +213,6 @@
         },[tool]);
 
         const onPointerDown=useCallback((e)=>{
-            e.preventDefault();
             const {x,y}=getPos(e);
             if(tool==='text'){
                 setTextPos({x,y});
@@ -238,7 +240,6 @@
         },[tool,getPos,pushHistory,floodFill,applyStyle]);
 
         const onPointerMove=useCallback((e)=>{
-            if(e.cancelable) e.preventDefault();
             const {x,y}=getPos(e);
             setPos({x:Math.round(x),y:Math.round(y)});
             if(!isDown.current)return;
@@ -391,19 +392,22 @@
             </div>
             <div className="da-workspace">
             <div className="da-canvas-scroll">
-                {textActive && (
-                    <input ref={textInputRef} value={textVal} onChange={e=>setTextVal(e.target.value)}
-                    onKeyDown={e=>{if (e.key==='Enter') commitText(); if(e.key==='Escape') setTextActive(false);}}
-                    onBlur={commitText} style={{
-                        position:'absolute',left:`calc(20px + ${textPos.x/(CANVAS_W/canvasRef.current?.getBoundingClientRect().width || 1)}px)`,
-                        top:`calc(20px + ${textPos.y/(CANVAS_H/canvasRef.current?.getBoundingClientRect().height || 1)}px)`,
-                        fontSize:`${Math.max(12,strokePx*4)}px`,fontFamily:'DM Sans, sans-serif',background:'rgba(255,255,255,0.92)',
-                        border:'1.5px dashed #0067c0', borderRadius:'4px',padding:'2px 6px', outline:'none',color:color,zIndex:10,minWidth:60,
-                    }} placeholder="Type here..."/>
-                )}
-                <canvas ref={canvasRef} width={CANVAS_W} height={CANVAS_H} className={`da-canvas c-${tool}`} 
-                                onMouseDown={onPointerDown} onMouseMove={onPointerMove} onMouseUp={onPointerUp} onMouseLeave={onPointerUp} onTouchStart={onPointerDown} onTouchMove={onPointerMove} onTouchEnd={onPointerUp}
-                style={{maxWidth:'100%',maxHeight:'100%'}}/>
+                <div className="da-canvas-stage">
+                    {textActive && (
+                        <input ref={textInputRef} value={textVal} onChange={e=>setTextVal(e.target.value)}
+                        onKeyDown={e=>{if (e.key==='Enter') commitText(); if(e.key==='Escape') setTextActive(false);}}
+                        onBlur={commitText} style={{
+                            position:'absolute',left:`${textPos.x*displayScaleX}px`,
+                            top:`${textPos.y*displayScaleY}px`,
+                            transform:'translate(-2px, -100%)',
+                            fontSize:`${Math.max(12,strokePx*4)*displayScaleY}px`,fontFamily:'DM Sans, sans-serif',background:'rgba(255,255,255,0.92)',
+                            border:'1.5px dashed #0067c0', borderRadius:'4px',padding:'2px 6px', outline:'none',color:color,zIndex:10,minWidth:60,
+                        }} placeholder="Type here..."/>
+                    )}
+                    <canvas ref={canvasRef} width={CANVAS_W} height={CANVAS_H} className={`da-canvas c-${tool}`} 
+                                    onMouseDown={onPointerDown} onMouseMove={onPointerMove} onMouseUp={onPointerUp} onMouseLeave={onPointerUp} onTouchStart={onPointerDown} onTouchMove={onPointerMove} onTouchEnd={onPointerUp}
+                    style={{maxWidth:'100%',maxHeight:'100%', touchAction:'none'}}/>
+                </div>
             </div>
             </div>
 
