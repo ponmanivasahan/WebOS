@@ -26,6 +26,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
   background: var(--notes-bg);
   color: var(--notes-text);
   font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
@@ -132,6 +133,34 @@
   padding: 0 14px;
   border-bottom: 1px solid var(--notes-border-2);
   background: var(--notes-topbar);
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+
+.notes-toolbar::-webkit-scrollbar,
+.notes-tabs-scroll::-webkit-scrollbar,
+.notes-statusbar::-webkit-scrollbar,
+.notes-editor::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+.notes-toolbar::-webkit-scrollbar-thumb,
+.notes-tabs-scroll::-webkit-scrollbar-thumb,
+.notes-statusbar::-webkit-scrollbar-thumb,
+.notes-editor::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.55);
+  border-radius: 999px;
+  border: 2px solid rgba(16, 16, 16, 0.55);
+}
+
+.notes-toolbar::-webkit-scrollbar-track,
+.notes-tabs-scroll::-webkit-scrollbar-track,
+.notes-statusbar::-webkit-scrollbar-track,
+.notes-editor::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .notes-menu-group {
@@ -338,6 +367,10 @@
   background: #0a0d13;
   color: #98a0b1;
   font-size: 11px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
 }
 
 .notes-status-chip,
@@ -346,4 +379,109 @@
   border: 1px solid #202734;
   border-radius: 999px;
   background: #111620;
+}
+
+@media(max-width:768px){
+  .notes-shell{
+    height: 100%;
+    min-height: 0;
+  }
+  .notes-toolbar,
+  .notes-tabs-scroll{
+    overflow-x: auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .notes-editor{
+    overflow-wrap:anywhere;
+  }
+  .notes-tab{
+    min-width: 120px;
+    max-width: 180px;
+    padding: 0 8px;
+  }
+  .notes-tab-name{
+    font-size: 12px;
+  }
+  .notes-new-tab{
+    width: 28px;
+    font-size: 18px;
+  }
+  .notes-toolbar{
+    gap: 6px;
+    padding: 0 8px;
+  }
+  .notes-menu-group,
+  .notes-fmt-group{
+    flex-shrink: 0;
+  }
+  .notes-menu-items{
+    padding: 4px 8px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .notes-toolbar-sep{
+    display: none;
+  }
+  .notes-current-file-name{
+    max-width: 120px;
+    font-size: 12px;
+  }
+  .notes-fmt-btn,
+  .notes-settings-btn,
+  .notes-new-file-btn,
+  .notes-delete-file-btn{
+    width: 26px;
+    height: 26px;
+  }
+  .notes-editor{
+    padding: 12px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .notes-statusbar{
+    flex-wrap: nowrap;
+    gap: 6px;
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+}
+
+@media(max-width:480px){
+  .notes-file-head{
+    display: none;
+  }
+  .notes-tab{
+    min-width: 100px;
+    max-width: 140px;
+  }
+  .notes-editor{
+    font-size: 14px;
+    padding: 10px;
+  }
+  .notes-toolbar{
+    gap: 4px;
+    padding: 0 6px;
+  }
+  .notes-current-file-name{
+    max-width: 90px;
+  }
+  .notes-fmt-btn,
+  .notes-settings-btn,
+  .notes-new-file-btn,
+  .notes-delete-file-btn{
+    width: 24px;
+    height: 24px;
+  }
+  .notes-toolbar-sep{
+    display: none;
+  }
+  .notes-statusbar{
+    gap: 4px;
+    padding: 4px 6px;
+  }
+  .notes-status-chip,
+  .notes-status-panel{
+    padding: 2px 6px;
+  }
 }

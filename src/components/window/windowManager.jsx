@@ -81,6 +81,9 @@ export default function WindowManager({
   const [geometry, setGeometry] = useState({});
   const [newFileSignals,setNewFileSignals]=useState({});
   const [titleRenameRequests,setTitleRenameRequests]=useState({});
+  const handleWindowTitleChange=useCallback((windowId,title)=>{
+    onTitleChange?.(windowId,title);
+  },[onTitleChange]);
   const getMaxRect = () => ({
     x:0,
     y:0,
@@ -201,7 +204,7 @@ export default function WindowManager({
               <AppComponent
                 windowId={win.id}
                 onOpenTextFile={(file)=>onOpenApp?.('notes',{type:'open-text-file',...file})}
-                onWindowTitleChange={(title)=>onTitleChange?.(win.id,title)}
+                onWindowTitleChange={(title)=>handleWindowTitleChange(win.id,title)}
                 newFileSignal={newFileSignals[win.id] || 0}
                 titleRenameRequest={titleRenameRequests[win.id] || null}
                 openFileRequest={win.notesOpenRequest || null}

@@ -79,9 +79,11 @@ function App(){
   };
 
   const handleWindowTitleChange=(id,title)=>{
-    setWindows((prev)=>
-      prev.map((w)=>w.id===id ? {...w,title}:w)
-    );
+    setWindows((prev)=>{
+      const target=prev.find((w)=>w.id===id);
+      if(!target || target.title===title) return prev;
+      return prev.map((w)=>w.id===id ? {...w,title}:w);
+    });
   };
 
   const handleLogout=()=>{
