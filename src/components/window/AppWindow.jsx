@@ -114,7 +114,7 @@ export default function AppWindow({
         };
     },[]);
 
-    const TASKBAR_H=48;
+    const TASKBAR_H=isMaximized ? 0 : 48;
     const WINDOW_SIDE_GAP=isMaximized ? 0 : 8;
     const BOTTOM_GAP=isMaximized ? 0 : 8;
     const maxWidth=Math.max(240,viewport.width-(WINDOW_SIDE_GAP*2));
