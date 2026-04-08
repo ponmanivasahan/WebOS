@@ -33,6 +33,7 @@ import chromeIcon from '../../assets/taskbar/chrome.png';
 import drawIcon from '../../assets/draw.png';
 import slowRoadsIcon from '../../assets/slowroads.png';
 import MinecraftIcon from '../../assets/Minecraft.png';
+import developerIcon from '../../assets/developer.png';
 
 const DESKTOP_APPS=[
     {
@@ -88,6 +89,12 @@ const DESKTOP_APPS=[
         label:'Minecraft',
         appId:'minecraft',
         icon:<IconImage src={MinecraftIcon} alt='Minecraft' />,
+    },
+    {
+        id:'developer-info',
+        label:'Developer Info',
+        appId:'developer-info',
+        icon:<IconImage src={developerIcon} alt='Developer Info' />,
     },
 ];
 

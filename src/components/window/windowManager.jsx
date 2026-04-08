@@ -9,6 +9,7 @@ import Chrome from '../apps/DesktopApps/Chrome';
 import Draw from '../apps/DesktopApps/Draw';
 import SlowRoads from '../apps/Games/SlowRoads';
 import Minecraft from '../apps/Games/MineCraft';
+import DevInfo from '../desktop/DevInfo';
 import vscodeIcon from '../../assets/taskbar/vs.png';
 import terminalIcon from '../../assets/taskbar/terminal.png';
 import chromeIcon from '../../assets/taskbar/chrome.png';
@@ -18,7 +19,7 @@ import notesIcon from '../../assets/taskbar/notepad.png';
 import drawIcon from '../../assets/draw.png';
 import slowRoadsIcon from '../../assets/slowroads.png';
 import minecraftIcon from '../../assets/Minecraft.png';
-import genericAppIcon from '../../assets/taskbar/generic-app.svg';
+import developerIcon from '../../assets/developer.png';
 
 const APP_DEFAULTS = {
   'file-explorer':{ width: 720, height: 480, title: 'File Explorer'},
@@ -30,6 +31,7 @@ const APP_DEFAULTS = {
   'draw': { width: 980, height: 640, title: 'Paint' },
   'slowroads': { width: 1080, height: 680, title: 'Slow Roads' },
   'minecraft': { width: 1080, height: 680, title: 'Minecraft' },
+  'developer-info': { width: 860, height: 620, title: 'Developer Info' },
 };
 
 const getAppIcon = (appId) => {
@@ -42,6 +44,7 @@ const getAppIcon = (appId) => {
   if (appId === 'draw') return <AppIcon src={drawIcon} alt="Paint" />;
   if (appId === 'slowroads') return <AppIcon src={slowRoadsIcon} alt="Slow Roads" />;
   if (appId === 'minecraft') return <AppIcon src={minecraftIcon} alt="Minecraft" />;
+  if (appId === 'developer-info') return <AppIcon src={developerIcon} alt="Developer Info" />;
   return null;
 };
 
@@ -55,6 +58,7 @@ const APP_MENUS = {
   'draw':[],
   'slowroads':[],
   'minecraft':[],
+  'developer-info':[],
 };
 
 const APP_COMPONENTS = {
@@ -67,6 +71,7 @@ const APP_COMPONENTS = {
   'draw': Draw,
   'slowroads': SlowRoads,
   'minecraft': Minecraft,
+  'developer-info': DevInfo,
 };
 
 export default function WindowManager({

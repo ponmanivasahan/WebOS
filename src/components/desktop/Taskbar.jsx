@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import TaskbarClock from './TaskbarClock';
-import DevInfo from './DevInfo';
 import windowsIcon from '../../assets/taskbar/windows.svg';
 import fileExplorerIcon from '../../assets/taskbar/fileexp.png';
 import vscodeIcon from '../../assets/taskbar/vs.png';
@@ -16,8 +15,8 @@ import soundIcon from '../../assets/taskbar/sound.png';
 import notificationIcon from '../../assets/taskbar/notification.png';
 import batteryIcon from '../../assets/taskbar/battery.png';
 import chevronUpIcon from '../../assets/taskbar/chevronup.png';
-import devIcon from '../../assets/taskbar/dev.png';
 import MinecraftIcon from '../../assets/Minecraft.png';
+import developerIcon from '../../assets/developer.png';
 
 export default function Taskbar({ windows = [], activeWinId, onOpenApp, availableApps = [], onLogout }) {
   const [isStartOpen, setIsStartOpen] = useState(false);
@@ -26,7 +25,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
   const [isTrayOverflowOpen, setIsTrayOverflowOpen] = useState(false);
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [taskbarContext, setTaskbarContext] = useState(null);
-  const [devOpen, setDevOpen] = useState(false);
   const [startQuery, setStartQuery] = useState('');
   const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth);
   const showMobileShell = viewportWidth <= 768;
@@ -500,11 +498,10 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
               type="button"
               className="start-menu-user"
               onClick={() => {
-                setIsStartOpen(false);
-                setDevOpen(true);
+                launchApp({ type: 'internal', appId: 'developer-info' });
               }}
             >
-              <TaskbarIconImage src={devIcon} alt="" className="taskbar-icon-img start-menu-user-icon" />
+              <TaskbarIconImage src={developerIcon} alt="" className="taskbar-icon-img start-menu-user-icon" />
               <span>Developer Info</span>
             </button>
             <button
@@ -607,8 +604,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
           })}
         </div>
       )}
-
-      {devOpen && <DevInfo onClose={() => setDevOpen(false)} />}
     </>
   );
 }
@@ -671,5 +666,6 @@ function TaskbarAppIcon({ appId }) {
   if (appId === 'draw') return <TaskbarIconImage src={drawIcon} alt="" className="taskbar-icon-img" />;
   if (appId === 'slowroads') return <TaskbarIconImage src={slowRoadsIcon} alt="" className="taskbar-icon-img" />;
   if (appId === 'minecraft') return <TaskbarIconImage src={MinecraftIcon} alt="" className="taskbar-icon-img" />;
+  if (appId === 'developer-info') return <TaskbarIconImage src={developerIcon} alt="" className="taskbar-icon-img" />;
   return <TaskbarIconImage src={genericAppIcon} alt="" className="taskbar-icon-img" />;
 }

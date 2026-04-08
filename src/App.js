@@ -131,4 +131,5 @@ const APP_META={
   'terminal':{title:'Terminal'},
   'chrome':{title:'Chrome'},
   'draw':{title:'Paint'},
+  'developer-info':{title:'Developer Info'},
 };
