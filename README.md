@@ -177,6 +177,6 @@ If you want to collaborate on this project, DM me on Slack:
 
 ## License
 
-No license is provided for this repository.
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
 
-All rights reserved by default.
+See the LICENSE file for details.
