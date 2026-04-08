@@ -3,7 +3,7 @@ import './welcome.css';
 import background from '../../assets/background2.png';
 import loginSound from '../../assets/wfw311.ogv';
 import { useOS } from '../../context/OSContext';
-const CORRECT_PASSWORD='Miss You';
+const CORRECT_PASSWORD='123';
 export default function LoginScreen({onAuthenticate}){
     const {soundVolume}=useOS();
     const [password,setPassword]=useState('')
@@ -12,8 +12,6 @@ export default function LoginScreen({onAuthenticate}){
     const [shaking,setShaking]=useState(false);
     const [attempts,setAttempts]=useState(0);
     const [isLocked,setIsLocked]=useState(false);
-    const [showHint,setShowHint]=useState(false);
-    const [showKeypad,setShowKeypad]=useState(false);
     const [showPassword,setShowPassword]=useState(false);
     const inputRef=useRef(null);
 
@@ -58,23 +56,6 @@ export default function LoginScreen({onAuthenticate}){
         }
     }
 
-    const handleKeypadInput=(key)=>{
-        if(success || isLocked) return;
-
-        setError('');
-
-        if(key==='CLEAR'){
-            setPassword('');
-        }
-        else if(key==='SPACE'){
-            setPassword((prev)=>prev+' ');
-        }
-        else{
-            setPassword((prev)=>prev+key);
-        }
-
-        inputRef.current?.focus();
-    }
      const rowClass=[
         'login-input-row',
         error ? 'is-error' : '',
@@ -87,12 +68,14 @@ export default function LoginScreen({onAuthenticate}){
                     <UserIcon />
                 </div>
 
+                <div className="login-text">Welcome to Aurora OS</div>
+
                 <div className={`login-input-wrap${shaking ? ' login-input-shake' :''}`} >
                     <div className={rowClass}>
                         <input ref={inputRef} type={showPassword ? 'text' : 'password'} placeholder="Password" value={password} className="login-input" onChange={(e)=>{
                             setPassword(e.target.value);
                             setError('');
-                        }} onKeyDown={(e)=>e.key==='Enter' && submit()} disabled={isLocked} />
+                        }} onKeyDown={(e)=>e.key==='Enter' && submit()} autoCapitalize="off" autoCorrect="off" enterKeyHint="go" disabled={isLocked} />
 
                         <button
                             type="button"
@@ -113,61 +96,6 @@ export default function LoginScreen({onAuthenticate}){
                     {error &&(
                         <div className="login-msg is-error">{error}</div>
                     )}
-
-                    <div className="login-tools-row">
-                        <button
-                            type="button"
-                            className={`login-tool-btn${showHint ? ' is-active' : ''}`}
-                            onClick={()=>setShowHint((v)=>!v)}
-                            aria-label="Show password hint"
-                            title="Passkey hint"
-                        >
-                            <PasskeyIcon />
-                        </button>
-
-                        <button
-                            type="button"
-                            className={`login-tool-btn${showKeypad ? ' is-active' : ''}`}
-                            onClick={()=>setShowKeypad((v)=>!v)}
-                            aria-label="Open keypad"
-                            title="Keypad"
-                        >
-                            <KeypadIcon />
-                        </button>
-                    </div>
-
-                    {showHint && (
-                        <div className="login-hint">
-                            Hint: <b>Miss You</b>
-                        </div>
-                    )}
-
-                    {showKeypad && (
-                        <div className="login-keypad" role="group" aria-label="On-screen keypad">
-                            <div className="login-keypad-head">
-                                <span className="login-keypad-title">On-screen keypad</span>
-                                <span className="login-keypad-help">Tap keys to type password</span>
-                            </div>
-
-                            <div className="login-keypad-grid compact">
-                                {['M','i','s','s','Y','o','u'].map((k, idx)=>(
-                                    <button key={`${k}-${idx}`} type="button" className="login-keypad-key letter" onClick={()=>handleKeypadInput(k)} disabled={isLocked}>{k}</button>
-                                ))}
-                            </div>
-
-                            <div className="login-keypad-row row-actions compact">
-                                <button type="button" className="login-keypad-key action" onClick={()=>handleKeypadInput('CLEAR')} disabled={isLocked}>clear</button>
-                                <button type="button" className="login-keypad-key wide" onClick={()=>handleKeypadInput('SPACE')} disabled={isLocked}>space</button>
-                                <button type="button" className="login-keypad-key action submit" onClick={submit} disabled={isLocked}>enter</button>
-                            </div>
-                        </div>
-                    )}
-
-                    <div className="login-note">
-                        Welcome to Aurora OS.
-                        This is version 1.0.
-                        With Out forgetting checkout Notes App.
-                    </div>
                 </div>
 
                 <div className="login-footer-row">
@@ -194,28 +122,6 @@ function ArrowRightIcon(){
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M5 12h14" />
             <path d="m13 5 7 7-7 7" />
-        </svg>
-    );
-}
-
-function PasskeyIcon(){
-    return(
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="8" cy="15" r="4" />
-            <path d="M12 15h9" />
-            <path d="M19 12v6" />
-            <path d="M16 13v4" />
-        </svg>
-    );
-}
-
-function KeypadIcon(){
-    return(
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="4" width="18" height="16" rx="2" />
-            <path d="M7 8h.01M12 8h.01M17 8h.01" />
-            <path d="M7 12h.01M12 12h.01M17 12h.01" />
-            <path d="M7 16h10" />
         </svg>
     );
 }
