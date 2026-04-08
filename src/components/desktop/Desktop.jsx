@@ -19,11 +19,11 @@ import ContextMenu from './ContextMenu';
 import useFileSystem from '../apps/FileExplorer/useFileSystem';
 import {useOS} from '../../context/OSContext';
 import './desktop.css';
-import desktopBackground from '../../assets/desktopbg.png';
-import backgroundImage from '../../assets/background.png';
-import backgroundImage1 from '../../assets/background1.png';
+import desktopBackground from '../../assets/wallpaper1.png';
+import backgroundImage from '../../assets/wallpaper2.png';
+import backgroundImage1 from '../../assets/wallpaper3.png';
 import backgroundImage2 from '../../assets/background2.png';
-import desktopImage from '../../assets/desktop.png';
+import desktopImage from '../../assets/wallpaper4.png';
 import fileExplorerIcon from '../../assets/taskbar/fileexp.png';
 import taskManagerIcon from '../../assets/taskbar/taskmanager.png';
 import notesIcon from '../../assets/taskbar/notepad.png';
@@ -33,7 +33,6 @@ import chromeIcon from '../../assets/taskbar/chrome.png';
 import drawIcon from '../../assets/draw.png';
 import slowRoadsIcon from '../../assets/slowroads.png';
 import MinecraftIcon from '../../assets/Minecraft.png';
-import Minecraft from './../apps/Games/MineCraft';
 
 const DESKTOP_APPS=[
     {
