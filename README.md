@@ -178,5 +178,6 @@ If you want to collaborate on this project, DM me on Slack:
 ## License
 
 This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
+Sorry if it didn't work
 
 See the LICENSE file for details.
