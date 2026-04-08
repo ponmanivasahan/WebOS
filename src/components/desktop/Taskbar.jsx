@@ -28,6 +28,8 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
   const [taskbarContext, setTaskbarContext] = useState(null);
   const [devOpen, setDevOpen] = useState(false);
   const [startQuery, setStartQuery] = useState('');
+  const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth);
+  const showMobileShell = viewportWidth <= 768;
 
   const startMenuRef = useRef(null);
   const calendarPanelRef = useRef(null);
@@ -35,12 +37,21 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
   const trayOverflowPanelRef = useRef(null);
   const taskbarContextRef = useRef(null);
 
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const projectApps = useMemo(
     () => availableApps.filter((app) => app.appId && app.appId !== 'file-explorer' && app.appId !== 'vscode'),
     [availableApps]
   );
 
   const MAX_VISIBLE_PINNED = 9;
+  const isCompactTaskbar = showMobileShell;
+  const maxVisiblePinned = viewportWidth <= 480 ? 3 : viewportWidth <= 768 ? 4 : MAX_VISIBLE_PINNED;
 
   const pinnedApps = useMemo(() => {
     const base = [
@@ -70,8 +81,9 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
     });
   }, [projectApps]);
 
-  const visiblePinnedApps = useMemo(() => pinnedApps.slice(0, MAX_VISIBLE_PINNED), [pinnedApps]);
-  const overflowPinnedApps = useMemo(() => pinnedApps.slice(MAX_VISIBLE_PINNED), [pinnedApps]);
+  const visiblePinnedApps = useMemo(() => pinnedApps.slice(0, maxVisiblePinned), [pinnedApps, maxVisiblePinned]);
+  const overflowPinnedApps = useMemo(() => pinnedApps.slice(maxVisiblePinned), [pinnedApps, maxVisiblePinned]);
+  const showOverflowButton = !showMobileShell && overflowPinnedApps.length > 0;
 
   const openAppIds = useMemo(() => new Set(windows.map((win) => win.appId)), [windows]);
   const hiddenTrayApps = useMemo(
@@ -261,6 +273,23 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
 
   return (
     <>
+      {showMobileShell && (
+        <div className="taskbar-mobile-status" aria-hidden="true">
+          <TaskbarClock
+            compact
+            isActive={isCalendarOpen}
+            onClick={() => {
+              setIsCalendarOpen((v) => !v);
+            }}
+            onContextMenu={(e) => openTaskbarContextMenu(e, 'clock')}
+          />
+          <div className="taskbar-mobile-battery">
+            <TaskbarIconImage src={batteryIcon} alt="" className="taskbar-mobile-battery-icon" />
+            <span>100%</span>
+          </div>
+        </div>
+      )}
+
       <div className="taskbar">
         <div className="taskbar-center">
           <button
@@ -293,7 +322,7 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
             );
           })}
 
-          {overflowPinnedApps.length > 0 && (
+          {showOverflowButton && (
             <button
               type="button"
               className={`taskbar-icon-btn${isAppOverflowOpen ? ' is-focused' : ''}`}
@@ -306,6 +335,7 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
           )}
         </div>
 
+        {!showMobileShell && (
         <div className="taskbar-tray">
           <button
             type="button"
@@ -319,29 +349,35 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
           >
             <TaskbarIconImage src={chevronUpIcon} alt="" className="taskbar-chevron-img" />
           </button>
-          <button
-            type="button"
-            className="taskbar-tray-btn"
-            title="Settings"
-            aria-label="Settings"
-            onClick={() => {}}
-            onContextMenu={(e) => openTaskbarContextMenu(e, 'tray')}
-          >
-            <TaskbarIconImage src={settingsIcon} alt="" className="taskbar-tray-img" />
-          </button>
-          <button
-            type="button"
-            className="taskbar-tray-btn"
-            title="Sound"
-            aria-label="Sound"
-            onClick={() => {}}
-            onContextMenu={(e) => openTaskbarContextMenu(e, 'tray')}
-          >
-            <TaskbarIconImage src={soundIcon} alt="" className="taskbar-tray-img" />
-          </button>
-          <button type="button" className="taskbar-tray-btn taskbar-language" title="Language Preferences" aria-label="Language Preferences">
-            <span>ENG</span>
-          </button>
+          {!isCompactTaskbar && (
+            <button
+              type="button"
+              className="taskbar-tray-btn"
+              title="Settings"
+              aria-label="Settings"
+              onClick={() => {}}
+              onContextMenu={(e) => openTaskbarContextMenu(e, 'tray')}
+            >
+              <TaskbarIconImage src={settingsIcon} alt="" className="taskbar-tray-img" />
+            </button>
+          )}
+          {!isCompactTaskbar && (
+            <button
+              type="button"
+              className="taskbar-tray-btn"
+              title="Sound"
+              aria-label="Sound"
+              onClick={() => {}}
+              onContextMenu={(e) => openTaskbarContextMenu(e, 'tray')}
+            >
+              <TaskbarIconImage src={soundIcon} alt="" className="taskbar-tray-img" />
+            </button>
+          )}
+          {!isCompactTaskbar && (
+            <button type="button" className="taskbar-tray-btn taskbar-language" title="Language Preferences" aria-label="Language Preferences">
+              <span>ENG</span>
+            </button>
+          )}
           <button
             type="button"
             className="taskbar-tray-btn"
@@ -352,9 +388,11 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
           >
             <TaskbarIconImage src={notificationIcon} alt="" className="taskbar-tray-img" />
           </button>
-          <button type="button" className="taskbar-tray-btn" title="Battery" aria-label="Battery">
-            <TaskbarIconImage src={batteryIcon} alt="" className="taskbar-tray-img" />
-          </button>
+          {!isCompactTaskbar && (
+            <button type="button" className="taskbar-tray-btn" title="Battery" aria-label="Battery">
+              <TaskbarIconImage src={batteryIcon} alt="" className="taskbar-tray-img" />
+            </button>
+          )}
           <TaskbarClock
             isActive={isCalendarOpen}
             onClick={() => {
@@ -363,6 +401,7 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
             onContextMenu={(e) => openTaskbarContextMenu(e, 'clock')}
           />
         </div>
+        )}
       </div>
 
       {isAppOverflowOpen && overflowPinnedApps.length > 0 && (
@@ -384,8 +423,6 @@ export default function Taskbar({ windows = [], activeWinId, onOpenApp, availabl
           </div>
         </div>
       )}
-
-
 
       {isStartOpen && (
         <div className="start-menu" ref={startMenuRef}>

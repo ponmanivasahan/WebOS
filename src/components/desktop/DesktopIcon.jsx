@@ -5,6 +5,7 @@ export default function DesktopIcon({
    selected=false,
    id,
    style,
+   isMobile=false,
    isEditing=false,
    editValue='',
    isDragging=false,
@@ -20,6 +21,7 @@ export default function DesktopIcon({
      const handleClick=(e)=>{
         e.stopPropagation();
         onSelect?.(id);
+        if(isMobile) onOpen?.(id);
      }
 
      const handleContext=(e)=>{
@@ -32,11 +34,11 @@ export default function DesktopIcon({
       <div
          className={`desktop-icon${selected ? ' is-selected' : ''}${isDragging ? ' is-dragging' : ''}`}
          style={style}
-         draggable={!isEditing}
+         draggable={!isEditing && !isMobile}
          onDragStart={(e)=>onDragStart?.(e,id)}
          onDragEnd={onDragEnd}
          onClick={handleClick}
-         onDoubleClick={(e)=>{if(isEditing) return; e.stopPropagation(); onOpen?.(id);}}
+         onDoubleClick={isMobile ? undefined : (e)=>{if(isEditing) return; e.stopPropagation(); onOpen?.(id);}}
          onContextMenu={handleContext}
       >
                  <div className="desktop-icon-img">{icon}</div>

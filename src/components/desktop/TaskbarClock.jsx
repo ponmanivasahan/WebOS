@@ -1,7 +1,7 @@
 import './desktop.css';
 import useNow from '../../hooks/useNow';
 const p2=(n)=>String(n).padStart(2,'0');
-export default function TaskbarClock({ onClick, onContextMenu, isActive = false }){
+export default function TaskbarClock({ onClick, onContextMenu, isActive = false, compact = false }){
 const now=useNow();
 const hh=p2(now.getHours());
 const mm=p2(now.getMinutes());
@@ -12,13 +12,13 @@ const date=now.toLocaleDateString('en-GB',{
 return(
     <button
         type="button"
-        className={`taskbar-clock${isActive ? ' is-active' : ''}`}
+        className={`taskbar-clock${isActive ? ' is-active' : ''}${compact ? ' is-compact' : ''}`}
         title={`${hh}:${mm} ${date}`}
         onClick={onClick}
         onContextMenu={onContextMenu}
     >
         <span className="taskbar-clock-value">{hh}:{mm}</span>
-        <span className="taskbar-date-value">{date}</span>
+        {!compact && <span className="taskbar-date-value">{date}</span>}
     </button>
 )
 }

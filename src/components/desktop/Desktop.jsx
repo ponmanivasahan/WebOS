@@ -98,14 +98,18 @@ const ICON_GAP=10;
 const ICON_START_X=6;
 const ICON_START_Y=6;
 const MAX_ROWS_PER_COLUMN=4;
-const DESKTOP_TASKBAR_H=52;
+const getDesktopTaskbarHeight=()=>{
+    if(window.innerWidth<=480) return 60;
+    if(window.innerWidth<=768) return 56;
+    return 48;
+};
 const DESKTOP_AREA_PADDING=12;
 const ICONS_INNER_PADDING=6;
 
 function buildDefaultPositions(apps){
     const availableHeight=Math.max(
         ICON_H,
-        window.innerHeight - DESKTOP_TASKBAR_H - (DESKTOP_AREA_PADDING * 2) - (ICONS_INNER_PADDING * 2),
+        window.innerHeight - getDesktopTaskbarHeight() - (DESKTOP_AREA_PADDING * 2) - (ICONS_INNER_PADDING * 2),
     );
     const rowsThatFit=Math.max(1,Math.floor((availableHeight + ICON_GAP) / (ICON_H + ICON_GAP)));
     const rowsPerColumn=Math.max(1,Math.min(MAX_ROWS_PER_COLUMN,rowsThatFit));
@@ -137,6 +141,7 @@ const BUILTIN_WALLPAPER_MAP=BUILTIN_WALLPAPERS.reduce((acc,item)=>{
 export default function Desktop({openWindows = [], activeWinId, onOpenApp, onLogout}) {
     const {wallpaper,setWallpaper,brightness}=useOS();
     const {createFolder,deleteEntry,renameEntry,listDir}=useFileSystem();
+    const [viewportWidth,setViewportWidth]=useState(()=>window.innerWidth);
     const [selectedIcon,setSelectedIcon]=useState(null);
     const [ctxMenu,setCtxMenu]=useState(null);
     const [showWallpaperPicker,setShowWallpaperPicker]=useState(false);
@@ -150,6 +155,7 @@ export default function Desktop({openWindows = [], activeWinId, onOpenApp, onLog
     const desktopAreaRef=useRef(null);
     const wallpaperInputRef=useRef(null);
     const folderCounterRef=useRef(0);
+    const isMobileLayout=viewportWidth<=768;
     const desktopItems=useMemo(()=>[...DESKTOP_APPS,...desktopFolders],[desktopFolders]);
 
     const clampPosition=useCallback((position, rect)=>{
@@ -163,6 +169,7 @@ export default function Desktop({openWindows = [], activeWinId, onOpenApp, onLog
 
     useEffect(()=>{
         const handleResize=()=>{
+            setViewportWidth(window.innerWidth);
             if(!desktopAreaRef.current) return;
             const rect=desktopAreaRef.current.getBoundingClientRect();
             setPositions((prev)=>{
@@ -380,14 +387,15 @@ export default function Desktop({openWindows = [], activeWinId, onOpenApp, onLog
                 onChange={handleWallpaperUpload}
             />
             <div ref={desktopAreaRef} className='desktop-area' onDragOver={handleDragOver} onDrop={handleDesktopDrop}>
-                <div className='desktop-icons'>
+                <div className={`desktop-icons${isMobileLayout ? ' desktop-icons--mobile' : ''}`}>
                     {desktopItems.map((app)=>(
                         <DesktopIcon
                             key={app.id}
                             id={app.id}
                             label={app.label}
                             icon={app.icon}
-                            style={{left:positions[app.id]?.x ?? ICON_START_X,top:positions[app.id]?.y ?? ICON_START_Y}}
+                            isMobile={isMobileLayout}
+                            style={isMobileLayout ? undefined : {left:positions[app.id]?.x ?? ICON_START_X,top:positions[app.id]?.y ?? ICON_START_Y}}
                             isDragging={draggingId===app.id}
                             isEditing={editingId===app.id}
                             editValue={editingName}
